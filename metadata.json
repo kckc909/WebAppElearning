@@ -1,0 +1,5 @@
+{
+  "name": "SkillUp: Online Learning Marketplace",
+  "description": "An online learning platform combining a Marketplace for instructors and an LMS for students, focusing on Digital Skills and Applied Language Skills. It features course discovery, learning modules, progress tracking, and AI-powered recommendations.",
+  "requestFramePermissions": []
+}
