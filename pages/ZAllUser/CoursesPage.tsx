@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { COURSES } from '../mockData';
-import CourseCard from '../components/CourseCard';
+import { COURSES } from '../../mockData';
+import CourseCard from '../../components/CourseCard';
 import { IoHomeOutline } from 'react-icons/io5';
 
 const FilterCheckbox: React.FC<{ label: string, id: string, checked?: boolean, onChange?:()=>void }> = ({ label, id, checked, onChange }) => (

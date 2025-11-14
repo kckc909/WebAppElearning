@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Course } from '../types';
+import { Course } from '../cus_types';
 import { IoHomeOutline } from 'react-icons/io5';
 
 interface CourseCardProps {
@@ -9,17 +9,17 @@ interface CourseCardProps {
 }
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 !== 0;
-    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+  const fullStars = Math.floor(rating);
+  const halfStar = rating % 1 !== 0;
+  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
-    return (
-        <div className="flex items-center">
-            {[...Array(fullStars)].map((_, i) => <IoHomeOutline  key={`full-${i}`} name="star" className="text-yellow-400"></IoHomeOutline >)}
-            {halfStar && <IoHomeOutline  name="star-half" className="text-yellow-400"></IoHomeOutline >}
-            {[...Array(emptyStars)].map((_, i) => <IoHomeOutline  key={`empty-${i}`} name="star-outline" className="text-yellow-400"></IoHomeOutline >)}
-        </div>
-    )
+  return (
+    <div className="flex items-center">
+      {[...Array(fullStars)].map((_, i) => <IoHomeOutline key={`full-${i}`} name="star" className="text-yellow-400"></IoHomeOutline >)}
+      {halfStar && <IoHomeOutline name="star-half" className="text-yellow-400"></IoHomeOutline >}
+      {[...Array(emptyStars)].map((_, i) => <IoHomeOutline key={`empty-${i}`} name="star-outline" className="text-yellow-400"></IoHomeOutline >)}
+    </div>
+  )
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
@@ -35,16 +35,16 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         </div>
         <h3 className="mt-2 font-semibold text-lg text-secondary leading-tight truncate group-hover:text-primary transition-colors">{course.title}</h3>
         <div className="mt-2 flex items-center space-x-2">
-            <span className="font-bold text-yellow-500 text-sm">{course.rating.toFixed(1)}</span>
-            <StarRating rating={course.rating} />
-            <span className="text-sm text-slate-500">({course.reviewsCount})</span>
+          <span className="font-bold text-yellow-500 text-sm">{course.rating.toFixed(1)}</span>
+          <StarRating rating={course.rating} />
+          <span className="text-sm text-slate-500">({course.reviewsCount})</span>
         </div>
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-baseline space-x-2">
             <span className="text-xl font-bold text-primary">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(course.price)}</span>
             {course.originalPrice && <span className="text-sm text-slate-500 line-through">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(course.originalPrice)}</span>}
           </div>
-           <span className="px-2 py-1 text-xs font-semibold text-primary bg-blue-100 rounded-full">{course.level}</span>
+          <span className="px-2 py-1 text-xs font-semibold text-primary bg-blue-100 rounded-full">{course.level}</span>
         </div>
       </div>
     </Link>
