@@ -1,5 +1,5 @@
 import React from 'react';
-import { TEAM_MEMBERS } from '../mockData';
+import { TEAM_MEMBERS } from '../../mockData';
 import { IoHomeOutline } from 'react-icons/io5';
 
 const ValueCard: React.FC<{ icon: string; title: string; description: string }> = ({ icon, title, description }) => (

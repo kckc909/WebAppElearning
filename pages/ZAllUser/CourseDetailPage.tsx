@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { COURSES } from '../mockData';
+import { Link, NavLink, useParams } from 'react-router-dom';
+import { COURSES } from '../../mockData';
 import { IoHomeOutline } from 'react-icons/io5';
 
 const StarRating: React.FC<{ rating: number; text?: boolean }> = ({ rating, text }) => {
@@ -25,6 +25,10 @@ const CourseDetailPage: React.FC = () => {
 
   if (!course) {
     return <div className="text-center py-20">Course not found.</div>;
+  }
+
+  const onClickDangKyHocHandle = () => {
+
   }
 
   const { instructor, reviews } = course;
@@ -67,6 +71,8 @@ const CourseDetailPage: React.FC = () => {
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md mt-8">
               <h2 className="text-2xl font-bold mb-4">Nội dung khóa học</h2>
+
+              {/* Sections */}
               {course.curriculum.map((section, index) => (
                 <div key={index} className="border rounded-md mb-3">
                   <div className="bg-slate-50 p-4 font-semibold flex justify-between items-center cursor-pointer">
@@ -132,7 +138,9 @@ const CourseDetailPage: React.FC = () => {
                     <span className="text-3xl font-bold text-primary">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(course.price)}</span>
                     {course.originalPrice && <span className="text-base text-slate-500 line-through">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(course.originalPrice)}</span>}
                   </div>
-                  <button className="mt-4 w-full bg-primary text-white font-bold py-3 rounded-md hover:bg-primary-hover transition-colors">Đăng ký học</button>
+                  <Link to={`/lesson/${course.id}`}>
+                    <button onClick={onClickDangKyHocHandle} className="mt-4 w-full bg-primary text-white font-bold py-3 rounded-md hover:bg-primary-hover transition-colors">Đăng ký học</button>
+                  </Link>
                   <ul className="mt-6 space-y-3 text-slate-600 text-sm">
                     <li className="flex justify-between"><span>Trình độ:</span> <span className="font-semibold">{course.level}</span></li>
                     <li className="flex justify-between"><span>Thời lượng:</span> <span className="font-semibold">{course.duration}</span></li>

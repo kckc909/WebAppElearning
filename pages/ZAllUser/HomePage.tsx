@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { COURSES } from '../mockData';
-import CourseCard from '../components/CourseCard';
+import { COURSES } from '../../mockData';
+import CourseCard from '../../components/CourseCard';
 import { IoHomeOutline } from 'react-icons/io5';
 
 const FeatureSection: React.FC<{
