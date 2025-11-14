@@ -1,43 +1,24 @@
 
-import React from 'react';
-import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import HomePage from './pages/HomePage';
-import CoursesPage from './pages/CoursesPage';
-import CourseDetailPage from './pages/CourseDetailPage';
-import AuthPage from './pages/AuthPage';
-import AboutPage from './pages/AboutPage';
-import BecomeInstructorPage from './pages/BecomeInstructorPage';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import AllUsersRoutes from './pages/ZAllUser/AllUsersRoutes';
+import StudentRoutes from './pages/Student/StudentRoutes'
+import InstructorRoutes from './pages/Instructor/InstructorRoutes'
+import AdminRoutes from './pages/Admin/AdminRoutes'
 
-const App: React.FC = () => {
-  return (
-    <HashRouter>
-      <MainLayout />
-    </HashRouter>
-  );
+import { setupIonicReact } from '@ionic/react';
+setupIonicReact();
+
+const App = () => {
+	return (
+		<HashRouter>
+			<Routes>
+				<Route path="/instructor/*" element={<InstructorRoutes />} />
+				<Route path="/student/*" element={<StudentRoutes />} />
+				<Route path="/admin/*" element={<AdminRoutes />} />
+				<Route path="/*" element={<AllUsersRoutes />} />
+			</Routes>
+		</HashRouter>
+	);
 };
-
-const MainLayout: React.FC = () => {
-    const location = useLocation();
-    const isAuthPage = location.pathname === '/auth';
-
-    return (
-        <div className="bg-light font-sans text-secondary">
-            {!isAuthPage && <Header />}
-            <main className="min-h-screen">
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/courses" element={<CoursesPage />} />
-                    <Route path="/courses/:id" element={<CourseDetailPage />} />
-                    <Route path="/auth" element={<AuthPage />} />
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/become-instructor" element={<BecomeInstructorPage />} />
-                </Routes>
-            </main>
-            {!isAuthPage && <Footer />}
-        </div>
-    );
-}
 
 export default App;
