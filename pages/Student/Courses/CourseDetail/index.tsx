@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, NavLink, useParams } from 'react-router-dom';
-import { COURSES } from '../../mockData';
+import { COURSES } from '../../../../mockData';
 import { IoHomeOutline } from 'react-icons/io5';
 
 const StarRating: React.FC<{ rating: number; text?: boolean }> = ({ rating, text }) => {

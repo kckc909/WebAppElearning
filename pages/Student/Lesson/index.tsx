@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COURSES, INSTRUCTORS, LESSON_COMMENTS, LESSON_QA, LESSONS } from '../../../mockData';
 
-import SidebarIcon from '../../../components/SidebarIcon';
+import SidebarIcon from '../../../components/icons/SidebarIcon';
 import SimpleMarkdown from '../../../components/SimpleMarkdown';
 import CommentsPanel from './CommentsPanel';
 import CurriculumPanel from './CuriculumPanel';

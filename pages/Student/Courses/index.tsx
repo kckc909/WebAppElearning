@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { COURSES } from '../../mockData';
-import CourseCard from '../../components/CourseCard';
+import { COURSES } from '../../../mockData';
+import CourseCard from '../../../components/CourseCard';
 import { IoHomeOutline } from 'react-icons/io5';
 
-const FilterCheckbox: React.FC<{ label: string, id: string, checked?: boolean, onChange?:()=>void }> = ({ label, id, checked, onChange }) => (
+const FilterCheckbox: React.FC<{ label: string, id: string, checked?: boolean, onChange?: () => void }> = ({ label, id, checked, onChange }) => (
     <div className="flex items-center">
         <input id={id} type="checkbox" checked={checked} onChange={onChange} className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" />
         <label htmlFor={id} className="ml-3 text-sm text-slate-600">{label}</label>
@@ -22,8 +22,8 @@ const CoursesPage: React.FC = () => {
                 <p className="mt-2 text-lg text-slate-600">Tìm kiếm khóa học phù hợp nhất với mục tiêu của bạn.</p>
                 <div className="mt-6 flex justify-center">
                     <div className="relative w-full max-w-2xl">
-                    <input type="search" placeholder="Tìm kiếm khóa học, giảng viên..." className="w-full rounded-full border-slate-300 py-3 pl-5 pr-12 text-base focus:ring-primary focus:border-primary" />
-                    <IoHomeOutline name="search-outline" className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl text-slate-400"></IoHomeOutline>
+                        <input type="search" placeholder="Tìm kiếm khóa học, giảng viên..." className="w-full rounded-full border-slate-300 py-3 pl-5 pr-12 text-base focus:ring-primary focus:border-primary" />
+                        <IoHomeOutline name="search-outline" className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl text-slate-400"></IoHomeOutline>
                     </div>
                 </div>
             </header>
@@ -58,7 +58,7 @@ const CoursesPage: React.FC = () => {
                         </div>
                     </div>
                 </aside>
-                
+
                 {/* Course Grid */}
                 <main className="lg:w-3/4">
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">

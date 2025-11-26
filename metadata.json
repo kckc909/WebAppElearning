@@ -1,5 +1,7 @@
 {
-  "name": "SkillUp: Online Learning Marketplace",
-  "description": "An online learning platform combining a Marketplace for instructors and an LMS for students, focusing on Digital Skills and Applied Language Skills. It features course discovery, learning modules, progress tracking, and AI-powered recommendations.",
-  "requestFramePermissions": []
+  "name": "MiLearn: Online Learning Marketplace",
+  "description": "Nền tảng học - dạy trực tuyến, cung cấp môi trường dạy và học online cho giáo viên và học viên có nhu cầu.",
+  "requestFramePermissions": [
+    
+  ]
 }

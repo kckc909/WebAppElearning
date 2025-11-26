@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IoLogoGoogle, IoLogoFacebook } from 'react-icons/io';  
+import { IoLogoGoogle, IoLogoFacebook } from 'react-icons/io';
 const AuthPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
 
-    const onLoginHandle = () => {
+    const onLoginClickedHandle = () => {
+        
+
+
         setIsLogin(true);
     };
 
-    const onRegisterHandle = () => { 
+    const onRegisterClickedHandle = () => {
+
+
+
         setIsLogin(false);
     };
 
-    const SocialButton: React.FC<{ icon: React.ComponentType<{ className?: string }>; provider: string; }> = ({ icon: Icon, provider }) => (  
+    const SocialButton: React.FC<{ icon: React.ComponentType<{ className?: string }>; provider: string; }> = ({ icon: Icon, provider }) => (
         <button className="flex-1 flex items-center justify-center space-x-2 border border-slate-300 rounded-md py-2.5 hover:bg-slate-50 transition-colors">
-            <Icon className="text-xl" /> 
+            <Icon className="text-xl" />
             <span className="font-medium text-slate-600">{provider}</span>
         </button>
     );
@@ -65,10 +71,10 @@ const AuthPage: React.FC = () => {
                 </div>
 
                 <div className="flex border-b mb-6">
-                    <button onClick={onLoginHandle} className={`flex-1 py-2 text-center font-semibold ${isLogin ? 'border-b-2 border-primary text-primary' : 'text-slate-500'}`}>
+                    <button onClick={onLoginClickedHandle} className={`flex-1 py-2 text-center font-semibold ${isLogin ? 'border-b-2 border-primary text-primary' : 'text-slate-500'}`}>
                         Đăng nhập
                     </button>
-                    <button onClick={onRegisterHandle} className={`flex-1 py-2 text-center font-semibold ${!isLogin ? 'border-b-2 border-primary text-primary' : 'text-slate-500'}`}>
+                    <button onClick={onRegisterClickedHandle} className={`flex-1 py-2 text-center font-semibold ${!isLogin ? 'border-b-2 border-primary text-primary' : 'text-slate-500'}`}>
                         Đăng ký
                     </button>
                 </div>
@@ -85,7 +91,7 @@ const AuthPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center space-x-4">
-                    <SocialButton icon={IoLogoGoogle} provider="Google" />  
+                    <SocialButton icon={IoLogoGoogle} provider="Google" />
                     <SocialButton icon={IoLogoFacebook} provider="Facebook" />
                 </div>
             </div>
