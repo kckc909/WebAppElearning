@@ -21,6 +21,7 @@ import ClassDetail from './MyClasses/ClassDetail'
 import MyCourses from './MyCourses'
 import Student_PaymentHistory from "./PaymentHistory"
 import Student_Certificates from './Certificates'
+import Student_Settings from './Settings'
 
 import Student_LoggedInLayout from './StudentSideBar'
 
@@ -47,6 +48,7 @@ export default function StudentRoutes() {
                     <Route path={student_routes.payment_history} element={<Student_PaymentHistory />} />
                     <Route path={student_routes.certificates} element={<Student_Certificates />} />
                     <Route path={student_routes.profile} element={<Student_Profile />} />
+                    <Route path={student_routes.settings} element={<Student_Settings />}></Route>
                 </Route>
 
             </Route>

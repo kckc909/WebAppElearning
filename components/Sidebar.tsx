@@ -37,14 +37,14 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
 
             {/* Icon (Lucide) — thay thế ion-icon */}
             <IconCom
-                className={`w-5 h-5 transition-all duration-200 text-xxl
+                className={`w-7 h-7 transition-all duration-200 text-xxl
                     ${isCollapsed ? "mx-auto" : "mr-3"}
                 `}
             />
 
             {/* Label */}
             {!isCollapsed && (
-                <span className="text-sm font-medium whitespace-nowrap">
+                <span className="font-medium whitespace-nowrap">
                     {label}
                 </span>
             )}

@@ -19,7 +19,7 @@ export default function StudentLayout() {
         <main className="w-full h-screen">
             {/* nếu đã đăng nhập thì ....  */}
             {!isAuthPage && !isLessonPage && <Header />}
-            <div className="h-screen pt-1">
+            <div className="min-h-screen pt-1">
                 <Outlet />
             </div>
             {!isAuthPage && !isLessonPage && <Footer />}

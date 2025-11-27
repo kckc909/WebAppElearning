@@ -2,24 +2,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Course } from '../cus_types';
-import { IoHomeOutline } from 'react-icons/io5';
+import StarRating from '../components/icons/StarRating'
 
 interface CourseCardProps {
   course: Course;
-}
-
-const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
-  const fullStars = Math.floor(rating);
-  const halfStar = rating % 1 !== 0;
-  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-
-  return (
-    <div className="flex items-center">
-      {[...Array(fullStars)].map((_, i) => <IoHomeOutline key={`full-${i}`} name="star" className="text-yellow-400"></IoHomeOutline >)}
-      {halfStar && <IoHomeOutline name="star-half" className="text-yellow-400"></IoHomeOutline >}
-      {[...Array(emptyStars)].map((_, i) => <IoHomeOutline key={`empty-${i}`} name="star-outline" className="text-yellow-400"></IoHomeOutline >)}
-    </div>
-  )
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
