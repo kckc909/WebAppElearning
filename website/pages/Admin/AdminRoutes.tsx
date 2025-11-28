@@ -4,32 +4,32 @@ import AdminDashboard from './Dashboard/index'
 import { Toaster } from 'react-hot-toast';
 import { admin_routes } from "../page_routes";
 
-import Admin_AllClasses from '../Admin/ClassesManagement/AllClasses'
+import Admin_AllClasses from './ClassesManagement/AllClasses'
 import Admin_ClassDetail from "./ClassesManagement/AllClasses/ClassDetail";
-import Admin_ClassesOverview from "../Admin/ClassesManagement/ClassesOverview";
-import Admin_Documents from "../Admin/DocumentLibrary";
-import Admin_ClassGrades from "../Admin/ClassesManagement/Grades";
-import Admin_Schedule from "../Admin/ClassesManagement/Schedule";
+import Admin_ClassesOverview from "./ClassesManagement/ClassesOverview";
+import Admin_Documents from "./DocumentLibrary";
+import Admin_ClassGrades from "./ClassesManagement/Grades";
+import Admin_Schedule from "./ClassesManagement/Schedule";
 
-import Admin_AllCourses from "../Admin/CoursesManagement/AllCourses";
-import Admin_CourseDetail from "../Admin/CoursesManagement/AllCourses/CourseDetail";
-import Admin_Approval from "../Admin/CoursesManagement/Approval";
-import Admin_Certificates from "../Admin/CoursesManagement/Certificates";
-import Admin_CoursesOverview from "../Admin/CoursesManagement/CoursesOverview";
-import Admin_CourseGrades from "../Admin/CoursesManagement/Grades";
-import Admin_DocumentLibrary from "../Admin/DocumentLibrary";
+import Admin_AllCourses from "./CoursesManagement/AllCourses";
+import Admin_CourseDetail from "./CoursesManagement/AllCourses/CourseDetail";
+import Admin_Approval from "./CoursesManagement/Approval";
+import Admin_Certificates from "./CoursesManagement/Certificates";
+import Admin_CoursesOverview from "./CoursesManagement/CoursesOverview";
+import Admin_CourseGrades from "./CoursesManagement/Grades";
+import Admin_DocumentLibrary from "./DocumentLibrary";
 
-import Admin_StudentManagement from "../Admin/StudentManagement"
-import Admin_InstructorManagement from '../Admin/InstructorManagement'
-import Admin_InstructorVertification from '../Admin/InstructorVertification'
+import Admin_StudentManagement from "./StudentManagement"
+import Admin_InstructorManagement from './InstructorManagement'
+import Admin_InstructorVertification from './InstructorVertification'
 
-import Admin_Transactions from '../Admin/Finance/Transactions'
-import Admin_Revenue from '../Admin/Finance/Revenue'
-import Admin_Payouts from '../Admin/Finance/Payouts'
+import Admin_Transactions from './Finance/Transactions'
+import Admin_Revenue from './Finance/Revenue'
+import Admin_Payouts from './Finance/Payouts'
 
-import Admin_Notification from '../Admin/Notification'
-import Admin_AnalyticsReports from '../Admin/Analytics_Reports'
-import Admin_Settings from '../Admin/Settings'
+import Admin_Notification from './Notification'
+import Admin_AnalyticsReports from './Analytics_Reports'
+import Admin_Settings from './Settings'
 
 export default function AdminRoutes() {
     return (

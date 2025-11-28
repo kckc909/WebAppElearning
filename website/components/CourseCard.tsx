@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Course } from '../cus_types';
-import StarRating from '../components/icons/StarRating'
+import StarRating from './icons/StarRating'
 
 interface CourseCardProps {
   course: Course;
