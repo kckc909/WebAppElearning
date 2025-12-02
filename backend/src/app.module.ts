@@ -12,6 +12,11 @@ import { Accounts_Service } from './modules/accounts/accounts.service.js';
 import { HelperModule } from './modules/helper/helper.module.js';
 import { EmailModule } from './modules/emailService/email.module.js';
 import { EmailService } from './modules/emailService/email.service.js';
+import { Notifications_Module } from './modules/notifications/notifications.module.js';
+import { UserProfiles_Module } from './modules/user_profiles/user_profiles.module.js';
+import { Classes_Module } from './modules/classes/classes.module.js';
+import { Courses_Module } from './modules/courses/courses.module.js';
+import { Lessons_Module } from './modules/lessons/lessons.module.js';
 
 
 @Module({
@@ -22,6 +27,11 @@ import { EmailService } from './modules/emailService/email.service.js';
     HelperModule,
 
     Users_Module,
+    Classes_Module,
+    Courses_Module,
+    Lessons_Module,
+    UserProfiles_Module,
+    Notifications_Module,
 
   ],
   controllers: [AppController, Accounts_Controller],

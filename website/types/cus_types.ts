@@ -36,7 +36,8 @@ export interface Course {
     originalPrice?: number;
     rating: number;
     reviewsCount: number;
-    level: 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
+    level: number;
+    // 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
     language: string;
     duration: string;
     lectures: number;
@@ -124,7 +125,8 @@ export interface ClassAssignment {
     title: string;
     classId: number;
     deadline: string;
-    status: 'pending' | 'submitted' | 'graded' | 'late';
+    status: number;
+    // 'pending' | 'submitted' | 'graded' | 'late';
     grade?: number;
 }
 
@@ -143,16 +145,19 @@ export interface AuditLog {
     user: string;
     target: string;
     timestamp: string;
-    status: 'Success' | 'Failure' | 'Warning';
+    status: number;
+    // 'Success' | 'Failure' | 'Warning';
     details: string;
 }
 
-export interface User {
+export interface Account {
     id: string;
-    name: string;
+    full_name: string;
     email: string;
-    role: 'Admin' | 'Instructor' | 'Student' | 'Superadmin';
-    status: 'Active' | 'Inactive' | 'Pending';
+    role: number;
+    // 'Admin' | 'Instructor' | 'Student' | 'Superadmin';
+    status: number;
+    // 'Active' | 'Inactive' | 'Pending';
     lastLogin: string;
     avatar: string;
 }
@@ -161,12 +166,12 @@ export interface CreateUserDto {
     name: string;
     email: string;
     password: string;
-    role?: User['role'];
-    status?: User['status']
+    role?: Account['role'];
+    status?: Account['status']
 }
 
 export interface UpdateUserDto {
     name?: string;
     email?: string;
-    role?: User['role'];
+    role?: Account['role'];
 }

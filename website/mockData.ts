@@ -1,4 +1,4 @@
-import { ClassAssignment, Course, EnrolledCourse, Instructor, Lesson, LessonComment, LessonQA, Review, StudentClass, User } from './cus_types';
+import { ClassAssignment, Course, EnrolledCourse, Instructor, Lesson, LessonComment, LessonQA, Review, StudentClass, Account } from './types/cus_types';
 
 export const INSTRUCTORS: Instructor[] = [
 	{
@@ -424,14 +424,14 @@ export const PENDING_ASSIGNMENTS: ClassAssignment[] = [
 		title: 'Writing Task 1: Bar Chart Analysis',
 		classId: 101,
 		deadline: 'Today, 23:59',
-		status: 'pending'
+		status: 2
 	},
 	{
 		id: 2,
 		title: 'React Component Lifecycle Quiz',
 		classId: 0, // Course assignment
 		deadline: 'Tomorrow, 12:00',
-		status: 'pending'
+		status: 2
 	}
 ];
 
@@ -442,10 +442,10 @@ export const MOCK_USER = {
 	role: '0'
 };
 
-export const MOCK_USERS: User[] = [
-	{ id: '1', name: 'Alice Johnson', email: 'alice@example.com', role: 'Superadmin', status: 'Active', lastLogin: '2023-10-25 10:30 AM', avatar: 'https://picsum.photos/seed/alice/40/40' },
-	{ id: '2', name: 'Bob Smith', email: 'bob@example.com', role: 'Admin', status: 'Active', lastLogin: '2023-10-24 02:15 PM', avatar: 'https://picsum.photos/seed/bob/40/40' },
-	{ id: '3', name: 'Charlie Brown', email: 'charlie@example.com', role: 'Editor', status: 'Inactive', lastLogin: '2023-10-20 09:00 AM', avatar: 'https://picsum.photos/seed/charlie/40/40' },
-	{ id: '4', name: 'Diana Prince', email: 'diana@example.com', role: 'Viewer', status: 'Pending', lastLogin: 'Never', avatar: 'https://picsum.photos/seed/diana/40/40' },
-	{ id: '5', name: 'Evan Wright', email: 'evan@example.com', role: 'Editor', status: 'Active', lastLogin: '2023-10-25 08:45 AM', avatar: 'https://picsum.photos/seed/evan/40/40' },
+export const MOCK_USERS: Account[] = [
+	{ id: '1', full_name: 'Alice Johnson', email: 'alice@example.com', role: -1, status: 0, lastLogin: '2023-10-25 10:30 AM', avatar: 'https://picsum.photos/seed/alice/40/40' },
+	{ id: '2', full_name: 'Bob Smith', email: 'bob@example.com', role: 0, status: 0, lastLogin: '2023-10-24 02:15 PM', avatar: 'https://picsum.photos/seed/bob/40/40' },
+	{ id: '3', full_name: 'Charlie Brown', email: 'charlie@example.com', role: 1, status: 1, lastLogin: '2023-10-20 09:00 AM', avatar: 'https://picsum.photos/seed/charlie/40/40' },
+	{ id: '4', full_name: 'Diana Prince', email: 'diana@example.com', role: 2, status: 2, lastLogin: 'Never', avatar: 'https://picsum.photos/seed/diana/40/40' },
+	{ id: '5', full_name: 'Evan Wright', email: 'evan@example.com', role: 1, status: 0, lastLogin: '2023-10-25 08:45 AM', avatar: 'https://picsum.photos/seed/evan/40/40' },
 ];

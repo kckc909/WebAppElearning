@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Accounts } from '../../../types/types';
 import { Edit2, Trash2, Download, Plus, Search } from 'lucide-react';
 import AccountModal from './AccountModal';
-import Pagination from '../../../components/Pagination';
 import DataTable from '../../../components/DataTable'
+import { useAccounts } from '../../../hooks/accounts'
+import { MOCK_USERS as MOCK_ACCOUNTS } from '../../../mockData'
 
 // Helper for Role Mapping
 export const getRoleName = (role?: number | null) => {
@@ -26,18 +27,29 @@ export const getStatusLabel = (status?: number | null) => {
     }
 };
 
-const MOCK_ACCOUNTS: Accounts[] = [
-    { id: 1, full_name: 'Alice Johnson', email: 'alice@example.com', password_hash: 'hash1', role: 1, status: 1, created_at: '2023-10-25', avatar_url: 'https://picsum.photos/seed/alice/40/40' },
-    { id: 2, full_name: 'Bob Smith', email: 'bob@example.com', password_hash: 'hash2', role: 2, status: 1, created_at: '2023-10-24', avatar_url: 'https://picsum.photos/seed/bob/40/40' },
-    { id: 3, full_name: 'Charlie Brown', email: 'charlie@example.com', password_hash: 'hash3', role: 3, status: 0, created_at: '2023-10-20', avatar_url: 'https://picsum.photos/seed/charlie/40/40' },
-    { id: 4, full_name: 'Diana Prince', email: 'diana@example.com', password_hash: 'hash4', role: 4, status: 2, created_at: '2023-10-18', avatar_url: 'https://picsum.photos/seed/diana/40/40' },
-    { id: 5, full_name: 'Evan Wright', email: 'evan@example.com', password_hash: 'hash5', role: 3, status: 1, created_at: '2023-10-25', avatar_url: 'https://picsum.photos/seed/evan/40/40' },
-    { id: 6, full_name: 'Fiona Gallagher', email: 'fiona@example.com', password_hash: 'hash6', role: 4, status: 1, created_at: '2023-10-26', avatar_url: 'https://picsum.photos/seed/fiona/40/40' },
-    { id: 7, full_name: 'George Martin', email: 'george@example.com', password_hash: 'hash7', role: 2, status: 0, created_at: '2023-09-15', avatar_url: 'https://picsum.photos/seed/george/40/40' },
-];
+// const MOCK_ACCOUNTS: Accounts[] = [
+//     { id: 1, full_name: 'Alice Johnson', email: 'alice@example.com', password_hash: 'hash1', role: 1, status: 1, created_at: '2023-10-25', avatar_url: 'https://picsum.photos/seed/alice/40/40' },
+//     { id: 2, full_name: 'Bob Smith', email: 'bob@example.com', password_hash: 'hash2', role: 2, status: 1, created_at: '2023-10-24', avatar_url: 'https://picsum.photos/seed/bob/40/40' },
+//     { id: 3, full_name: 'Charlie Brown', email: 'charlie@example.com', password_hash: 'hash3', role: 3, status: 0, created_at: '2023-10-20', avatar_url: 'https://picsum.photos/seed/charlie/40/40' },
+//     { id: 4, full_name: 'Diana Prince', email: 'diana@example.com', password_hash: 'hash4', role: 4, status: 2, created_at: '2023-10-18', avatar_url: 'https://picsum.photos/seed/diana/40/40' },
+//     { id: 5, full_name: 'Evan Wright', email: 'evan@example.com', password_hash: 'hash5', role: 3, status: 1, created_at: '2023-10-25', avatar_url: 'https://picsum.photos/seed/evan/40/40' },
+//     { id: 6, full_name: 'Fiona Gallagher', email: 'fiona@example.com', password_hash: 'hash6', role: 4, status: 1, created_at: '2023-10-26', avatar_url: 'https://picsum.photos/seed/fiona/40/40' },
+//     { id: 7, full_name: 'George Martin', email: 'george@example.com', password_hash: 'hash7', role: 2, status: 0, created_at: '2023-09-15', avatar_url: 'https://picsum.photos/seed/george/40/40' },
+// ];
 
 const UserManagement: React.FC = () => {
-    const [users, setUsers] = useState<Accounts[]>(MOCK_ACCOUNTS);
+    const {
+        accounts,
+        loading,
+        error,
+        fetchAccounts,
+        fetchAccountById,
+        createAccount,
+        updateAccount,
+        deleteAccount,
+    } = useAccounts();
+
+    const [users, setUsers] = useState<Accounts[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<Set<string | number>>(new Set());
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -50,7 +62,7 @@ const UserManagement: React.FC = () => {
     const [editingUser, setEditingUser] = useState<Accounts | null>(null);
 
     // Filter Logic
-    const filteredUsers = users.filter(user =>
+    const filteredUsers = accounts.filter(user =>
         user.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -128,13 +140,14 @@ const UserManagement: React.FC = () => {
             const newUser: Accounts = {
                 id: Date.now(),
                 full_name: data.full_name,
+                username: data.username,
                 email: data.email,
                 role: data.role,
                 status: data.status,
-                password_hash: 'default_hash', // In a real app, this would be handled by backend
+                password_hash: '',
                 created_at: now,
                 updated_at: now,
-                avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(data.full_name)}&background=random&color=fff`
+                avatar_url: ``
             };
             setUsers(prev => [newUser, ...prev]);
         }
@@ -208,6 +221,7 @@ const UserManagement: React.FC = () => {
                 onSubmit={handleModalSubmit}
                 initialData={editingUser ? {
                     id: 0,
+                    username: editingUser.username,
                     full_name: editingUser.full_name,
                     email: editingUser.email,
                     role: editingUser.role ?? 2,
