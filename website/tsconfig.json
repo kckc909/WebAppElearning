@@ -27,6 +27,6 @@
     "noEmit": true
   },
   "include": [
-    "types.d.ts"
+    "types/types.d.ts"
   ]
 }

@@ -2,7 +2,7 @@ const tmp_on_navigate = '/#/'
 
 // ------------------- Super Admin -------------------
 const superadmin_routes = {
-    base: '/',
+    base: 'superadmin/',
     dashboard: 'dashboard',
     audit_logs: 'audit-logs',
     system_settings: 'settings',
@@ -11,8 +11,9 @@ const superadmin_routes = {
 
 // ------------------- Admin -------------------
 const admin_routes = {
+    base: 'admin/',
     // Classes Management
-    all_classes: 'classes/all',
+    all_classes: 'classes',
     classes_overview: 'classes/overview',
     documents: 'classes/documents',
     class_grades: 'classes/grades',
@@ -20,7 +21,7 @@ const admin_routes = {
     class_detail: (classId: string | number) => `classes/${classId}`,
 
     // Courses Management
-    all_courses: 'courses/all',
+    all_courses: 'courses',
     approval: 'courses-management/approval',
     certificates: 'courses-management/certificates',
     courses_overview: 'courses-overview',
@@ -54,11 +55,11 @@ const admin_routes = {
 
 // ------------------- Instructor -------------------
 const instructor_routes = {
+    base: 'instructor/',
     // Classes Management
     classes_overview: 'classes/overview',
     class_list: 'classes/all',
     class_detail: (classId: string | number) => `classes/${classId}`,
-    class_settings: (classId: string | number) => `classes/${classId}/class-settings`,
     activity: 'classes/activity',
     assignments: 'classes/assignments',
     attendance: 'classes/attendance',
@@ -74,10 +75,11 @@ const instructor_routes = {
     course_lesson: (courseId: string | number, lessonId: string | number) => `courses/${courseId}/${lessonId}`,
     course_certificates: 'courses-management/certificates',
 
+    // 
     dashboard: 'dashboard',
     document_library: 'document-library',
     notification: 'notification',
-    settings: 'instructor/settings',
+    settings: 'settings',
 };
 
 // ------------------- Student -------------------

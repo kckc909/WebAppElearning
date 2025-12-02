@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-    ChevronDown, X
+    ChevronDown, FileText, LayoutDashboard, Settings, Users, X, Menu, ChevronLeft, ChevronRight
 } from "lucide-react";
 
 import { NavLink } from 'react-router-dom';
@@ -13,18 +13,51 @@ import SuperAdmin_UsersManagement from './UsersManagement'
 
 
 interface SidebarProps {
-    isOpen: boolean;
-    setIsOpen: (isOpen: boolean) => void;
+    isOpen?: boolean;
+    setIsOpen?: (isOpen: boolean) => void;
 }
 
 const menuItems = [
-    { name: 'Dashboard', icon: <SuperAdmin_Dashboard />, path: tmp_on_navigate + superadmin_routes.dashboard },
-    { name: 'Users Management', icon: <SuperAdmin_UsersManagement />, path: tmp_on_navigate + superadmin_routes.users_management },
-    { name: 'Audit logs', icon: <SuperAdmin_AuditLogs />, path: tmp_on_navigate + superadmin_routes.audit_logs },
-    { name: 'Settings', icon: <SuperAdmin_Settings />, path: tmp_on_navigate + superadmin_routes.system_settings },
+    { name: 'Dashboard', icon: <LayoutDashboard />, path: tmp_on_navigate + superadmin_routes.base + superadmin_routes.dashboard },
+    { name: 'Users Management', icon: <Users />, path: tmp_on_navigate + superadmin_routes.base + superadmin_routes.users_management },
+    { name: 'Audit logs', icon: <FileText />, path: tmp_on_navigate + superadmin_routes.base + superadmin_routes.audit_logs },
+    { name: 'Settings', icon: <Settings />, path: tmp_on_navigate + superadmin_routes.base + superadmin_routes.system_settings },
 ]
 
 const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
+    // support both controlled (props) and uncontrolled (local) modes
+    const isControlled = typeof isOpen === 'boolean' && typeof setIsOpen === 'function';
+    const [localOpen, setLocalOpen] = useState<boolean>(isOpen ?? false);
+
+    // desktop collapse state: when true, sidebar is narrow and shows icons only
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+    const navRef = useRef<HTMLElement | null>(null);
+
+    // optional: restore collapsed state from localStorage
+    useEffect(() => {
+        try {
+            const saved = localStorage.getItem('sa_sidebar_collapsed');
+            if (saved !== null) setIsCollapsed(saved === '1');
+        } catch { }
+    }, []);
+
+    useEffect(() => {
+        try { localStorage.setItem('sa_sidebar_collapsed', isCollapsed ? '1' : '0'); } catch { }
+    }, [isCollapsed]);
+
+    useEffect(() => {
+        if (!isControlled && typeof isOpen === 'boolean') {
+            // if parent toggles but doesn't supply setter, sync local state
+            setLocalOpen(isOpen);
+        }
+    }, [isOpen, isControlled]);
+
+    const open = isControlled ? !!isOpen : localOpen;
+    const toggle = () => {
+        if (isControlled) setIsOpen && setIsOpen(!isOpen);
+        else setLocalOpen(v => !v);
+    };
+
     const [openDropdown, setOpenDropdown] = useState<string | null>();
     const [activeItem, setActiveItem] = useState<string>('Dashboard');
 
@@ -35,33 +68,82 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     const handleItemClick = (name: string) => {
         setActiveItem(name);
         // On smaller screens, close sidebar after selection
-        if (window.innerWidth < 1024) {
-            setIsOpen(false);
+        if (!isControlled) {
+            if (window.innerWidth < 1024) setLocalOpen(false);
+        } else {
+            if (window.innerWidth < 1024) setIsOpen && setIsOpen(false);
         }
     };
 
     const sidebarClasses = `
         fixed lg:relative inset-y-0 left-0 z-30
-        w-64 bg-white text-gray-700
-        transform transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        ${isCollapsed ? 'w-20' : 'w-64'} bg-white text-gray-700
+        transform transition-all duration-300 ease-in-out
+        ${open ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 lg:flex lg:flex-col
     `;
 
     return (
         <>
-            {isOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden" onClick={() => setIsOpen(false)}></div>}
+            {/* hamburger button (visible on mobile) */}
+            {!open && (
+                <button
+                    onClick={toggle}
+                    aria-label="Open sidebar"
+                    className="fixed top-4 left-4 z-40 bg-white border rounded-md p-2 shadow-sm lg:hidden"
+                >
+                    <Menu className="w-5 h-5" />
+                </button>
+            )}
+
+            {open && <div className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden" onClick={toggle}></div>}
             <aside className={sidebarClasses}>
-                <div className="flex items-center justify-between p-4 border-b h-[65px]">
-                    <NavLink to={'/admin'} className={'flex items-center space-x-2'}>
-                        <img src="/MiLearnLogo.png" alt="MiLearn Logo" className="h-10 w-10" />
-                        <h1 className="text-xl font-bold text-green-600">MiLearn</h1>
+                <div className="flex items-center justify-between p-3 border-b h-[65px]">
+                    <NavLink to={'/' + superadmin_routes.base + superadmin_routes.dashboard} className={'flex items-center space-x-2'}>
+                        <img
+                            src="/MiLearnLogo.png"
+                            alt="MiLearn Logo"
+                            className={`transition-all duration-300 ${isCollapsed ? 'h-6 w-6' : 'h-10 w-10'}`}
+                        // className="h-10 w-10"
+                        />
+                        <h1 className={`text-xl font-bold text-green-600 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>MiLearn</h1>
                     </NavLink>
-                    <button onClick={() => setIsOpen(false)} className="lg:hidden text-gray-500">
-                        <X className="w-6 h-6" />
-                    </button>
+                    <div className="flex items-center space-x-2">
+                        {/* collapse toggle for desktop: ChevronLeft when expanded, ChevronRight when collapsed */}
+                        <button
+                            onClick={() => setIsCollapsed(s => !s)}
+                            className="hidden lg:inline-flex items-center justify-center p-1 rounded hover:bg-gray-100 text-gray-700 transition-transform duration-300"
+                            aria-label={isCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
+                            title={isCollapsed ? "Mở rộng" : "Thu gọn"}
+                        >
+                            {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+                        </button>
+                        <button onClick={toggle} className="lg:hidden text-gray-500" aria-label="Close sidebar">
+                            <X className="w-6 h-6" />
+                        </button>
+                    </div>
                 </div>
-                <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
+                <nav
+                    ref={navRef as any}
+                    className="flex-1 p-2 space-y-1 overflow-auto"
+                    onWheel={(e) => {
+                        const nav = navRef.current;
+                        if (!nav) return;
+                        // if content overflows horizontally, map vertical wheel to horizontal scroll
+                        const canScrollX = nav.scrollWidth > nav.clientWidth;
+                        if (canScrollX) {
+                            // Use the larger axis movement as direction
+                            const dx = e.deltaX;
+                            const dy = e.deltaY;
+                            const delta = Math.abs(dx) > 0 ? dx : dy;
+                            if (delta !== 0) {
+                                nav.scrollLeft += delta;
+                                // prevent page vertical scroll when interacting with sidebar horizontal overflow
+                                e.preventDefault();
+                            }
+                        }
+                    }}
+                >
                     {menuItems.map((item: any) => (
                         item.subItems ? (
                             <div key={item.name}>
@@ -71,12 +153,12 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                                         ${openDropdown === item.name ? 'text-green-700 bg-green-50' : 'hover:bg-gray-100'}`}
                                 >
                                     <div className="flex items-center">
-                                        <span className="w-6 h-6 mr-3">{item.icon}</span>
-                                        <span>{item.name}</span>
+                                        <span className={`w-6 h-6 ${isCollapsed ? 'mx-auto' : 'mr-3'}`}>{item.icon}</span>
+                                        <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>{item.name}</span>
                                     </div>
-                                    <ChevronDown className={`w-5 h-5 transition-transform ${openDropdown === item.name ? 'rotate-180' : ''}`} />
+                                    <ChevronDown className={`w-5 h-5 transition-all duration-300 ${openDropdown === item.name ? 'rotate-180' : ''} ${isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`} />
                                 </button>
-                                {openDropdown === item.name && (
+                                {openDropdown === item.name && !isCollapsed && (
                                     <div className="pl-4 mt-1 border-l-2 border-gray-200 ml-5">
                                         {item.subItems.map((subItem: any) => (
                                             <a
@@ -98,15 +180,29 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                                 key={item.name}
                                 href={item.path}
                                 onClick={() => handleItemClick(item.name)}
-                                className={`flex items-center p-2 rounded-lg text-sm font-medium
+                                title={isCollapsed ? item.name : undefined}
+                                className={`flex items-center p-2 rounded-lg text-sm font-medium transition-colors
                                     ${activeItem === item.name ? 'bg-green-100 text-green-800' : 'hover:bg-gray-100'}`}
                             >
-                                <span className="w-6 h-6 mr-3">{item.icon}</span>
-                                {item.name}
+                                <span className={`w-6 h-6 ${isCollapsed ? 'mx-auto' : 'mr-3'}`}>{item.icon}</span>
+                                <span className={`flex-1 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>{item.name}</span>
                             </a>
                         )
                     ))}
                 </nav>
+
+                {/*  */}
+                {/* <div className="absolute bottom-0 left-0 w-full p-4 border-t border-slate-800">
+                    <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-brand-500 to-purple-500 flex items-center justify-center text-xs font-bold">
+                            SA
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-white">Admin User</p>
+                            <p className="text-xs text-slate-400">Super Administrator</p>
+                        </div>
+                    </div>
+                </div> */}
             </aside>
         </>
     );

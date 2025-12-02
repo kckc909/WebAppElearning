@@ -1,4 +1,4 @@
-import { ClassAssignment, Course, EnrolledCourse, Instructor, Lesson, LessonComment, LessonQA, Review, StudentClass } from './cus_types';
+import { ClassAssignment, Course, EnrolledCourse, Instructor, Lesson, LessonComment, LessonQA, Review, StudentClass, User } from './cus_types';
 
 export const INSTRUCTORS: Instructor[] = [
 	{
@@ -441,3 +441,11 @@ export const MOCK_USER = {
 	email: 'kckc@example.com',
 	role: '0'
 };
+
+export const MOCK_USERS: User[] = [
+	{ id: '1', name: 'Alice Johnson', email: 'alice@example.com', role: 'Superadmin', status: 'Active', lastLogin: '2023-10-25 10:30 AM', avatar: 'https://picsum.photos/seed/alice/40/40' },
+	{ id: '2', name: 'Bob Smith', email: 'bob@example.com', role: 'Admin', status: 'Active', lastLogin: '2023-10-24 02:15 PM', avatar: 'https://picsum.photos/seed/bob/40/40' },
+	{ id: '3', name: 'Charlie Brown', email: 'charlie@example.com', role: 'Editor', status: 'Inactive', lastLogin: '2023-10-20 09:00 AM', avatar: 'https://picsum.photos/seed/charlie/40/40' },
+	{ id: '4', name: 'Diana Prince', email: 'diana@example.com', role: 'Viewer', status: 'Pending', lastLogin: 'Never', avatar: 'https://picsum.photos/seed/diana/40/40' },
+	{ id: '5', name: 'Evan Wright', email: 'evan@example.com', role: 'Editor', status: 'Active', lastLogin: '2023-10-25 08:45 AM', avatar: 'https://picsum.photos/seed/evan/40/40' },
+];

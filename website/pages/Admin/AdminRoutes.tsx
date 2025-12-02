@@ -27,6 +27,7 @@ import Admin_Transactions from './Finance/Transactions'
 import Admin_Revenue from './Finance/Revenue'
 import Admin_Payouts from './Finance/Payouts'
 
+import Admin_CMS from './CMS'
 import Admin_Notification from './Notification'
 import Admin_AnalyticsReports from './Analytics_Reports'
 import Admin_Settings from './Settings'
@@ -50,7 +51,7 @@ export default function AdminRoutes() {
 
                     {/*  CLASSES MANAGEMENT  */}
                     <Route path={admin_routes.all_classes} element={<Admin_AllClasses />} />
-                    <Route path={admin_routes.class_detail} element={<Admin_ClassDetail />} />
+                    <Route path={admin_routes.class_detail(':id')} element={<Admin_ClassDetail />} />
                     <Route path={admin_routes.classes_overview} element={<Admin_ClassesOverview />} />
                     <Route path={admin_routes.documents} element={<Admin_Documents />} />
                     <Route path={admin_routes.class_grades} element={<Admin_ClassGrades />} />
@@ -58,7 +59,7 @@ export default function AdminRoutes() {
 
                     {/*  COURSES MANAGEMENT  */}
                     <Route path={admin_routes.all_courses} element={<Admin_AllCourses />} />
-                    <Route path={admin_routes.course_detail} element={<Admin_CourseDetail />} />
+                    <Route path={admin_routes.course_detail(':id')} element={<Admin_CourseDetail />} />
                     <Route path={admin_routes.approval} element={<Admin_Approval />} />
                     <Route path={admin_routes.certificates} element={<Admin_Certificates />} />
                     <Route path={admin_routes.courses_overview} element={<Admin_CoursesOverview />} />
@@ -68,7 +69,7 @@ export default function AdminRoutes() {
                     <Route path={admin_routes.document_library} element={<Admin_DocumentLibrary />} />
                     <Route path={admin_routes.student_management} element={<Admin_StudentManagement />} />
                     <Route path={admin_routes.instructor_management} element={<Admin_InstructorManagement />} />
-                    <Route path={admin_routes.instructor_vertification} element={<Admin_InstructorVertification />} />
+                    <Route path={admin_routes.instructor_verification} element={<Admin_InstructorVertification />} />
 
                     {/*  FINANCE  */}
                     <Route path={admin_routes.transactions} element={<Admin_Transactions />} />
@@ -76,6 +77,7 @@ export default function AdminRoutes() {
                     <Route path={admin_routes.payouts} element={<Admin_Payouts />} />
 
                     {/*  OTHER  */}
+                    <Route path={admin_routes.cms} element={<Admin_CMS />} />
                     <Route path={admin_routes.notification} element={<Admin_Notification />} />
                     <Route path={admin_routes.analytics_reports} element={<Admin_AnalyticsReports />} />
                     <Route path={admin_routes.settings} element={<Admin_Settings />} />

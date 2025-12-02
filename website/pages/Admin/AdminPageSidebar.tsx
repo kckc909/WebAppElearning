@@ -44,48 +44,48 @@ interface SidebarProps {
 }
 
 const menuItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard />, path: tmp_on_navigate + admin_routes.dashboard },
+    { name: 'Dashboard', icon: <LayoutDashboard />, path: tmp_on_navigate + admin_routes.base + admin_routes.dashboard },
     {
         name: 'Classes Management',
         icon: <BookOpen />,
         subItems: [
-            { name: 'Classes Overview', icon: <FileChartPie />, path: tmp_on_navigate + admin_routes.classes_overview },
-            { name: 'All Classes', icon: <BookOpenText />, path: tmp_on_navigate + admin_routes.all_classes },
-            { name: 'Schedule', icon: <Calendar />, path: tmp_on_navigate + admin_routes.schedule },
-            { name: 'Grades', icon: <BadgeCheck />, path: tmp_on_navigate + admin_routes.class_grades },
-            { name: `Documents`, icon: <Files />, path: tmp_on_navigate + admin_routes.documents },
+            { name: 'Classes Overview', icon: <FileChartPie />, path: tmp_on_navigate + admin_routes.base + admin_routes.classes_overview },
+            { name: 'All Classes', icon: <BookOpenText />, path: tmp_on_navigate + admin_routes.base + admin_routes.all_classes },
+            { name: 'Schedule', icon: <Calendar />, path: tmp_on_navigate + admin_routes.base + admin_routes.schedule },
+            { name: 'Grades', icon: <BadgeCheck />, path: tmp_on_navigate + admin_routes.base + admin_routes.class_grades },
+            { name: `Documents`, icon: <Files />, path: tmp_on_navigate + admin_routes.base + admin_routes.documents },
         ]
     },
     {
         name: 'Course Management', icon: <Book />,
         subItems: [
-            { name: 'Courses Overview', icon: <FileChartPie />, path: tmp_on_navigate + admin_routes.courses_overview },
-            { name: 'All Courses', icon: <BookText />, path: tmp_on_navigate + admin_routes.all_courses },
-            { name: 'Approval', icon: <ClipboardClock />, path: tmp_on_navigate + admin_routes.approval },
-            { name: 'Grades', icon: <BadgeCheck />, path: tmp_on_navigate + admin_routes.course_grades },
-            { name: 'Certificates', icon: <Award />, path: tmp_on_navigate + admin_routes.certificates },
+            { name: 'Courses Overview', icon: <FileChartPie />, path: tmp_on_navigate + admin_routes.base + admin_routes.courses_overview },
+            { name: 'All Courses', icon: <BookText />, path: tmp_on_navigate + admin_routes.base + admin_routes.all_courses },
+            { name: 'Approval', icon: <ClipboardClock />, path: tmp_on_navigate + admin_routes.base + admin_routes.approval },
+            { name: 'Grades', icon: <BadgeCheck />, path: tmp_on_navigate + admin_routes.base + admin_routes.course_grades },
+            { name: 'Certificates', icon: <Award />, path: tmp_on_navigate + admin_routes.base + admin_routes.certificates },
         ]
     },
-    { name: 'CMS', icon: <FolderKanban />, path: tmp_on_navigate + admin_routes.cms },
+    { name: 'CMS', icon: <FolderKanban />, path: tmp_on_navigate + admin_routes.base + admin_routes.cms },
 
-    { name: 'Students Management', icon: <Users />, path: tmp_on_navigate + admin_routes.student_management },
+    { name: 'Students Management', icon: <Users />, path: tmp_on_navigate + admin_routes.base + admin_routes.student_management },
 
-    { name: 'Instructors Management', icon: <GraduationCap />, path: tmp_on_navigate + admin_routes.instructor_management },
-    { name: 'Instructors Vertification', icon: <UserRoundCheck />, path: tmp_on_navigate + admin_routes.instructor_vertification },
+    { name: 'Instructors Management', icon: <GraduationCap />, path: tmp_on_navigate + admin_routes.base + admin_routes.instructor_management },
+    { name: 'Instructors Vertification', icon: <UserRoundCheck />, path: tmp_on_navigate + admin_routes.base + admin_routes.instructor_verification },
 
     {
         name: 'Finance', icon: <DollarSign />,
         subItems: [
-            { name: 'Transactions', icon: <Repeat2 />, path: tmp_on_navigate + admin_routes.transactions },
-            { name: 'Revenue', icon: <TrendingUp />, path: tmp_on_navigate + admin_routes.revenue },
-            { name: 'Payouts', icon: <Wallet />, path: tmp_on_navigate + admin_routes.payouts },
+            { name: 'Transactions', icon: <Repeat2 />, path: tmp_on_navigate + admin_routes.base + admin_routes.transactions },
+            { name: 'Revenue', icon: <TrendingUp />, path: tmp_on_navigate + admin_routes.base + admin_routes.revenue },
+            { name: 'Payouts', icon: <Wallet />, path: tmp_on_navigate + admin_routes.base + admin_routes.payouts },
         ]
     },
 
-    { name: 'Document Library', icon: <FileText />, path: tmp_on_navigate + admin_routes.document_library },
-    { name: 'Notifications', icon: <Bell />, path: tmp_on_navigate + admin_routes.notification },
-    { name: 'Analytics & Reports', icon: <LineChart />, path: tmp_on_navigate + admin_routes.analytics_reports },
-    { name: 'Settings', icon: <Settings />, path: tmp_on_navigate + admin_routes.settings },
+    { name: 'Document Library', icon: <FileText />, path: tmp_on_navigate + admin_routes.base + admin_routes.document_library },
+    { name: 'Notifications', icon: <Bell />, path: tmp_on_navigate + admin_routes.base + admin_routes.notification },
+    { name: 'Analytics & Reports', icon: <LineChart />, path: tmp_on_navigate + admin_routes.base + admin_routes.analytics_reports },
+    { name: 'Settings', icon: <Settings />, path: tmp_on_navigate + admin_routes.base + admin_routes.settings },
 
     // { name: 'Users & Roles', icon: <ShieldCheck />, path: temp }, => superadmin
 ];

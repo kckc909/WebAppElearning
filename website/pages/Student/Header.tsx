@@ -61,7 +61,7 @@ const Header: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({
           </div>
 
           <div className="hidden items-center space-x-4 md:flex">
-            {!isLoggedIn ? (
+            {isLoggedIn ? (
               <div className="relative" ref={avatarRef}>
                 <button
                   onClick={() => setIsAvatarOpen(!isAvatarOpen)}

@@ -102,7 +102,6 @@ export interface SidebarItem {
     notification?: number;
 }
 
-
 export interface EnrolledCourse extends Course {
     progress: number; // 0 to 100
     lastAccessed: string;
@@ -136,4 +135,38 @@ export interface StudentClass {
     schedule: string; // e.g., "Mon, Wed 19:00"
     nextSession?: ClassSession;
     progress: number;
+}
+
+export interface AuditLog {
+    id: string;
+    action: string;
+    user: string;
+    target: string;
+    timestamp: string;
+    status: 'Success' | 'Failure' | 'Warning';
+    details: string;
+}
+
+export interface User {
+    id: string;
+    name: string;
+    email: string;
+    role: 'Admin' | 'Instructor' | 'Student' | 'Superadmin';
+    status: 'Active' | 'Inactive' | 'Pending';
+    lastLogin: string;
+    avatar: string;
+}
+
+export interface CreateUserDto {
+    name: string;
+    email: string;
+    password: string;
+    role?: User['role'];
+    status?: User['status']
+}
+
+export interface UpdateUserDto {
+    name?: string;
+    email?: string;
+    role?: User['role'];
 }

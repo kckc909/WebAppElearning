@@ -11,7 +11,7 @@ export default function SuperAdminRoutes() {
         <Routes>
             <Route element={<SuperAdminLayout />}>
                 {/* = '/' */}
-                <Route path={superadmin_routes.base} element={<SuperAdminDashboard />}></Route>
+                <Route path={'/'} element={<SuperAdminDashboard />}></Route>
 
                 <Route path={superadmin_routes.dashboard} element={<SuperAdminDashboard />} />
                 <Route path={superadmin_routes.users_management} element={<SuperAdmin_UsersManagement />} />
