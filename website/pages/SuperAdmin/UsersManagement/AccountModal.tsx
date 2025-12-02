@@ -1,83 +1,76 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Accounts } from '../../../types/types';
-import { X, Edit2, Plus } from 'lucide-react';
+import { X, Edit2, Plus, EyeOff, Eye } from 'lucide-react';
 
 export interface AccountModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: Accounts) => void;
-    initialData?: Accounts;
+    onSubmit: (data: AccountData) => void;
+    initialData?: AccountData;
     title: string;
 }
 
-const defaultFormData: Accounts = {
+export interface AccountData {
+    id: number;
+    full_name: string;
+    email: string;
+    username: string;
+    password_hash: string;
+    avatar_url?: string | null;
+    role: number;    // -1: SuperAdmin, 0: Admin, 1: Instructor, 2: Student
+    status: number;  // 0: Active, 1: Inactive, 2: Pending
+    created_at?: string;
+    updated_at?: string;
+}
+
+const defaultFormData: AccountData = {
     id: 0,
     full_name: '',
     email: '',
+    username: '',
+    password_hash: '',
     role: 2,
-    status: 1,
-    password_hash: ''
+    status: 0,
 };
 
-const AccountModal: React.FC<AccountModalProps> = ({
-    isOpen,
-    onClose,
-    onSubmit,
-    initialData,
-    title
-}) => {
-    const [formData, setFormData] = useState<Accounts>(defaultFormData);
+const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, initialData, title }) => {
+    const [formData, setFormData] = useState<AccountData>(defaultFormData);
     const [isDirty, setIsDirty] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-    // Initialize form data when modal opens or initialData changes
+
     useEffect(() => {
         if (isOpen) {
-            if (initialData) {
-                setFormData(initialData);
-            } else {
-                setFormData(defaultFormData);
-            }
+            setFormData(initialData ?? defaultFormData);
             setIsDirty(false);
         }
     }, [isOpen, initialData]);
 
-    // Handle Input Changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({
+            ...prev,
+            [name]: name === 'role' || name === 'status' ? Number(value) : value
+        }));
         setIsDirty(true);
     };
 
-    // Safe Close with Confirmation
     const handleSafeClose = useCallback(() => {
-        if (isDirty) {
-            const confirmClose = window.confirm("You have unsaved changes. Are you sure you want to close?");
-            if (confirmClose) {
-                onClose();
-            }
-        } else {
-            onClose();
-        }
+        if (isDirty && !window.confirm('You have unsaved changes. Are you sure you want to close?')) return;
+        onClose();
     }, [isDirty, onClose]);
 
-    // Handle ESC key
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape' && isOpen) {
-                handleSafeClose();
-            }
+            if (event.key === 'Escape' && isOpen) handleSafeClose();
         };
-
         window.addEventListener('keydown', handleKeyDown);
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
+        return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isOpen, handleSafeClose]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData);
-        setIsDirty(false); // Reset dirty state after submit
+        setIsDirty(false);
     };
 
     if (!isOpen) return null;
@@ -88,15 +81,9 @@ const AccountModal: React.FC<AccountModalProps> = ({
                 className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity"
                 onClick={handleSafeClose}
             />
-
             <div className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 animate-fade-in-up">
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
-                    <button
-                        type="button"
-                        className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
-                        onClick={handleSafeClose}
-                    >
-                        <span className="sr-only">Close</span>
+                    <button type="button" className="rounded-md bg-white text-gray-400 hover:text-gray-500" onClick={handleSafeClose}>
                         <X size={24} />
                     </button>
                 </div>
@@ -105,93 +92,120 @@ const AccountModal: React.FC<AccountModalProps> = ({
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-brand-100 sm:mx-0 sm:h-10 sm:w-10">
                         {initialData ? <Edit2 className="h-6 w-6 text-brand-600" /> : <Plus className="h-6 w-6 text-brand-600" />}
                     </div>
+
                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-                        <h3 className="text-base font-semibold leading-6 text-gray-900">
-                            {title}
-                        </h3>
-                        <div className="mt-4">
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
-                                    <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900 text-left">Full Name</label>
-                                    <div className="mt-1">
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            id="name"
-                                            required
-                                            value={formData.full_name}
-                                            onChange={handleChange}
-                                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
-                                            placeholder="John Doe"
-                                        />
-                                    </div>
-                                </div>
+                        <h3 className="text-base font-semibold leading-6 text-gray-900">{title}</h3>
+                        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+                            <div>
+                                <label htmlFor="full_name" className="block text-sm font-medium text-gray-900">Full Name</label>
+                                <input
+                                    type="text"
+                                    id="full_name"
+                                    name="full_name"
+                                    value={formData.full_name}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
+                                />
+                            </div>
 
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 text-left">Email Address</label>
-                                    <div className="mt-1">
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            id="email"
-                                            required
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
-                                            placeholder="john@example.com"
-                                        />
-                                    </div>
-                                </div>
+                            <div>
+                                <label htmlFor="username" className="block text-sm font-medium text-gray-900">Username</label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
+                                />
+                            </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label htmlFor="role" className="block text-sm font-medium leading-6 text-gray-900 text-left">Role</label>
-                                        <select
-                                            id="role"
-                                            name="role"
-                                            value={Number(formData.role)}
-                                            onChange={handleChange}
-                                            className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
-                                        >
-                                            <option value={0} >Admin</option>
-                                            <option value={1}>Instructor</option>
-                                            <option value={2}>Student</option>
-                                        </select>
-                                    </div>
+                            <div>
+                                <label htmlFor="email" className="block text-sm font-medium text-gray-900">Email</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
+                                />
+                            </div>
 
-                                    <div>
-                                        <label htmlFor="status" className="block text-sm font-medium leading-6 text-gray-900 text-left">Status</label>
-                                        <select
-                                            id="status"
-                                            name="status"
-                                            value={Number(formData.status)}
-                                            onChange={handleChange}
-                                            className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
-                                        >
-                                            <option value={0}>Active</option>
-                                            <option value={1}>Inactive</option>
-                                            <option value={2}>Pending</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3 pt-4 border-t border-gray-100">
-                                    <button
-                                        type="submit"
-                                        className="inline-flex w-full justify-center rounded-md bg-brand-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 sm:col-start-2 bg-primary"
-                                    >
-                                        {initialData ? 'Save Changes' : 'Create User'}
-                                    </button>
+                            <div>
+                                <label htmlFor="password_hash" className="block text-sm font-medium text-gray-900">Password</label>
+                                <div className="relative mt-1">
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        id="password_hash"
+                                        name="password_hash"
+                                        value={formData.password_hash}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
+                                        placeholder={initialData ? 'Leave blank to keep current password' : ''}
+                                    />
                                     <button
                                         type="button"
-                                        className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
-                                        onClick={handleSafeClose}
+                                        onClick={() => setShowPassword(prev => !prev)}
+                                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"
                                     >
-                                        Cancel
+                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                     </button>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="role" className="block text-sm font-medium text-gray-900">Role</label>
+                                    <select
+                                        id="role"
+                                        name="role"
+                                        value={formData.role}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
+                                    >
+                                        <option value={-1}>Super Admin</option>
+                                        <option value={0}>Admin</option>
+                                        <option value={1}>Instructor</option>
+                                        <option value={2}>Student</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="status" className="block text-sm font-medium text-gray-900">Status</label>
+                                    <select
+                                        id="status"
+                                        name="status"
+                                        value={formData.status}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
+                                    >
+                                        <option value={0}>Active</option>
+                                        <option value={1}>Inactive</option>
+                                        <option value={2}>Pending</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3 pt-4 border-t border-gray-100">
+                                <button
+                                    type="submit"
+                                    className="inline-flex w-full justify-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 sm:col-start-2"
+                                >
+                                    {initialData ? 'Save Changes' : 'Create User'}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
+                                    onClick={handleSafeClose}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

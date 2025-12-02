@@ -2,24 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoLogoGoogle, IoLogoFacebook } from 'react-icons/io';
 import { accService } from '../../API/accounts.api';
-
-const SocialButton: React.FC<{ icon: React.ComponentType<{ className?: string }>; provider: string }> = ({
-    icon: Icon,
-    provider,
-}) => (
-    <button
-        type="button"
-        className="flex-1 flex items-center justify-center space-x-2 border border-slate-300 rounded-md py-2.5 hover:bg-slate-50 transition-colors"
-    >
-        <Icon className="text-xl" />
-        <span className="font-medium text-slate-600">{provider}</span>
-    </button>
-);
+import SocialButton from '../../components/SocialButton'
 
 const LoginForm: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -27,19 +14,29 @@ const LoginForm: React.FC = () => {
         e.preventDefault();
         setError('');
 
-        if (!username.trim() || !password.trim()) {
-            setError("Vui lòng nhập đầy đủ thông tin.");
+        // check
+        if (!username.trim()) {
+            setError("Tài khoản không thể để trống!");
             return;
         }
 
+        if (!password.trim()) {
+            setError("Mật khẩu không thể để trống!")
+            return;
+        }
+
+        // found 
+        console.log('fetching')
         const accFound = await accService.login(username, password);
 
         if (!accFound) {
-            setError("Sai username hoặc mật khẩu.");
+            setError("Sai tài khoản hoặc mật khẩu!");
             return;
         }
 
-        alert('Chào mừng ' + accFound.data.full_name);
+        localStorage.setItem("Account", JSON.stringify(accFound));
+
+        alert('Chào mừng ' + accFound.full_name);
         navigate('/');
     };
 
@@ -107,8 +104,8 @@ const RegisterForm: React.FC = () => {
         // check
         if (!name.trim()) return setError("Họ tên không được để trống.");
         if (!emailRegex.test(email)) return setError("Email không hợp lệ.");
-        if (username.length < 4) return setError("Username phải ít nhất 4 ký tự.");
-        if (/\s/.test(username)) return setError("Username không được có dấu cách.");
+        if (username.length < 4) return setError("Tài khoản phải ít nhất 4 ký tự.");
+        if (/\s/.test(username)) return setError("Tài khoản không được có dấu cách.");
         if (password.length < 6) return setError("Mật khẩu phải ít nhất 6 ký tự.");
 
         const emailExists = await accService.isExists(email, username);

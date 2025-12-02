@@ -14,16 +14,12 @@ export default function SuperAdminLayout() {
     }, [])
 
     useEffect(() => {
-        if (user) {
+        if (!user || !(user.role === -1)) {
             toast.error('Bạn cần đăng nhập với quyền Admin để truy cập trang quản trị!')
             setRedirect(true)
         }
     }, [user])
 
-    const handleLogout = () => {
-        localStorage.removeItem('user');
-        setUser(null)
-    };
     return (<>
         <main className="flex h-screen bg-gray-50 overflow-hidden">
             <SuperAdminSidebar isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />

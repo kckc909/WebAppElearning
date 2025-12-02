@@ -5,6 +5,7 @@ import SuperAdminDashboard from "./Dashboard";
 import SuperAdmin_Settings from "./Settings";
 import SuperAdmin_AuditLogs from "./Audit_logs";
 import SuperAdmin_UsersManagement from "./UsersManagement";
+import Superadmin_Login from './Login'
 
 export default function SuperAdminRoutes() {
     return (<>
@@ -18,6 +19,7 @@ export default function SuperAdminRoutes() {
                 <Route path={superadmin_routes.audit_logs} element={<SuperAdmin_AuditLogs />} />
                 <Route path={superadmin_routes.system_settings} element={<SuperAdmin_Settings />} />
             </Route>
+            <Route path={superadmin_routes.login} element={<Superadmin_Login />}></Route>
         </Routes>
     </>)
 }

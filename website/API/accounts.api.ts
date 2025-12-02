@@ -36,19 +36,25 @@ class AccountsService {
     async login(username: string, password: string) {
         const data = { username, password }
         const res = await axiosInstance.post(`/accounts/login`, data)
-        return res;
+        return res.data;
     }
 
     async register({ name, username, email, password }: any) {
-
-        return ''
+        const res = await axiosInstance.post('/accounts/register',
+            {
+                full_name: name,
+                username: username,
+                email: email,
+                password: password
+            })
+        return res.data
     }
 
     async sendEmailVertifyCode(email: string) {
         // tạm thời trả ra code 
         const res = await axiosInstance.post(`/email/vertify`, { email: email })
         console.log(res)
-        return res
+        return res.data
     }
 
     async isExists(email: string, username: string) {
@@ -58,7 +64,7 @@ class AccountsService {
                 username: username
             })
 
-        return res
+        return res.data
     }
 }
 export const accService = new AccountsService();

@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Bell, Menu, LogOut, User, Home, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
 }
 
 const SuperAdminHeader: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
+    const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -20,6 +21,14 @@ const SuperAdminHeader: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+
+    const handleLogout = () => {
+        alert("Logged out!");
+        localStorage.setItem('Account', '')
+        setIsDropdownOpen(false);
+        navigate('/')
+    }
 
     return (
         <header className="sticky top-0 z-10 flex h-16 flex-shrink-0 items-center justify-between bg-white px-4 shadow-sm sm:px-6 lg:px-8">
@@ -92,10 +101,7 @@ const SuperAdminHeader: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
                             <div className="border-t border-gray-100 py-1">
                                 <button
-                                    onClick={() => {
-                                        alert("Logged out!");
-                                        setIsDropdownOpen(false);
-                                    }}
+                                    onClick={() => { handleLogout }}
                                     className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                 >
                                     <LogOut size={16} className="mr-3 text-red-500" />

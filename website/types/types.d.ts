@@ -13,11 +13,13 @@ export type DateTimeString = string;
 export interface Accounts {
     id: ID;
     full_name: string;
+    username: string;
     email: string;
     password_hash: string;
     avatar_url?: string | null;
     role?: number | null;
     status?: number | null;
+
     created_at?: DateTimeString | null;
     updated_at?: DateTimeString | null;
 }

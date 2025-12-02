@@ -3,14 +3,8 @@ import {
     ChevronDown, FileText, LayoutDashboard, Settings, Users, X, Menu, ChevronLeft, ChevronRight
 } from "lucide-react";
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { superadmin_routes, tmp_on_navigate } from '../page_routes';
-
-import SuperAdmin_Dashboard from './Dashboard'
-import SuperAdmin_AuditLogs from './Audit_logs'
-import SuperAdmin_Settings from './Settings'
-import SuperAdmin_UsersManagement from './UsersManagement'
-
 
 interface SidebarProps {
     isOpen?: boolean;
@@ -18,22 +12,21 @@ interface SidebarProps {
 }
 
 const menuItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard />, path: tmp_on_navigate + superadmin_routes.base + superadmin_routes.dashboard },
-    { name: 'Users Management', icon: <Users />, path: tmp_on_navigate + superadmin_routes.base + superadmin_routes.users_management },
-    { name: 'Audit logs', icon: <FileText />, path: tmp_on_navigate + superadmin_routes.base + superadmin_routes.audit_logs },
-    { name: 'Settings', icon: <Settings />, path: tmp_on_navigate + superadmin_routes.base + superadmin_routes.system_settings },
+    { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' + superadmin_routes.base + superadmin_routes.dashboard },
+    { name: 'Users Management', icon: <Users />, path: '/' + superadmin_routes.base + superadmin_routes.users_management },
+    { name: 'Audit logs', icon: <FileText />, path: '/' + superadmin_routes.base + superadmin_routes.audit_logs },
+    { name: 'Settings', icon: <Settings />, path: '/' + superadmin_routes.base + superadmin_routes.system_settings },
 ]
 
 const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
-    // support both controlled (props) and uncontrolled (local) modes
     const isControlled = typeof isOpen === 'boolean' && typeof setIsOpen === 'function';
     const [localOpen, setLocalOpen] = useState<boolean>(isOpen ?? false);
-
-    // desktop collapse state: when true, sidebar is narrow and shows icons only
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
     const navRef = useRef<HTMLElement | null>(null);
+    const location = useLocation(); // <- lấy route hiện tại
 
-    // optional: restore collapsed state from localStorage
+    // restore collapsed state
     useEffect(() => {
         try {
             const saved = localStorage.getItem('sa_sidebar_collapsed');
@@ -46,10 +39,7 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     }, [isCollapsed]);
 
     useEffect(() => {
-        if (!isControlled && typeof isOpen === 'boolean') {
-            // if parent toggles but doesn't supply setter, sync local state
-            setLocalOpen(isOpen);
-        }
+        if (!isControlled && typeof isOpen === 'boolean') setLocalOpen(isOpen);
     }, [isOpen, isControlled]);
 
     const open = isControlled ? !!isOpen : localOpen;
@@ -58,16 +48,11 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         else setLocalOpen(v => !v);
     };
 
-    const [openDropdown, setOpenDropdown] = useState<string | null>();
-    const [activeItem, setActiveItem] = useState<string>('Dashboard');
-
     const handleDropdownClick = (name: string) => {
         setOpenDropdown(openDropdown === name ? null : name);
     };
 
-    const handleItemClick = (name: string) => {
-        setActiveItem(name);
-        // On smaller screens, close sidebar after selection
+    const handleItemClick = () => {
         if (!isControlled) {
             if (window.innerWidth < 1024) setLocalOpen(false);
         } else {
@@ -85,18 +70,14 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
 
     return (
         <>
-            {/* hamburger button (visible on mobile) */}
             {!open && (
-                <button
-                    onClick={toggle}
-                    aria-label="Open sidebar"
-                    className="fixed top-4 left-4 z-40 bg-white border rounded-md p-2 shadow-sm lg:hidden"
-                >
+                <button onClick={toggle} className="fixed top-4 left-4 z-40 bg-white border rounded-md p-2 shadow-sm lg:hidden">
                     <Menu className="w-5 h-5" />
                 </button>
             )}
 
             {open && <div className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden" onClick={toggle}></div>}
+
             <aside className={sidebarClasses}>
                 <div className="flex items-center justify-between p-3 border-b h-[65px]">
                     <NavLink to={'/' + superadmin_routes.base + superadmin_routes.dashboard} className={'flex items-center space-x-2'}>
@@ -104,12 +85,10 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                             src="/MiLearnLogo.png"
                             alt="MiLearn Logo"
                             className={`transition-all duration-300 ${isCollapsed ? 'h-6 w-6' : 'h-10 w-10'}`}
-                        // className="h-10 w-10"
                         />
                         <h1 className={`text-xl font-bold text-green-600 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>MiLearn</h1>
                     </NavLink>
                     <div className="flex items-center space-x-2">
-                        {/* collapse toggle for desktop: ChevronLeft when expanded, ChevronRight when collapsed */}
                         <button
                             onClick={() => setIsCollapsed(s => !s)}
                             className="hidden lg:inline-flex items-center justify-center p-1 rounded hover:bg-gray-100 text-gray-700 transition-transform duration-300"
@@ -118,27 +97,25 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                         >
                             {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
                         </button>
-                        <button onClick={toggle} className="lg:hidden text-gray-500" aria-label="Close sidebar">
+                        <button onClick={toggle} className="lg:hidden text-gray-500">
                             <X className="w-6 h-6" />
                         </button>
                     </div>
                 </div>
+
                 <nav
                     ref={navRef as any}
                     className="flex-1 p-2 space-y-1 overflow-auto"
                     onWheel={(e) => {
                         const nav = navRef.current;
                         if (!nav) return;
-                        // if content overflows horizontally, map vertical wheel to horizontal scroll
                         const canScrollX = nav.scrollWidth > nav.clientWidth;
                         if (canScrollX) {
-                            // Use the larger axis movement as direction
                             const dx = e.deltaX;
                             const dy = e.deltaY;
                             const delta = Math.abs(dx) > 0 ? dx : dy;
                             if (delta !== 0) {
                                 nav.scrollLeft += delta;
-                                // prevent page vertical scroll when interacting with sidebar horizontal overflow
                                 e.preventDefault();
                             }
                         }
@@ -150,7 +127,7 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                                 <button
                                     onClick={() => handleDropdownClick(item.name)}
                                     className={`w-full flex items-center justify-between p-2 rounded-lg text-sm font-medium
-                                        ${openDropdown === item.name ? 'text-green-700 bg-green-50' : 'hover:bg-gray-100'}`}
+                                        ${item.subItems.some((s: any) => location.pathname.startsWith(s.path)) ? 'text-green-700 bg-green-50' : 'hover:bg-gray-100'}`}
                                 >
                                     <div className="flex items-center">
                                         <span className={`w-6 h-6 ${isCollapsed ? 'mx-auto' : 'mr-3'}`}>{item.icon}</span>
@@ -161,48 +138,35 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                                 {openDropdown === item.name && !isCollapsed && (
                                     <div className="pl-4 mt-1 border-l-2 border-gray-200 ml-5">
                                         {item.subItems.map((subItem: any) => (
-                                            <a
+                                            <NavLink
                                                 key={subItem.name}
-                                                href={subItem.path}
-                                                onClick={() => handleItemClick(subItem.name)}
-                                                className={`flex items-center p-2 my-1 rounded-md text-sm transition-colors
-                                                    ${activeItem === subItem.name ? 'bg-green-100 text-green-800 font-semibold border-l-4 border-green-500 -ml-[18px] pl-[14px]' : 'hover:bg-gray-100 text-gray-600'}`}
+                                                to={subItem.path}
+                                                onClick={handleItemClick}
+                                                className={({ isActive }) => `flex items-center p-2 my-1 rounded-md text-sm transition-colors
+                                                    ${isActive ? 'bg-green-100 text-green-800 font-semibold border-l-4 border-green-500 -ml-[18px] pl-[14px]' : 'hover:bg-gray-100 text-gray-600'}`}
                                             >
                                                 <span className="w-5 h-5 mr-3">{subItem.icon}</span>
                                                 {subItem.name}
-                                            </a>
+                                            </NavLink>
                                         ))}
                                     </div>
                                 )}
                             </div>
                         ) : (
-                            <a
+                            <NavLink
                                 key={item.name}
-                                href={item.path}
-                                onClick={() => handleItemClick(item.name)}
+                                to={item.path}
+                                onClick={handleItemClick}
                                 title={isCollapsed ? item.name : undefined}
-                                className={`flex items-center p-2 rounded-lg text-sm font-medium transition-colors
-                                    ${activeItem === item.name ? 'bg-green-100 text-green-800' : 'hover:bg-gray-100'}`}
+                                className={({ isActive }) => `flex items-center p-2 rounded-lg text-sm font-medium transition-colors
+                                    ${isActive ? 'bg-green-100 text-green-800 font-semibold' : 'hover:bg-gray-100'}`}
                             >
                                 <span className={`w-6 h-6 ${isCollapsed ? 'mx-auto' : 'mr-3'}`}>{item.icon}</span>
                                 <span className={`flex-1 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>{item.name}</span>
-                            </a>
+                            </NavLink>
                         )
                     ))}
                 </nav>
-
-                {/*  */}
-                {/* <div className="absolute bottom-0 left-0 w-full p-4 border-t border-slate-800">
-                    <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-brand-500 to-purple-500 flex items-center justify-center text-xs font-bold">
-                            SA
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-white">Admin User</p>
-                            <p className="text-xs text-slate-400">Super Administrator</p>
-                        </div>
-                    </div>
-                </div> */}
             </aside>
         </>
     );

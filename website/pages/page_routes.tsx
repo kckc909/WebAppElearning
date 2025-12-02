@@ -7,6 +7,7 @@ const superadmin_routes = {
     audit_logs: 'audit-logs',
     system_settings: 'settings',
     users_management: 'users-management',
+    login: "login"
 };
 
 // ------------------- Admin -------------------
