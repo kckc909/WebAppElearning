@@ -1,0 +1,429 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model admin_logs {
+  id           Int       @id @default(autoincrement())
+  admin_id     Int
+  action       String?   @db.VarChar(255)
+  target_table String?   @db.VarChar(255)
+  target_id    Int?
+  created_at   DateTime? @default(now()) @db.DateTime(0)
+  users        accounts  @relation(fields: [admin_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "admin_logs_ibfk_1")
+
+  @@index([admin_id], map: "admin_id")
+}
+
+model certificates {
+  id               Int       @id @default(autoincrement())
+  student_id       Int
+  course_id        Int
+  certificate_code String?   @unique(map: "certificate_code") @db.VarChar(100)
+  issued_at        DateTime? @default(now()) @db.DateTime(0)
+  pdf_url          String?   @db.VarChar(255)
+  users            accounts  @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "certificates_ibfk_1")
+  courses          courses   @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "certificates_ibfk_2")
+
+  @@index([course_id], map: "course_id")
+  @@index([student_id], map: "student_id")
+}
+
+model class_assignments {
+  id                Int                 @id @default(autoincrement())
+  class_id          Int
+  title             String?             @db.VarChar(255)
+  description       String?             @db.Text
+  file_url          String?             @db.VarChar(255)
+  due_date          DateTime?           @db.DateTime(0)
+  created_at        DateTime?           @default(now()) @db.DateTime(0)
+  classes           classes             @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_assignments_ibfk_1")
+  class_submissions class_submissions[]
+
+  @@index([class_id], map: "class_id")
+}
+
+model class_calendar {
+  id               Int       @id @default(autoincrement())
+  class_id         Int
+  title            String?   @db.VarChar(255)
+  description      String?   @db.Text
+  event_date       DateTime? @db.DateTime(0)
+  duration_minutes Int?
+  lesson           Int?      @default(0)
+  classes          classes   @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_calendar_ibfk_1")
+
+  @@index([class_id], map: "class_id")
+}
+
+model class_exam_results {
+  id          Int         @id @default(autoincrement())
+  exam_id     Int
+  student_id  Int
+  score       Decimal?    @db.Decimal(5, 2)
+  feedback    String?     @db.Text
+  graded_at   DateTime?   @default(now()) @db.DateTime(0)
+  class_exams class_exams @relation(fields: [exam_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_exam_results_ibfk_1")
+  users       accounts    @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_exam_results_ibfk_2")
+
+  @@index([exam_id], map: "exam_id")
+  @@index([student_id], map: "student_id")
+}
+
+model class_exams {
+  id                 Int                    @id @default(autoincrement())
+  class_id           Int
+  title              String?                @db.VarChar(255)
+  exam_type          class_exams_exam_type? @default(quiz)
+  total_score        Decimal?               @db.Decimal(5, 2)
+  created_at         DateTime?              @default(now()) @db.DateTime(0)
+  class_exam_results class_exam_results[]
+  classes            classes                @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_exams_ibfk_1")
+
+  @@index([class_id], map: "class_id")
+}
+
+model class_materials {
+  id          Int       @id @default(autoincrement())
+  class_id    Int
+  title       String?   @db.VarChar(255)
+  description String?   @db.Text
+  file_url    String?   @db.VarChar(255)
+  uploaded_at DateTime? @default(now()) @db.DateTime(0)
+  classes     classes   @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_materials_ibfk_1")
+
+  @@index([class_id], map: "class_id")
+}
+
+model class_students {
+  id         Int       @id @default(autoincrement())
+  class_id   Int
+  student_id Int
+  joined_at  DateTime? @default(now()) @db.DateTime(0)
+  status     Int?      @default(0)
+  classes    classes   @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_students_ibfk_1")
+  users      accounts  @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_students_ibfk_2")
+
+  @@index([class_id], map: "class_id")
+  @@index([student_id], map: "student_id")
+}
+
+model class_submissions {
+  id                Int               @id @default(autoincrement())
+  assignment_id     Int
+  student_id        Int
+  submission_url    String?           @db.VarChar(255)
+  submitted_at      DateTime?         @default(now()) @db.DateTime(0)
+  grade             Decimal?          @db.Decimal(5, 2)
+  feedback          String?           @db.Text
+  class_assignments class_assignments @relation(fields: [assignment_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_submissions_ibfk_1")
+  users             accounts          @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_submissions_ibfk_2")
+
+  @@index([assignment_id], map: "assignment_id")
+  @@index([student_id], map: "student_id")
+}
+
+model classes {
+  id                Int                 @id @default(autoincrement())
+  course_id         Int
+  instructor_id     Int
+  title             String              @db.VarChar(255)
+  description       String?             @db.Text
+  start_date        DateTime?           @db.DateTime(0)
+  end_date          DateTime?           @db.DateTime(0)
+  meeting_link      String?             @db.VarChar(255)
+  status            Int?                @default(0)
+  created_at        DateTime?           @default(now()) @db.DateTime(0)
+  class_assignments class_assignments[]
+  class_calendar    class_calendar[]
+  class_exams       class_exams[]
+  class_materials   class_materials[]
+  class_students    class_students[]
+  courses           courses             @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "classes_ibfk_1")
+  users             accounts            @relation(fields: [instructor_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "classes_ibfk_2")
+
+  @@index([course_id], map: "course_id")
+  @@index([instructor_id], map: "instructor_id")
+}
+
+model content_ides {
+  id              Int             @id @default(autoincrement())
+  user_id         Int
+  content_id      Int
+  language        String          @db.VarChar(50)
+  content         String?         @db.Text
+  test_results    Json?
+  status          Int?
+  editor_config   Json?
+  users           accounts        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "content_ides_ibfk_1")
+  lesson_contents lesson_contents @relation(fields: [content_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "content_ides_ibfk_2")
+
+  @@index([content_id], map: "content_id")
+  @@index([user_id], map: "user_id")
+}
+
+model content_ides_starter {
+  id              Int             @id @default(autoincrement())
+  content_id      Int
+  language        String          @db.VarChar(50)
+  content         String?         @db.Text
+  lesson_contents lesson_contents @relation(fields: [content_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "content_ides_starter_ibfk_1")
+
+  @@index([content_id], map: "content_id")
+}
+
+model course_categories {
+  id                      Int                 @id @default(autoincrement())
+  name                    String              @db.VarChar(255)
+  parent_id               Int?
+  course_categories       course_categories?  @relation("course_categoriesTocourse_categories", fields: [parent_id], references: [id], onUpdate: NoAction, map: "course_categories_ibfk_1")
+  other_course_categories course_categories[] @relation("course_categoriesTocourse_categories")
+  courses                 courses[]
+
+  @@index([parent_id], map: "parent_id")
+}
+
+model course_enrollments {
+  id              Int               @id @default(autoincrement())
+  course_id       Int
+  student_id      Int
+  enrolled_at     DateTime?         @default(now()) @db.DateTime(0)
+  progress        Decimal?          @default(0.00) @db.Decimal(5, 2)
+  certificate_url String?           @db.VarChar(255)
+  status          Int?              @default(0)
+  courses         courses           @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "course_enrollments_ibfk_1")
+  users           accounts          @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "course_enrollments_ibfk_2")
+  course_progress course_progress[]
+
+  @@index([course_id], map: "course_id")
+  @@index([student_id], map: "student_id")
+}
+
+model course_lessons {
+  id              Int               @id @default(autoincrement())
+  section_id      Int
+  title           String            @db.VarChar(255)
+  order_index     Int?
+  layout          Int?
+  course_sections course_sections   @relation(fields: [section_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "course_lessons_ibfk_1")
+  course_progress course_progress[]
+  lesson_contents lesson_contents[]
+
+  @@index([section_id], map: "section_id")
+}
+
+model course_progress {
+  id                 Int                @id @default(autoincrement())
+  enrollment_id      Int
+  lesson_id          Int
+  is_completed       Boolean?           @default(false)
+  completed_at       DateTime?          @db.DateTime(0)
+  course_enrollments course_enrollments @relation(fields: [enrollment_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "course_progress_ibfk_1")
+  course_lessons     course_lessons     @relation(fields: [lesson_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "course_progress_ibfk_2")
+
+  @@index([enrollment_id], map: "enrollment_id")
+  @@index([lesson_id], map: "lesson_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model course_reviews {
+  id         Int       @id @default(autoincrement())
+  course_id  Int
+  student_id Int
+  rating     Int?
+  comment    String?   @db.Text
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  courses    courses   @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "course_reviews_ibfk_1")
+  users      accounts  @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "course_reviews_ibfk_2")
+
+  @@index([course_id], map: "course_id")
+  @@index([student_id], map: "student_id")
+}
+
+model course_sections {
+  id             Int              @id @default(autoincrement())
+  course_id      Int
+  title          String           @db.VarChar(255)
+  order_index    Int?             @default(0)
+  course_lessons course_lessons[]
+  courses        courses          @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "course_sections_ibfk_1")
+
+  @@index([course_id], map: "course_id")
+}
+
+model courses {
+  id                 Int                  @id @default(autoincrement())
+  instructor_id      Int
+  category_id        Int?
+  title              String               @db.VarChar(255)
+  short_description  String?              @db.VarChar(255)
+  description        String?              @db.Text
+  level              Int?                 @default(0)
+  language           String?              @db.VarChar(100)
+  price              Int?                 @default(0)
+  discount_price     Int?                 @default(0)
+  thumbnail          String?              @db.VarChar(255)
+  complete_at        Int?
+  status             Int?                 @default(0)
+  created_at         DateTime?            @default(now()) @db.DateTime(0)
+  certificates       certificates[]
+  classes            classes[]
+  course_enrollments course_enrollments[]
+  course_reviews     course_reviews[]
+  course_sections    course_sections[]
+  users              accounts             @relation(fields: [instructor_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "courses_ibfk_1")
+  course_categories  course_categories?   @relation(fields: [category_id], references: [id], onUpdate: NoAction, map: "courses_ibfk_2")
+  transactions       transactions[]
+
+  @@index([category_id], map: "category_id")
+  @@index([instructor_id], map: "instructor_id")
+}
+
+model instructor_verifications {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  experience    String?   @db.Text
+  education     String?   @db.Text
+  documents_url String?   @db.VarChar(255)
+  status        Int?      @default(0)
+  created_at    DateTime? @default(now()) @db.DateTime(0)
+  users         accounts  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "instructor_verifications_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+}
+
+model lesson_contents {
+  id                   Int                    @id @default(autoincrement())
+  lesson_id            Int
+  position             Int
+  order_index          Int
+  type                 Int
+  content_data         Json?
+  content_ides         content_ides[]
+  content_ides_starter content_ides_starter[]
+  course_lessons       course_lessons         @relation(fields: [lesson_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "lesson_contents_ibfk_1")
+
+  @@index([lesson_id], map: "lesson_id")
+}
+
+model messages {
+  id                                Int       @id @default(autoincrement())
+  conversation_id                   Int?
+  sender_id                         Int
+  receiver_id                       Int
+  message                           String    @db.Text
+  status                            Int?      @default(0)
+  created_at                        DateTime? @default(now()) @db.DateTime(0)
+  users_messages_sender_idTousers   accounts  @relation("messages_sender_idTousers", fields: [sender_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "messages_ibfk_1")
+  users_messages_receiver_idTousers accounts  @relation("messages_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "messages_ibfk_2")
+
+  @@index([receiver_id], map: "receiver_id")
+  @@index([sender_id], map: "sender_id")
+}
+
+model notifications {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  title      String?   @db.VarChar(255)
+  message    String?   @db.Text
+  type       Int?      @default(0)
+  is_read    Boolean?  @default(false)
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  users      accounts  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notifications_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+}
+
+model payment_methods {
+  id           Int            @id @default(autoincrement())
+  method_name  String?        @db.VarChar(100)
+  provider     String?        @db.VarChar(100)
+  is_active    Boolean?       @default(true)
+  transactions transactions[]
+}
+
+model payouts {
+  id            Int       @id @default(autoincrement())
+  instructor_id Int
+  amount        Decimal?  @db.Decimal(10, 2)
+  status        Int?      @default(0)
+  paid_at       DateTime? @db.DateTime(0)
+  users         accounts  @relation(fields: [instructor_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payouts_ibfk_1")
+
+  @@index([instructor_id], map: "instructor_id")
+}
+
+model transactions {
+  id               Int              @id @default(autoincrement())
+  user_id          Int
+  course_id        Int?
+  amount           Decimal?         @db.Decimal(10, 2)
+  method_id        Int?
+  transaction_code String?          @db.VarChar(100)
+  status           Int?             @default(0)
+  created_at       DateTime?        @default(now()) @db.DateTime(0)
+  users            accounts         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "transactions_ibfk_1")
+  courses          courses?         @relation(fields: [course_id], references: [id], onUpdate: NoAction, map: "transactions_ibfk_2")
+  payment_methods  payment_methods? @relation(fields: [method_id], references: [id], onUpdate: NoAction, map: "transactions_ibfk_3")
+
+  @@index([course_id], map: "course_id")
+  @@index([method_id], map: "method_id")
+  @@index([user_id], map: "user_id")
+}
+
+model user_profiles {
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  bio          String?   @db.Text
+  phone        String?   @db.VarChar(20)
+  gender       Int?
+  dob          DateTime? @db.Date
+  job_title    String?   @db.VarChar(255)
+  social_links Json?
+  country      String?   @db.VarChar(100)
+  language     String?   @db.VarChar(100)
+  users        accounts  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_profiles_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+}
+
+model accounts {
+  id                                   Int                        @id @default(autoincrement())
+  full_name                            String                     @db.VarChar(255)
+  email                                String                     @unique(map: "email") @db.VarChar(255)
+  password_hash                        String                     @db.VarChar(255)
+  avatar_url                           String?                    @db.VarChar(255)
+  role                                 Int?                       @default(2)
+  status                               Int?                       @default(0)
+  created_at                           DateTime?                  @default(now()) @db.DateTime(0)
+  updated_at                           DateTime?                  @default(now()) @db.DateTime(0)
+  username                             String?                    @unique(map: "username") @db.VarChar(255)
+  admin_logs                           admin_logs[]
+  certificates                         certificates[]
+  class_exam_results                   class_exam_results[]
+  class_students                       class_students[]
+  class_submissions                    class_submissions[]
+  classes                              classes[]
+  content_ides                         content_ides[]
+  course_enrollments                   course_enrollments[]
+  course_reviews                       course_reviews[]
+  courses                              courses[]
+  instructor_verifications             instructor_verifications[]
+  messages_messages_sender_idTousers   messages[]                 @relation("messages_sender_idTousers")
+  messages_messages_receiver_idTousers messages[]                 @relation("messages_receiver_idTousers")
+  notifications                        notifications[]
+  payouts                              payouts[]
+  transactions                         transactions[]
+  user_profiles                        user_profiles[]
+}
+
+enum class_exams_exam_type {
+  quiz
+  written
+  oral
+}
