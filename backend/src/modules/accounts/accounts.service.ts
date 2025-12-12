@@ -1,6 +1,7 @@
 import { BadRequestException, Delete, Get, Injectable, Post, Put } from "@nestjs/common";
 import { PrismaService } from "../../prisma.service.js";
 import type { AccountCreateForm, AccountUpdateForm } from "./accounts.dto.js";
+import { IdParam } from "types/types.pipe.js";
 
 @Injectable()
 export class Accounts_Service {
@@ -44,11 +45,11 @@ export class Accounts_Service {
         return accountsFound;
     }
 
-    async getById(id: number)
+    async getById(idParam: IdParam)
         : Promise<any> {
 
         const accountFound = await this.prisma.accounts.findFirst({
-            where: { id: id },
+            where: { id: idParam.id },
             select: {
                 id: true,
                 full_name: true,

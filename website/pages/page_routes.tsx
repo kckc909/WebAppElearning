@@ -7,7 +7,7 @@ const superadmin_routes = {
     audit_logs: 'audit-logs',
     system_settings: 'settings',
     users_management: 'users-management',
-    login: "login"
+    login: `login`
 };
 
 // ------------------- Admin -------------------
@@ -56,32 +56,50 @@ const admin_routes = {
 
 // ------------------- Instructor -------------------
 const instructor_routes = {
-    base: 'instructor/',
-    // Classes Management
-    classes_overview: 'classes/overview',
-    class_list: 'classes/all',
-    class_detail: (classId: string | number) => `classes/${classId}`,
-    activity: 'classes/activity',
-    assignments: 'classes/assignments',
-    attendance: 'classes/attendance',
-    grades: 'classes/grades',
-    members: 'classes/members',
-    schedule: 'classes/schedule',
+    base: `instructor/`,
 
-    // Courses Management
-    courses_overview: 'courses/overview',
-    courses_list: 'courses/all',
+    // Dashboard
+    dashboard: `dashboard`,
+
+    // ---------------- COURSES MANAGEMENT ----------------
+    courses_overview: `courses/overview`,
+    courses_list: `courses/all`,
+
+    // New features
+    courses_create: `courses/create`,
+    courses_draft: `courses/draft`,
+
     course_detail: (courseId: string | number) => `courses/${courseId}`,
-    course_content: (courseId: string | number) => `courses/${courseId}/content`,
-    course_lesson: (courseId: string | number, lessonId: string | number) => `courses/${courseId}/${lessonId}`,
-    course_certificates: 'courses-management/certificates',
+    course_lesson: (courseId: string | number, lessonId: string | number) => `courses/${courseId}/lessons/${lessonId}`,
 
-    // 
-    dashboard: 'dashboard',
-    document_library: 'document-library',
-    notification: 'notification',
-    settings: 'settings',
+    course_reviews: (courseId: string | number) => `courses/${courseId}/reviews`,
+    course_students: (courseId: string | number) => `courses/${courseId}/students`,
+    course_certificates: (courseId: string | number) => `courses/${courseId}/certificates`,
+    course_analytics: (courseId: string | number) => `courses/${courseId}/analytics`,
+    course_settings: (courseId: string | number) => `courses/${courseId}/settings`,
+
+    // ---------------- CLASSES MANAGEMENT ----------------
+    classes_overview: `classes/overview`,
+    class_list: `classes/all`,
+
+    schedule: `classes/schedule`,
+
+    class_detail: (classId: string | number) => `classes/${classId}`,
+    class_live: (classId: string | number) => `classes/${classId}/live`,
+    class_activity: (classId: string | number) => `classes/${classId}/activity`,
+    class_attendance: (classId: string | number) => `classes/${classId}/attendance`,
+    class_assignments: (classId: string | number) => `classes/${classId}/assignments`,
+    class_materials: (classId: string | number) => `classes/${classId}/materials`,
+    class_grades: (classId: string | number) => `classes/${classId}/grades`,
+    class_members: (classId: string | number) => `classes/${classId}/members`,
+    class_settings: (classId: string | number) => `classes/${classId}/settings`,
+
+    // ---------------- OTHER ----------------
+    document_library: `document-library`,
+    notification: `notification`,
+    settings: `settings`,
 };
+
 
 // ------------------- Student -------------------
 const student_routes = {

@@ -21,16 +21,20 @@ export class Accounts_Controller {
 
         const accounts = await this._service.getAll();
 
-        return { accounts };
+        return accounts;
 
     }
 
     @Get(':id')
-    async getById(@Param('id') id: IdParam) {
+    async getById(@Param() id: IdParam) {
 
-        const account = await this._service.getById(Number(id))
+        if (!Number(id.id)) {
+            throw new BadRequestException("id must is interger")
+        }
 
-        return { account };
+        const account = await this._service.getById(id)
+
+        return account;
 
     }
 
@@ -42,10 +46,11 @@ export class Accounts_Controller {
             // body.password_hash = new_password
             // this._email.sendPasswordEmail(body.email, body.password_hash);
 
+
             // tạo trong db
             const created = await this._service.create(body)
 
-            return { created }
+            return created
 
         }
         catch (e) {
@@ -55,7 +60,7 @@ export class Accounts_Controller {
         }
     }
 
-    @Put()
+    @Put(':id')
     async update(@Body() body: AccountUpdateForm) {
         try {
 
@@ -63,7 +68,7 @@ export class Accounts_Controller {
 
             const updated = await this._service.update(body)
 
-            return { updated }
+            return updated
 
         }
         catch (e) {
@@ -78,7 +83,7 @@ export class Accounts_Controller {
         try {
             const deleted = await this._service.delete(param.id)
 
-            return { deleted };
+            return deleted;
 
         }
         catch (e) {

@@ -1,4 +1,4 @@
-import { CreateUserDto, UpdateUserDto } from "../types/cus_types";
+import { Account } from "../types/types";
 import axiosInstance from "./api";
 
 class AccountsService {
@@ -15,19 +15,19 @@ class AccountsService {
     }
 
     // POST /api/accounts - Tạo user mới
-    async create(data: CreateUserDto) {
+    async create(data: Account) {
         const response = await axiosInstance.post('/accounts', data);
         return response.data;
     }
 
     // PUT /api/accounts/:id - Cập nhật user
-    async update(id: string, data: UpdateUserDto) {
+    async update(id: number, data: Account) {
         const response = await axiosInstance.put(`/accounts/${id}`, data);
         return response.data;
     }
 
     // DELETE /api/accounts/:id - Xóa user
-    async delete(id: string) {
+    async delete(id: number) {
         const response = await axiosInstance.delete(`/accounts/${id}`);
         return response.data;
     }
@@ -40,12 +40,12 @@ class AccountsService {
     }
 
     async register({ name, username, email, password }: any) {
-        const res = await axiosInstance.post('/accounts/register',
+        const res = await axiosInstance.post('/accounts',
             {
                 full_name: name,
                 username: username,
                 email: email,
-                password: password
+                password_hash: password
             })
         return res.data
     }

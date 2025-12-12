@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { EnrolledCourse } from '../../../cus_types'
+import { EnrolledCourse } from '../../../types/types'
 import { Award } from 'lucide-react'
 
 const CourseProgressCard: React.FC<{ course: EnrolledCourse }> = ({ course }) => (

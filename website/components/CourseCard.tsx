@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Course } from '../cus_types';
+import { CourseWithRelations as Course } from '../types/types';
 import StarRating from './icons/StarRating'
 
 interface CourseCardProps {

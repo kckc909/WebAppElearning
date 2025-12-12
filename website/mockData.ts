@@ -1,4 +1,4 @@
-import { ClassAssignment, Course, EnrolledCourse, Instructor, Lesson, LessonComment, LessonQA, Review, StudentClass, Account } from './types/cus_types';
+import { ClassAssignmentUI as ClassAssignment, CourseWithRelations as Course, EnrolledCourse, Instructor, Lesson, LessonComment, LessonQA, Review, StudentClass, Account } from './types/types';
 
 export const INSTRUCTORS: Instructor[] = [
 	{

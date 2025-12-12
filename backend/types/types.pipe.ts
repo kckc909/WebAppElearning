@@ -1,6 +1,6 @@
-import { IsInt, Min } from "class-validator";
+import { IsInt, IsNotEmpty, Min } from "class-validator";
 
 export class IdParam {
-    @IsInt()
+    @IsNotEmpty()
     id: number
 }

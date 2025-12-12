@@ -1,28 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { X, Edit2, Plus, EyeOff, Eye } from 'lucide-react';
+import { Account } from '../../../types/types';
 
 export interface AccountModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: AccountData) => void;
-    initialData?: AccountData;
+    onSubmit: (data: Account) => void;
+    initialData?: Account;
     title: string;
 }
 
-export interface AccountData {
-    id: number;
-    full_name: string;
-    email: string;
-    username: string;
-    password_hash: string;
-    avatar_url?: string | null;
-    role: number;    // -1: SuperAdmin, 0: Admin, 1: Instructor, 2: Student
-    status: number;  // 0: Active, 1: Inactive, 2: Pending
-    created_at?: string;
-    updated_at?: string;
-}
-
-const defaultFormData: AccountData = {
+const defaultFormData: Account = {
     id: 0,
     full_name: '',
     email: '',
@@ -33,7 +21,7 @@ const defaultFormData: AccountData = {
 };
 
 const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, initialData, title }) => {
-    const [formData, setFormData] = useState<AccountData>(defaultFormData);
+    const [formData, setFormData] = useState<Account>(defaultFormData);
     const [isDirty, setIsDirty] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
@@ -163,7 +151,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
                                     <select
                                         id="role"
                                         name="role"
-                                        value={formData.role}
+                                        value={formData.role as number}
                                         onChange={handleChange}
                                         className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
                                     >
@@ -179,7 +167,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
                                     <select
                                         id="status"
                                         name="status"
-                                        value={formData.status}
+                                        value={formData.status as number}
                                         onChange={handleChange}
                                         className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
                                     >

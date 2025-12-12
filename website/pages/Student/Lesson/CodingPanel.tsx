@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lesson } from "../../../cus_types";
+import { Lesson } from "../../../types/types";
 
 const CodingPanel: React.FC<{ lesson: Lesson }> = ({ lesson }) => {
     const [code, setCode] = useState(lesson.starterCode || '');

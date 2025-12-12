@@ -4,7 +4,7 @@ import Header from "./Header";
 import { useEffect, useState } from "react";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { MOCK_USER } from "../../mockData";
-import { Cus_User } from "../../cus_types";
+import { Cus_User } from "../../types/types";
 
 export default function StudentLayout() {
     // Protect Route - 2 

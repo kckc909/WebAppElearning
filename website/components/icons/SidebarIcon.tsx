@@ -1,4 +1,4 @@
-import { SidebarItem, SidebarTab } from "../../cus_types";
+import { SidebarItem, SidebarTab } from "../../types/types";
 
 const SidebarIcon: React.FC<{ item: SidebarItem, activeTab: SidebarTab, setActiveTab: (tab: SidebarTab) => void }> = ({ item, activeTab, setActiveTab }) => (
     <button

@@ -1,5 +1,5 @@
 import { Presentation, User, Clock, Video } from "lucide-react"
-import { StudentClass } from "../../../cus_types"
+import { StudentClass } from "../../../types/types"
 import { STUDENT_CLASSES } from "../../../mockData"
 
 const Tab_List = () => {

@@ -1,4 +1,4 @@
-import { LessonQA } from "../../../cus_types";
+import { LessonQA } from "../../../types/types";
 
 const QAPanel: React.FC<{ qas: LessonQA[], instructor: any }> = ({ qas, instructor }) => (
     <div className="p-6">

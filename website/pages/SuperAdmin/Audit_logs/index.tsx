@@ -1,13 +1,13 @@
 import React from 'react';
-import { AuditLog } from '../../../cus_types';
+import { AuditLog } from '../../../types/types';
 import { Search, AlertCircle, CheckCircle, Info, Calendar } from 'lucide-react';
 
 const MOCK_LOGS: AuditLog[] = [
-    { id: '1', action: 'User Created', user: 'admin@system.com', target: 'new_user@test.com', timestamp: '2023-10-25 10:30:45', status: 'Success', details: 'Account created with standard permissions.' },
-    { id: '2', action: 'Login Failed', user: 'unknown', target: 'System', timestamp: '2023-10-25 09:12:11', status: 'Failure', details: 'Invalid password attempt from IP 192.168.1.1' },
-    { id: '3', action: 'Settings Updated', user: 'admin@system.com', target: 'Global Config', timestamp: '2023-10-24 16:45:00', status: 'Warning', details: 'Security policy updated: Password strength increased.' },
-    { id: '4', action: 'Data Export', user: 'manager@system.com', target: 'User Table', timestamp: '2023-10-24 14:20:33', status: 'Success', details: 'Exported 500 records to CSV.' },
-    { id: '5', action: 'API Key Revoked', user: 'superadmin@system.com', target: 'Service A', timestamp: '2023-10-23 11:05:22', status: 'Success', details: 'Key ID: sk_live_... revoked manually.' },
+    { id: 1, admin_id: 1, action: 'User Created', target_table: 'accounts', target_id: 10, created_at: '2023-10-25 10:30:45', user: 'admin@system.com', target: 'new_user@test.com', timestamp: '2023-10-25 10:30:45', details: 'Account created with standard permissions.' },
+    { id: 2, admin_id: 1, action: 'Login Failed', target_table: 'accounts', target_id: null, created_at: '2023-10-25 09:12:11', user: 'unknown', target: 'System', timestamp: '2023-10-25 09:12:11', details: 'Invalid password attempt from IP 192.168.1.1' },
+    { id: 3, admin_id: 1, action: 'Settings Updated', target_table: 'settings', target_id: null, created_at: '2023-10-24 16:45:00', user: 'admin@system.com', target: 'Global Config', timestamp: '2023-10-24 16:45:00', details: 'Security policy updated: Password strength increased.' },
+    { id: 4, admin_id: 2, action: 'Data Export', target_table: 'accounts', target_id: null, created_at: '2023-10-24 14:20:33', user: 'manager@system.com', target: 'User Table', timestamp: '2023-10-24 14:20:33', details: 'Exported 500 records to CSV.' },
+    { id: 5, admin_id: 0, action: 'API Key Revoked', target_table: 'api_keys', target_id: 5, created_at: '2023-10-23 11:05:22', user: 'superadmin@system.com', target: 'Service A', timestamp: '2023-10-23 11:05:22', details: 'Key ID: sk_live_... revoked manually.' },
 ];
 
 const AuditLogs: React.FC = () => {

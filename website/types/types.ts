@@ -1,25 +1,32 @@
+// ============================================
+// PRIMITIVE HELPERS
+// ============================================
+export type ID = number;
+export type DateTimeString = string;
 
+// ============================================
+// ENUMS
+// ============================================
 export enum ClassExamsExamType {
     quiz = "quiz",
     written = "written",
     oral = "oral",
 }
 
-/* Primitive helpers */
-export type ID = number;
-export type DateTimeString = string;
+// ============================================
+// PRISMA-BASED TYPES (from database schema)
+// ============================================
 
-/* Users & related */
-export interface Accounts {
+/* Accounts */
+export interface Account {
     id: ID;
     full_name: string;
-    username: string;
+    username?: string | null;
     email: string;
     password_hash: string;
     avatar_url?: string | null;
     role?: number | null;
     status?: number | null;
-
     created_at?: DateTimeString | null;
     updated_at?: DateTimeString | null;
 }
@@ -42,7 +49,6 @@ export interface Certificate {
     certificate_code?: string | null;
     issued_at?: DateTimeString | null;
     pdf_url?: string | null;
-
 }
 
 /* Class assignments */
@@ -54,7 +60,6 @@ export interface ClassAssignment {
     file_url?: string | null;
     due_date?: DateTimeString | null;
     created_at?: DateTimeString | null;
-
 }
 
 /* Class calendar */
@@ -66,7 +71,6 @@ export interface ClassCalendar {
     event_date?: DateTimeString | null;
     duration_minutes?: number | null;
     lesson?: number | null;
-
 }
 
 /* Class exam results */
@@ -77,8 +81,6 @@ export interface ClassExamResult {
     score?: number | null; // decimal
     feedback?: string | null;
     graded_at?: DateTimeString | null;
-
-
 }
 
 /* Class exams */
@@ -89,7 +91,6 @@ export interface ClassExam {
     exam_type?: ClassExamsExamType | null;
     total_score?: number | null; // decimal
     created_at?: DateTimeString | null;
-
 }
 
 /* Class materials */
@@ -100,7 +101,6 @@ export interface ClassMaterial {
     description?: string | null;
     file_url?: string | null;
     uploaded_at?: DateTimeString | null;
-
 }
 
 /* Class students */
@@ -121,7 +121,6 @@ export interface ClassSubmission {
     submitted_at?: DateTimeString | null;
     grade?: number | null; // decimal
     feedback?: string | null;
-
 }
 
 /* Classes (class sessions) */
@@ -148,7 +147,6 @@ export interface ContentIde {
     test_results?: any | null; // JSON
     status?: number | null;
     editor_config?: any | null; // JSON
-
 }
 
 /* Content ides starter */
@@ -157,7 +155,6 @@ export interface ContentIdeStarter {
     content_id: ID;
     language: string;
     content?: string | null;
-
 }
 
 /* Course categories */
@@ -165,7 +162,6 @@ export interface CourseCategory {
     id: ID;
     name: string;
     parent_id?: number | null;
-
 }
 
 /* Course enrollments */
@@ -177,7 +173,6 @@ export interface CourseEnrollment {
     progress?: number | null; // decimal
     certificate_url?: string | null;
     status?: number | null;
-
 }
 
 /* Course lessons */
@@ -187,7 +182,6 @@ export interface CourseLesson {
     title: string;
     order_index?: number | null;
     layout?: number | null;
-
 }
 
 /* Course progress */
@@ -197,7 +191,6 @@ export interface CourseProgress {
     lesson_id: ID;
     is_completed?: boolean | null;
     completed_at?: DateTimeString | null;
-
 }
 
 /* Course reviews */
@@ -208,7 +201,6 @@ export interface CourseReview {
     rating?: number | null;
     comment?: string | null;
     created_at?: DateTimeString | null;
-
 }
 
 /* Course sections */
@@ -217,7 +209,6 @@ export interface CourseSection {
     course_id: ID;
     title: string;
     order_index?: number | null;
-
 }
 
 /* Courses */
@@ -236,7 +227,6 @@ export interface Course {
     complete_at?: number | null;
     status?: number | null;
     created_at?: DateTimeString | null;
-
 }
 
 /* Instructor verifications */
@@ -248,7 +238,6 @@ export interface InstructorVerification {
     documents_url?: string | null;
     status?: number | null;
     created_at?: DateTimeString | null;
-
 }
 
 /* Lesson contents */
@@ -259,7 +248,6 @@ export interface LessonContent {
     order_index: number;
     type: number;
     content_data?: any | null; // JSON
-
 }
 
 /* Messages */
@@ -271,7 +259,6 @@ export interface Message {
     message: string;
     status?: number | null;
     created_at?: DateTimeString | null;
-
 }
 
 /* Notifications */
@@ -283,7 +270,6 @@ export interface Notification {
     type?: number | null;
     is_read?: boolean | null;
     created_at?: DateTimeString | null;
-
 }
 
 /* Payment methods */
@@ -292,7 +278,6 @@ export interface PaymentMethod {
     method_name?: string | null;
     provider?: string | null;
     is_active?: boolean | null;
-
 }
 
 /* Payouts */
@@ -302,7 +287,6 @@ export interface Payout {
     amount?: number | null; // decimal
     status?: number | null;
     paid_at?: DateTimeString | null;
-
 }
 
 /* Transactions */
@@ -315,7 +299,6 @@ export interface Transaction {
     transaction_code?: string | null;
     status?: number | null;
     created_at?: DateTimeString | null;
-
 }
 
 /* User profiles */
@@ -330,5 +313,183 @@ export interface UserProfile {
     social_links?: any | null; // JSON
     country?: string | null;
     language?: string | null;
-
 }
+
+// ============================================
+// CUSTOM FRONTEND TYPES (extended/composite types)
+// ============================================
+
+/* Custom User (simplified for UI) */
+export interface Cus_User {
+    id: string;
+    name: string;
+    avatar: string;
+}
+
+/* Instructor (extended from Account) */
+export interface Instructor {
+    id: number;
+    name: string;
+    avatar: string;
+    title: string;
+    bio: string;
+    rating: number;
+    reviews: number;
+    students: number;
+    courses: number;
+}
+
+/* Review (for UI display) */
+export interface Review {
+    id: number;
+    author: string;
+    avatar: string;
+    rating: number;
+    comment: string;
+    date: string;
+}
+
+/* Course (extended for UI with relations) */
+export interface CourseWithRelations extends Course {
+    subtitle?: string;
+    category?: string;
+    instructor?: Instructor;
+    rating?: number;
+    reviewsCount?: number;
+    level?: string | number; // 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels' | number
+    duration?: string;
+    lectures?: number;
+    whatYouWillLearn?: string[];
+    curriculum?: {
+        section: string;
+        lectures: { title: string; duration: string }[];
+    }[];
+    reviews?: Review[];
+    originalPrice?: number;
+}
+
+/* Lesson (for UI) */
+export interface Lesson {
+    id: number;
+    courseId: number;
+    title: string;
+    type: 'video' | 'reading' | 'quiz' | 'coding';
+    content: string; // Markdown content for instructions
+    starterCode?: string;
+    hints?: string[];
+}
+
+/* Lesson Comment */
+export interface LessonComment {
+    id: number;
+    lessonId: number;
+    author: string;
+    avatar: string;
+    comment: string;
+    date: string;
+    replies?: LessonComment[];
+}
+
+/* Lesson QA */
+export interface LessonQA {
+    id: number;
+    lessonId: number;
+    question: {
+        author: string;
+        avatar: string;
+        text: string;
+        date: string;
+    };
+    answer?: {
+        author: string; // instructor
+        avatar: string;
+        text: string;
+        date: string;
+    };
+}
+
+/* Lecture */
+export interface Lecture {
+    id: number;
+    title: string;
+    duration: string;
+    type: 'video' | 'reading' | 'quiz' | 'coding';
+}
+
+/* Sidebar Types */
+export type SidebarTab = 'content' | 'curriculum' | 'comments' | 'help';
+
+export interface SidebarItem {
+    id: SidebarTab;
+    icon: string;
+    label: string;
+    notification?: number;
+}
+
+/* Enrolled Course (Course with enrollment data) */
+export interface EnrolledCourse extends CourseWithRelations {
+    progress: number; // 0 to 100
+    lastAccessed: string;
+    completed: boolean;
+    certificateUrl?: string;
+}
+
+/* Class Session */
+export interface ClassSession {
+    id: number;
+    title: string;
+    instructor: string;
+    startTime: string; // ISO string
+    endTime: string;
+    meetingLink: string;
+    isLive: boolean;
+}
+
+/* Class Assignment (for UI, extends Prisma type) */
+export interface ClassAssignmentUI extends ClassAssignment {
+    classId?: number;
+    deadline?: string;
+    status?: number; // 'pending' | 'submitted' | 'graded' | 'late'
+    grade?: number;
+}
+
+/* Student Class */
+export interface StudentClass {
+    id: number;
+    name: string;
+    instructor: string;
+    schedule: string; // e.g., "Mon, Wed 19:00"
+    nextSession?: ClassSession;
+    progress: number;
+}
+
+/* Audit Log (for UI, extends Prisma AdminLog) */
+export interface AuditLog extends AdminLog {
+    user?: string;
+    target?: string;
+    timestamp?: string;
+    details?: string;
+    status?: string | number | null; // For UI: 'Success' | 'Failure' | 'Warning' | number
+}
+
+/* Account (for UI, extends Prisma Account) */
+export interface AccountUI extends Account {
+    lastLogin?: string;
+    avatar?: string;
+}
+
+/* DTOs */
+export interface CreateUserDto {
+    name: string;
+    email: string;
+    password: string;
+    role?: Account['role'];
+    status?: Account['status'];
+}
+
+export interface UpdateUserDto {
+    name?: string;
+    email?: string;
+    role?: Account['role'];
+}
+

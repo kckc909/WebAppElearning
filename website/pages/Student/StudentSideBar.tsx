@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { IoChevronForward, IoChevronBack } from "react-icons/io5";
 import { Outlet } from "react-router-dom";
-import SidebarButton from '../../components/Sidebar'
+import SidebarButton from '../../components/SidebarLink'
 import { student_routes } from '../page_routes'
 
 const Student_LogedInLayout = () => {

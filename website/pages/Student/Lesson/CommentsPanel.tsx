@@ -1,4 +1,4 @@
-import { LessonComment } from "../../../cus_types";
+import { LessonComment } from "../../../types/types";
 
 const CommentsPanel: React.FC<{ comments: LessonComment[] }> = ({ comments }) => (
     <div className="p-6">

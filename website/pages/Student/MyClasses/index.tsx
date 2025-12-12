@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Calendar, CalendarDays, Clock, Edit3, FolderOpen, List, Presentation, User, Video, ToolCase } from 'lucide-react'
 import { STUDENT_CLASSES } from '../../../mockData'
-import { StudentClass } from "../../../cus_types";
+import { StudentClass } from "../../../types/types";
 import Tab_List from './Tab_List'
 import Tab_Schedule from './Tab_Schedule'
 import Tab_Docs from './Tab_Docs'

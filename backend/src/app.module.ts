@@ -17,6 +17,18 @@ import { UserProfiles_Module } from './modules/user_profiles/user_profiles.modul
 import { Classes_Module } from './modules/classes/classes.module.js';
 import { Courses_Module } from './modules/courses/courses.module.js';
 import { Lessons_Module } from './modules/lessons/lessons.module.js';
+import { Certificates_Module } from './modules/certificates/certificates.module.js';
+import { CourseCategories_Module } from './modules/course_categories/course_categories.module.js';
+import { CourseEnrollments_Module } from './modules/course_enrollments/course_enrollments.module.js';
+import { CourseProgress_Module } from './modules/course_progress/course_progress.module.js';
+import { CourseReviews_Module } from './modules/course_reviews/course_reviews.module.js';
+import { CourseSections_Module } from './modules/course_sections/course_sections.module.js';
+import { InstructorVerifications_Module } from './modules/instructor_verifications/instructor_verifications.module.js';
+import { Messages_Module } from './modules/messages/messages.module.js';
+import { PaymentMethods_Module } from './modules/payment_methods/payment_methods.module.js';
+import { Payouts_Module } from './modules/payouts/payouts.module.js';
+import { Transactions_Module } from './modules/transactions/transactions.module.js';
+import { AdminLogs_Module } from './modules/admin_logs/admin_logs.module.js';
 
 
 @Module({
@@ -32,6 +44,18 @@ import { Lessons_Module } from './modules/lessons/lessons.module.js';
     Lessons_Module,
     UserProfiles_Module,
     Notifications_Module,
+    Certificates_Module,
+    CourseCategories_Module,
+    CourseEnrollments_Module,
+    CourseProgress_Module,
+    CourseReviews_Module,
+    CourseSections_Module,
+    InstructorVerifications_Module,
+    Messages_Module,
+    PaymentMethods_Module,
+    Payouts_Module,
+    Transactions_Module,
+    AdminLogs_Module,
 
   ],
   controllers: [AppController, Accounts_Controller],

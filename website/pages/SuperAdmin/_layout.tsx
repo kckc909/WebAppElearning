@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import SuperAdminSidebar from "./_sidebar";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -6,19 +6,32 @@ import SuperAdminHeader from "./_header";
 
 export default function SuperAdminLayout() {
     const [user, setUser] = useState<any>();
-    const [redirect, setRedirect] = useState(false);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
-        setUser(localStorage.getItem('user'))
+        const storedUser = localStorage.getItem('Account');
+        if (storedUser) {
+            try {
+                console.log(storedUser)
+                setUser(JSON.parse(storedUser));
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                // alert("Bạn phải là Super Admin ")
+                setUser(null);  
+            }
+        } else {
+            setUser(null);
+        }
     }, [])
 
-    useEffect(() => {
-        if (!user || !(user.role === -1)) {
-            toast.error('Bạn cần đăng nhập với quyền Admin để truy cập trang quản trị!')
-            setRedirect(true)
-        }
-    }, [user])
+    if (user === undefined) {
+        return <div>Loading...</div>;
+    }
+
+    // if (!user || user.role !== -1) {
+    //     toast.error('Bạn cần đăng nhập với quyền Super Admin để truy cập trang quản trị!')
+    //     return <Navigate to="/superadmin/login" replace />;
+    // }
 
     return (<>
         <main className="flex h-screen bg-gray-50 overflow-hidden">

@@ -47,32 +47,32 @@ const SuperAdminLogin: React.FC = () => {
                 onSubmit={handleLogin}
                 className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md"
             >
-                <h2 className="text-2xl font-bold text-center mb-6">Super Admin Login</h2>
+                <h2 className="text-2xl font-bold text-center mb-6">Super Admin</h2>
 
                 {error && (
                     <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
                 )}
 
                 <div className="mb-4">
-                    <label className="block mb-1 font-medium">Username</label>
+                    <label className="block mb-1 font-medium">Tài khoản</label>
                     <input
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                        placeholder="Username..."
+                        placeholder="Nhập tài khoản..."
                         required
                     />
                 </div>
 
                 <div className="mb-6">
-                    <label className="block mb-1 font-medium">Password</label>
+                    <label className="block mb-1 font-medium">Mật khẩu</label>
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                        placeholder="Password..."
+                        placeholder="Nhập mật khẩu..."
                         required
                     />
                 </div>

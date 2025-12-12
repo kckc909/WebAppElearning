@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import CourseProgressCard from "./CourseProgressCard";
-import { EnrolledCourse } from "../../../cus_types";
+import { EnrolledCourse } from "../../../types/types";
 import { STUDENT_COURSES } from '../../../mockData'
 import { Book, BookOpen } from "lucide-react";
 

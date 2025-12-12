@@ -1,7 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
+import InstructorSidebar from "./InstructorSidebar";
+import InstructorPageHeader from './IntructorHeader'
 
 export default function InstructorLayout() {
     // Protect Route - 1
@@ -9,6 +10,10 @@ export default function InstructorLayout() {
     const [user, setUser] = useState<any>();
     const [redirect, setRedirect] = useState(false);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+    function handleLogout(): void {
+        throw new Error("Function not implemented.");
+    }
 
     // useEffect(() => {
     //     setUser(localStorage.getItem('user'))
@@ -37,10 +42,12 @@ export default function InstructorLayout() {
     // }
     // Pass quyền
     return (
-        <main className="w-full h-screen">
-
-            <Outlet />
-
+        <main className="flex h-screen bg-gray-50 overflow-hidden">
+            <InstructorSidebar isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
+            <div className="flex-1 flex flex-col">
+                <InstructorPageHeader toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} handleLogout={handleLogout} />
+                <Outlet />
+            </div>
         </main>
     );
 }

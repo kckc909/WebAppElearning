@@ -15,11 +15,14 @@ export class AccountCreateForm {
     @IsEmail()
     email!: string;
 
+    @IsNotEmpty()
+    username!: string;
+
     @IsString()
     @IsNotEmpty()
-    // @MinLength(6, {
-    //     message: 'Mật khẩu phải có tối thiểu $constraint1 ký tự',
-    // }) 
+    @MinLength(6, {
+        message: 'Mật khẩu phải có tối thiểu $constraint1 ký tự',
+    })
     password_hash!: string;
 
     @IsOptional()
@@ -45,22 +48,26 @@ export class AccountCreateForm {
 }
 
 export class AccountUpdateForm {
+    @IsOptional()
     @IsInt()
-    @IsPositive()
-    id!: typesCus.ID;
+    id?: typesCus.ID;
 
-    @IsOptional()
     @IsString()
-    full_name?: string;
+    @IsNotEmpty()
+    full_name!: string;
 
-    @IsOptional()
     @IsEmail()
-    email?: string;
+    email!: string;
 
-    @IsOptional()
+    @IsNotEmpty()
+    username!: string;
+
     @IsString()
-
-    password_hash?: string;
+    @IsNotEmpty()
+    @MinLength(6, {
+        message: 'Mật khẩu phải có tối thiểu $constraint1 ký tự',
+    })
+    password_hash!: string;
 
     @IsOptional()
     @IsString()
@@ -74,6 +81,14 @@ export class AccountUpdateForm {
     @IsOptional()
     @IsInt()
     status?: number | null;
+
+    @IsOptional()
+    @IsDateString()
+    created_at?: typesCus.DateTimeString | null;
+
+    @IsOptional()
+    @IsDateString()
+    updated_at?: typesCus.DateTimeString | null;
 }
 
 export class LoginForm {

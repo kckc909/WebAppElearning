@@ -1,7 +1,7 @@
 // hooks/useAccounts.ts
 import { useState, useEffect } from 'react';
 import { accService } from '../api/accounts.api';
-import { CreateUserDto, UpdateUserDto } from '../types/cus_types';
+import { Account } from '../types/types';
 
 export interface UseAccountsOptions {
     autoFetch?: boolean; // Tự động fetch khi mount
@@ -17,7 +17,8 @@ export const useAccounts = (options: UseAccountsOptions = { autoFetch: true }) =
         setLoading(true);
         setError(null);
         try {
-            const data = await accService.getAll(); 
+            const data = await accService.getAll();
+            console.log(data)
             setAccounts(data);
         } catch (err: any) {
             setError(err.message || 'Có lỗi xảy ra khi tải danh sách accounts');
@@ -42,7 +43,7 @@ export const useAccounts = (options: UseAccountsOptions = { autoFetch: true }) =
     };
 
     // Tạo account mới
-    const createAccount = async (data: CreateUserDto) => {
+    const createAccount = async (data: Account) => {
         setLoading(true);
         setError(null);
         try {
@@ -58,7 +59,7 @@ export const useAccounts = (options: UseAccountsOptions = { autoFetch: true }) =
     };
 
     // Cập nhật account
-    const updateAccount = async (id: string, data: UpdateUserDto) => {
+    const updateAccount = async (id: number, data: Account) => {
         setLoading(true);
         setError(null);
         try {
@@ -74,7 +75,7 @@ export const useAccounts = (options: UseAccountsOptions = { autoFetch: true }) =
     };
 
     // Xóa account
-    const deleteAccount = async (id: string) => {
+    const deleteAccount = async (id: number) => {
         setLoading(true);
         setError(null);
         try {

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Course, Lecture } from "../../../cus_types";
+import { CourseWithRelations as Course, Lecture } from "../../../types/types";
 
 const CurriculumPanel: React.FC<{ course: Course, currentLessonId: number }> = ({ course, currentLessonId }) => (
     <div className="p-6">

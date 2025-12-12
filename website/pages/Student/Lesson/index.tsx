@@ -9,7 +9,7 @@ import CommentsPanel from './CommentsPanel';
 import CurriculumPanel from './CuriculumPanel';
 import QAPanel from './QAPanel';
 import CodingPanel from './CodingPanel';
-import { SidebarItem, SidebarTab } from '../../../cus_types';
+import { SidebarItem, SidebarTab } from '../../../types/types';
 import LessonView from './LessonView';
 
 
