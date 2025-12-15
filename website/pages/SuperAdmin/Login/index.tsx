@@ -23,7 +23,7 @@ const SuperAdminLogin: React.FC = () => {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Sử dụng demo users
-            const { validateLogin } = await import('../../../demoUsers');
+            const { validateLogin } = await import('../../../mockData');
             const userData = validateLogin(email, password);
 
             if (userData && userData.role === -1) {
