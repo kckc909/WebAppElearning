@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { ConfigModule } from '@nestjs/config'; // Import ConfigModule
+import { ConfigModule } from '@nestjs/config';
 
 import { PrismaModule } from './prisma.module.js';
 import { PrismaService } from './prisma.service.js';
@@ -29,36 +29,56 @@ import { PaymentMethods_Module } from './modules/payment_methods/payment_methods
 import { Payouts_Module } from './modules/payouts/payouts.module.js';
 import { Transactions_Module } from './modules/transactions/transactions.module.js';
 import { AdminLogs_Module } from './modules/admin_logs/admin_logs.module.js';
+import { ClassAssignments_Module } from './modules/class_assignments/class_assignments.module.js';
+import { ClassCalendar_Module } from './modules/class_calendar/class_calendar.module.js';
+import { ClassExams_Module } from './modules/class_exams/class_exams.module.js';
+import { ClassExamResults_Module } from './modules/class_exam_results/class_exam_results.module.js';
+import { ClassMaterials_Module } from './modules/class_materials/class_materials.module.js';
+import { ClassStudents_Module } from './modules/class_students/class_students.module.js';
+import { ClassSubmissions_Module } from './modules/class_submissions/class_submissions.module.js';
+import { LessonContents_Module } from './modules/lesson_contents/lesson_contents.module.js';
+import { ContentIdes_Module } from './modules/content_ides/content_ides.module.js';
+import { ContentIdesStarter_Module } from './modules/content_ides_starter/content_ides_starter.module.js';
 
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    PrismaModule,
-    EmailModule,
-    HelperModule,
+    imports: [
+        ConfigModule.forRoot(),
+        PrismaModule,
+        EmailModule,
+        HelperModule,
 
-    Users_Module,
-    Classes_Module,
-    Courses_Module,
-    Lessons_Module,
-    UserProfiles_Module,
-    Notifications_Module,
-    Certificates_Module,
-    CourseCategories_Module,
-    CourseEnrollments_Module,
-    CourseProgress_Module,
-    CourseReviews_Module,
-    CourseSections_Module,
-    InstructorVerifications_Module,
-    Messages_Module,
-    PaymentMethods_Module,
-    Payouts_Module,
-    Transactions_Module,
-    AdminLogs_Module,
+        Users_Module,
+        Classes_Module,
+        Courses_Module,
+        Lessons_Module,
+        UserProfiles_Module,
+        Notifications_Module,
+        Certificates_Module,
+        CourseCategories_Module,
+        CourseEnrollments_Module,
+        CourseProgress_Module,
+        CourseReviews_Module,
+        CourseSections_Module,
+        InstructorVerifications_Module,
+        Messages_Module,
+        PaymentMethods_Module,
+        Payouts_Module,
+        Transactions_Module,
+        AdminLogs_Module,
+        ClassAssignments_Module,
+        ClassCalendar_Module,
+        ClassExams_Module,
+        ClassExamResults_Module,
+        ClassMaterials_Module,
+        ClassStudents_Module,
+        ClassSubmissions_Module,
+        LessonContents_Module,
+        ContentIdes_Module,
+        ContentIdesStarter_Module,
 
-  ],
-  controllers: [AppController, Accounts_Controller],
-  providers: [AppService, PrismaService, Accounts_Service, EmailService],
+    ],
+    controllers: [AppController, Accounts_Controller],
+    providers: [AppService, PrismaService, Accounts_Service, EmailService],
 })
 export class AppModule { }

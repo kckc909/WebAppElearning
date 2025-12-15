@@ -2,8 +2,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { MOCK_USER } from '../../mockData';
-import { BookOpen, CalendarDays, ChevronDown, ChevronDownIcon, LayoutDashboard, LogOut, Settings, User, Users } from 'lucide-react';
-import { student_routes } from '../page_routes'
+import { BookOpen, CalendarDays, ChevronDown, ChevronDownIcon, LayoutDashboard, LogOut, Settings, User, Users, GraduationCap, Shield } from 'lucide-react';
+import { student_routes, instructor_routes, admin_routes } from '../page_routes'
+import { useAuth } from '../../contexts/AuthContext';
 
 const NavItem: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
   <NavLink
@@ -16,14 +17,12 @@ const NavItem: React.FC<{ to: string; children: React.ReactNode }> = ({ to, chil
   </NavLink>
 );
 
-const Header: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({
-  isLoggedIn = false,
-  onLogout
-}) => {
+const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
   const avatarRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -38,7 +37,7 @@ const Header: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({
   }, [avatarRef]);
 
   const handleLogout = () => {
-    if (onLogout) onLogout();
+    logout();
     setIsAvatarOpen(false);
     navigate(student_routes.home);
   }
@@ -48,12 +47,12 @@ const Header: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-8">
-            <NavLink to={'/' + student_routes.home} className="flex items-center space-x-2">
+            <NavLink to={isAuthenticated ? '/' + student_routes.dashboard : '/' + student_routes.home} className="flex items-center space-x-2">
               <img src="/MiLearnLogo.png" alt="MiLearn Logo" className="h-10 w-10" />
               <span className="text-xl font-bold text-secondary">MiLearn</span>
             </NavLink>
             <nav className="hidden items-center space-x-6 md:flex">
-              <NavItem to={'/' + student_routes.home}>Trang chủ</NavItem>
+              <NavItem to={isAuthenticated ? '/' + student_routes.dashboard : '/' + student_routes.home}>Trang chủ</NavItem>
               <NavItem to={'/' + student_routes.courses}>Khóa học</NavItem>
               <NavItem to={'/' + student_routes.become_instructor}>Trở thành giảng viên</NavItem>
               <NavItem to={'/' + student_routes.about}>Giới thiệu</NavItem>
@@ -61,15 +60,15 @@ const Header: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({
           </div>
 
           <div className="hidden items-center space-x-4 md:flex">
-            {isLoggedIn ? (
+            {isAuthenticated ? (
               <div className="relative" ref={avatarRef}>
                 <button
                   onClick={() => setIsAvatarOpen(!isAvatarOpen)}
                   className="flex items-center space-x-2 focus:outline-none"
                 >
                   {/* User */}
-                  <span className="text-sm font-medium text-slate-700 hidden lg:block">Hi, {MOCK_USER.name}</span>
-                  <img src={MOCK_USER.avatar} alt="User Avatar" className="h-9 w-9 rounded-full border border-slate-200" />
+                  <span className="text-sm font-medium text-slate-700 hidden lg:block">Hi, {user?.full_name || 'User'}</span>
+                  <img src={user?.avatar_url || MOCK_USER.avatar} alt="User Avatar" className="h-9 w-9 rounded-full border border-slate-200" />
 
                   <ChevronDownIcon className='w-5 h-5 text-slate-500' />
                 </button>
@@ -128,6 +127,29 @@ const Header: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({
 
                     <div className="border-t border-slate-100 my-1"></div>
 
+                    {/* Role-based navigation */}
+                    {user?.role === 1 && (
+                      <Link
+                        to={'/instructor/' + instructor_routes.dashboard}
+                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
+                      >
+                        <GraduationCap className="mr-3 h-5 w-5" />
+                        Trang Giảng viên
+                      </Link>
+                    )}
+
+                    {user?.role === 2 && (
+                      <Link
+                        to={'/admin/' + admin_routes.dashboard}
+                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
+                      >
+                        <Shield className="mr-3 h-5 w-5" />
+                        Trang Quản trị
+                      </Link>
+                    )}
+
+                    {(user?.role === 1 || user?.role === 2) && <div className="border-t border-slate-100 my-1"></div>}
+
                     <button
                       onClick={handleLogout}
                       className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
@@ -163,18 +185,20 @@ const Header: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({
       {isMenuOpen && (
         <div className="md:hidden border-t border-slate-200">
           <nav className="flex flex-col space-y-2 px-4 py-4">
-            {!isLoggedIn ? (
+            {isAuthenticated ? (
               <>
                 <div className="flex items-center space-x-3 mb-4 pb-4 border-b border-slate-100">
-                  <img src={MOCK_USER.avatar} alt="Avatar" className="w-10 h-10 rounded-full" />
+                  <img src={user?.avatar_url || MOCK_USER.avatar} alt="Avatar" className="w-10 h-10 rounded-full" />
                   <div>
-                    <p className="font-bold text-secondary">{MOCK_USER.name}</p>
-                    <p className="text-xs text-slate-500">Học viên</p>
+                    <p className="font-bold text-secondary">{user?.full_name || 'User'}</p>
+                    <p className="text-xs text-slate-500">
+                      {user?.role === 2 ? 'Quản trị viên' : user?.role === 1 ? 'Giảng viên' : 'Học viên'}
+                    </p>
                   </div>
                 </div>
                 <div>
                   <div className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary">
-                    <NavItem to={'/' + student_routes.home}>Trang chủ</NavItem>
+                    <NavItem to={isAuthenticated ? '/' + student_routes.dashboard : '/' + student_routes.home}>Trang chủ</NavItem>
                   </div>
                   <div className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary">
                     <NavItem to={'/' + student_routes.courses}>Khóa học</NavItem>
@@ -239,6 +263,29 @@ const Header: React.FC<{ isLoggedIn?: boolean; onLogout?: () => void }> = ({
                 </Link>
 
                 <div className="border-t border-slate-100 my-1"></div>
+
+                {/* Role-based navigation for mobile */}
+                {user?.role === 1 && (
+                  <Link
+                    to={'/instructor/' + instructor_routes.dashboard}
+                    className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
+                  >
+                    <GraduationCap className="mr-3 h-5 w-5" />
+                    Trang Giảng viên
+                  </Link>
+                )}
+
+                {user?.role === 2 && (
+                  <Link
+                    to={'/admin/' + admin_routes.dashboard}
+                    className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
+                  >
+                    <Shield className="mr-3 h-5 w-5" />
+                    Trang Quản trị
+                  </Link>
+                )}
+
+                {(user?.role === 1 || user?.role === 2) && <div className="border-t border-slate-100 my-1"></div>}
 
                 <button onClick={handleLogout} className="text-left text-sm font-medium text-red-600 py-2">Đăng xuất</button>
               </>

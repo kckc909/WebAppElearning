@@ -72,6 +72,7 @@ const instructor_routes = {
     course_detail: (courseId: string | number) => `courses/${courseId}`,
     course_lesson: (courseId: string | number, lessonId: string | number) => `courses/${courseId}/lessons/${lessonId}`,
 
+    course_curriculum: (courseId: string | number) => `courses/${courseId}/curriculum`,
     course_reviews: (courseId: string | number) => `courses/${courseId}/reviews`,
     course_students: (courseId: string | number) => `courses/${courseId}/students`,
     course_certificates: (courseId: string | number) => `courses/${courseId}/certificates`,
@@ -114,7 +115,7 @@ const student_routes = {
     courses: 'courses',
     my_courses: 'courses/my',
     course_detail: (courseId: string | number) => `courses/${courseId}`,
-    lesson: (courseId: string | number, lessonId: string | number) => `courses/${courseId}/${lessonId}`,
+    lesson: (courseId: string | number, lessonId: string | number) => `courses/${courseId}/lesson/${lessonId}`,
 
     // Checkout & Payments
     checkout: 'checkout',

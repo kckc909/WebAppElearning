@@ -5,7 +5,7 @@ import StudentLayout from './StudentLayout'
 import HomePage from './HomePage'
 import CoursesPage from './Courses'
 import CourseDetailPage from './Courses/CourseDetail'
-import LessonPage from './Lesson/index'
+import LessonPage from './Courses/Lesson/index'
 import StudentDashboard from './Dashboard/index'
 import BecomeInstructorPage from './BecomeInstructorPage'
 import AuthPage from './AuthPage'
@@ -15,6 +15,7 @@ import NotFoundPageAll from '../NotFoundPageAll';
 import Student_Checkout from "./CheckOut"
 import Student_Profile from "./Profile"
 import Schedule from "./MyClasses/Schedule"
+import StudentStats from "./Stats"
 
 import MyClasses from './MyClasses'
 import ClassDetail from './MyClasses/ClassDetail'
@@ -49,6 +50,7 @@ export default function StudentRoutes() {
                     <Route path={student_routes.certificates} element={<Student_Certificates />} />
                     <Route path={student_routes.profile} element={<Student_Profile />} />
                     <Route path={student_routes.settings} element={<Student_Settings />}></Route>
+                    <Route path={student_routes.stats} element={<StudentStats />}></Route>
                 </Route>
 
             </Route>

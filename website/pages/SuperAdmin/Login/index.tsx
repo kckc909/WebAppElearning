@@ -1,90 +1,111 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { LogIn, Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { superadmin_routes } from '../../page_routes';
 
 const SuperAdminLogin: React.FC = () => {
+    const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const { login } = useAuth();
     const navigate = useNavigate();
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError("");
-        setLoading(true);
+        setIsLoading(true);
 
         try {
-            const res = await fetch("http://localhost:4000/accounts/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
-            });
+            // TODO: Replace with actual API call
+            // Giả lập API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const accFound = await res.json();
-            console.log(accFound)
+            // Sử dụng demo users
+            const { validateLogin } = await import('../../../demoUsers');
+            const userData = validateLogin(email, password);
 
-            if (!res.ok) {
-                setError(accFound.message || "Sai tài khoản hoặc mật khẩu");
+            if (userData && userData.role === -1) {
+                login(userData);
+                toast.success('Đăng nhập thành công!');
+                navigate('/superadmin/' + superadmin_routes.dashboard);
+            } else if (userData && userData.role !== -1) {
+                toast.error('Bạn không có quyền Super Admin!');
+            } else {
+                toast.error('Email hoặc mật khẩu không đúng!');
             }
-
-            if (!(accFound.role === -1)) {
-                setError("Bạn không có quyền đăng nhập vào trang này!")
-            }
-
-            // localStorage.setItem("superadmin_token", data.token);
-            localStorage.setItem('Account', accFound)
-            navigate("/superadmin/dashboard");
         } catch (error) {
-            setError("Không thể kết nối server");
+            toast.error('Có lỗi xảy ra khi đăng nhập!');
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-            <form
-                onSubmit={handleLogin}
-                className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md"
-            >
-                <h2 className="text-2xl font-bold text-center mb-6">Super Admin</h2>
-
-                {error && (
-                    <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
-                )}
-
-                <div className="mb-4">
-                    <label className="block mb-1 font-medium">Tài khoản</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                        placeholder="Nhập tài khoản..."
-                        required
-                    />
+        <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+                <div className="text-center mb-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <LogIn className="w-8 h-8 text-white" />
+                    </div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Super Admin</h1>
+                    <p className="text-gray-600">Đăng nhập vào hệ thống quản trị</p>
                 </div>
 
-                <div className="mb-6">
-                    <label className="block mb-1 font-medium">Mật khẩu</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                        placeholder="Nhập mật khẩu..."
-                        required
-                    />
-                </div>
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                            placeholder="superadmin@milearn.com"
+                            required
+                        />
+                    </div>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-                >
-                    {loading ? "Đang đăng nhập..." : "Đăng nhập"}
-                </button>
-            </form>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Mật khẩu</label>
+                        <div className="relative">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                placeholder="••••••••"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            >
+                                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                            </button>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <LogIn className="w-5 h-5" />
+                        {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+                    </button>
+                </form>
+
+                <div className="mt-6 text-center">
+                    <p className="text-xs text-gray-500">
+                        Chỉ dành cho Super Administrator
+                    </p>
+                    <p className="text-xs text-gray-400 mt-2">
+                        Demo: superadmin@milearn.com / admin123
+                    </p>
+                </div>
+            </div>
         </div>
     );
 };

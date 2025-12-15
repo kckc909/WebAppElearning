@@ -11,6 +11,16 @@ export default function InstructorLayout() {
     const [redirect, setRedirect] = useState(false);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
+    // Load collapsed state from localStorage
+    const [isSidebarCollapsed, setSidebarCollapsed] = useState(() => {
+        try {
+            const saved = localStorage.getItem('instructor_sidebar_collapsed');
+            return saved ? JSON.parse(saved) : false;
+        } catch {
+            return false;
+        }
+    });
+
     function handleLogout(): void {
         throw new Error("Function not implemented.");
     }
@@ -43,12 +53,18 @@ export default function InstructorLayout() {
     // Pass quyền
     return (
         <main className="flex h-screen bg-gray-50 overflow-hidden">
-            <InstructorSidebar isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
-            <div className="flex-1 flex flex-col">
+            <InstructorSidebar
+                isOpen={isSidebarOpen}
+                setIsOpen={setSidebarOpen}
+                isCollapsed={isSidebarCollapsed}
+                setIsCollapsed={setSidebarCollapsed}
+            />
+            <div className="flex-1 flex flex-col overflow-hidden">
                 <InstructorPageHeader toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} handleLogout={handleLogout} />
-                <Outlet />
+                <div className="flex-1 overflow-y-auto">
+                    <Outlet />
+                </div>
             </div>
         </main>
     );
 }
-

@@ -1,206 +1,299 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Plus, Search, Filter, Eye, Edit2, Trash2, Users, Calendar } from 'lucide-react';
-import DataTable, { Column, RowAction } from '../../../../components/DataTable';
-import { Class } from '../../../../types/types';
-import { instructor_routes } from '../../../page_routes';
+import { useNavigate } from 'react-router-dom';
+import {
+    Plus,
+    Search,
+    Users,
+    Calendar,
+    Clock,
+    Video,
+    MoreVertical,
+    Edit,
+    Eye,
+    Trash2,
+    Play,
+    MapPin
+} from 'lucide-react';
 
-const InstructorClassList: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 10;
+// Mock classes
+const MOCK_CLASSES = [
+    {
+        id: 1,
+        name: 'Web Development - Lớp A1',
+        course: 'Complete Web Development Bootcamp',
+        thumbnail: 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400',
+        status: 'active',
+        students: 25,
+        maxStudents: 30,
+        schedule: 'T2, T4, T6',
+        time: '19:00 - 21:00',
+        nextSession: '2024-12-16 19:00',
+        totalSessions: 24,
+        completedSessions: 12,
+        instructor: 'Nguyễn Văn A'
+    },
+    {
+        id: 2,
+        name: 'React Advanced - Lớp B2',
+        course: 'React & TypeScript Mastery',
+        thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400',
+        status: 'active',
+        students: 20,
+        maxStudents: 25,
+        schedule: 'T3, T5, T7',
+        time: '18:00 - 20:00',
+        nextSession: '2024-12-17 18:00',
+        totalSessions: 20,
+        completedSessions: 8,
+        instructor: 'Nguyễn Văn A'
+    },
+    {
+        id: 3,
+        name: 'Python Basics - Lớp C1',
+        course: 'Python for Beginners',
+        thumbnail: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400',
+        status: 'upcoming',
+        students: 15,
+        maxStudents: 30,
+        schedule: 'T2, T4',
+        time: '20:00 - 22:00',
+        nextSession: '2024-12-20 20:00',
+        totalSessions: 16,
+        completedSessions: 0,
+        instructor: 'Nguyễn Văn A'
+    },
+    {
+        id: 4,
+        name: 'Node.js Backend - Lớp D1',
+        course: 'Node.js Backend Masterclass',
+        thumbnail: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400',
+        status: 'completed',
+        students: 22,
+        maxStudents: 25,
+        schedule: 'T3, T5',
+        time: '19:00 - 21:00',
+        nextSession: null,
+        totalSessions: 18,
+        completedSessions: 18,
+        instructor: 'Nguyễn Văn A'
+    }
+];
 
-    // Mock data - sẽ thay thế bằng API call
-    const mockClasses: Class[] = [
-        {
-            id: 1,
-            course_id: 1,
-            instructor_id: 1,
-            title: 'Lớp IELTS Advanced K15',
-            description: 'Lớp học IELTS nâng cao',
-            start_date: '2024-01-15',
-            end_date: '2024-04-15',
-            meeting_link: 'https://meet.google.com/abc-xyz',
-            status: 1,
-            created_at: '2024-01-10',
-        },
-        {
-            id: 2,
-            course_id: 2,
-            instructor_id: 1,
-            title: 'ReactJS Workshop',
-            description: 'Workshop về ReactJS',
-            start_date: '2024-01-20',
-            end_date: '2024-03-20',
-            meeting_link: 'https://meet.google.com/def-uvw',
-            status: 1,
-            created_at: '2024-01-15',
-        },
-        {
-            id: 3,
-            course_id: 3,
-            instructor_id: 1,
-            title: 'Python Bootcamp',
-            description: 'Khóa học Python intensive',
-            start_date: '2024-02-01',
-            end_date: '2024-05-01',
-            meeting_link: 'https://meet.google.com/ghi-rst',
-            status: 0,
-            created_at: '2024-01-20',
-        },
-    ];
+type StatusFilter = 'all' | 'active' | 'upcoming' | 'completed';
 
-    const filteredClasses = mockClasses.filter((classItem) =>
-        classItem.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+const ClassListPage: React.FC = () => {
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
 
-    const paginatedClasses = filteredClasses.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize
-    );
+    const getStatusStyle = (status: string) => {
+        switch (status) {
+            case 'active':
+                return 'bg-green-100 text-green-700';
+            case 'upcoming':
+                return 'bg-blue-100 text-blue-700';
+            case 'completed':
+                return 'bg-slate-100 text-slate-700';
+            default:
+                return 'bg-slate-100 text-slate-700';
+        }
+    };
 
-    const columns: Column<Class>[] = [
-        {
-            key: 'title',
-            label: 'Class Title',
-            render: (classItem) => (
-                <div>
-                    <Link
-                        to={`/${instructor_routes.base}${instructor_routes.class_detail(classItem.id.toString())}`}
-                        className="font-medium text-gray-900 hover:text-green-600"
-                    >
-                        {classItem.title}
-                    </Link>
-                    <p className="text-sm text-gray-500 mt-1">{classItem.description}</p>
-                </div>
-            ),
-        },
-        {
-            key: 'start_date',
-            label: 'Schedule',
-            render: (classItem) => (
-                <div className="text-sm">
-                    <div className="flex items-center gap-1 text-gray-600">
-                        <Calendar className="w-4 h-4" />
-                        <span>
-                            {classItem.start_date
-                                ? new Date(classItem.start_date).toLocaleDateString('vi-VN')
-                                : '-'}
-                        </span>
-                    </div>
-                    {classItem.end_date && (
-                        <div className="text-gray-500 mt-1">
-                            to {new Date(classItem.end_date).toLocaleDateString('vi-VN')}
-                        </div>
-                    )}
-                </div>
-            ),
-        },
-        {
-            key: 'status',
-            label: 'Status',
-            render: (classItem) => (
-                <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        classItem.status === 1
-                            ? 'bg-green-100 text-green-700'
-                            : classItem.status === 0
-                            ? 'bg-yellow-100 text-yellow-700'
-                            : 'bg-gray-100 text-gray-700'
-                    }`}
-                >
-                    {classItem.status === 1 ? 'Active' : classItem.status === 0 ? 'Upcoming' : 'Ended'}
-                </span>
-            ),
-        },
-        {
-            key: 'meeting_link',
-            label: 'Meeting Link',
-            render: (classItem) => (
-                <a
-                    href={classItem.meeting_link || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-green-600 hover:text-green-700 hover:underline"
-                >
-                    Join Meeting
-                </a>
-            ),
-        },
-    ];
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'active':
+                return 'Đang học';
+            case 'upcoming':
+                return 'Sắp khai giảng';
+            case 'completed':
+                return 'Đã kết thúc';
+            default:
+                return status;
+        }
+    };
 
-    const actions: RowAction<Class>[] = [
-        {
-            label: 'View',
-            icon: <Eye className="w-4 h-4" />,
-            onClick: (classItem) => {
-                window.location.href = `/${instructor_routes.base}${instructor_routes.class_detail(classItem.id.toString())}`;
-            },
-        },
-        {
-            label: 'Edit',
-            icon: <Edit2 className="w-4 h-4" />,
-            onClick: (classItem) => {
-                console.log('Edit class', classItem.id);
-            },
-        },
-        {
-            label: 'Delete',
-            icon: <Trash2 className="w-4 h-4" />,
-            onClick: (classItem) => {
-                if (confirm(`Are you sure you want to delete "${classItem.title}"?`)) {
-                    console.log('Delete class', classItem.id);
-                }
-            },
-            className: 'text-red-600 hover:text-red-700',
-        },
-    ];
+    const formatNextSession = (dateStr: string | null) => {
+        if (!dateStr) return 'Đã hoàn thành';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('vi-VN', { weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
+    };
+
+    const filteredClasses = MOCK_CLASSES.filter(cls => {
+        if (statusFilter !== 'all' && cls.status !== statusFilter) return false;
+        if (searchQuery && !cls.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+        return true;
+    });
 
     return (
-        <div className="flex-1 overflow-y-auto bg-gray-50 p-6">
-            {/* Header */}
-            <div className="mb-6 flex items-center justify-between">
+        <div className="p-8">
+            {/* Page Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">My Classes</h1>
-                    <p className="text-gray-600 mt-1">Manage all your classes</p>
+                    <h1 className="text-3xl font-bold text-secondary mb-2">Danh sách lớp học</h1>
+                    <p className="text-slate-600">Quản lý {MOCK_CLASSES.length} lớp học của bạn</p>
                 </div>
-            </div>
-
-            {/* Filters */}
-            <div className="mb-6 flex flex-col sm:flex-row gap-4">
-                <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                        type="text"
-                        placeholder="Search classes..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    />
-                </div>
-                <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                    <Filter className="w-5 h-5" />
-                    Filter
+                <button
+                    onClick={() => navigate('/instructor/classes/create')}
+                    className="px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl font-semibold transition-colors flex items-center gap-2 shadow-lg shadow-primary/25"
+                >
+                    <Plus className="w-5 h-5" />
+                    Tạo lớp mới
                 </button>
             </div>
 
-            {/* Table */}
-            <DataTable
-                columns={columns}
-                data={paginatedClasses}
-                rowKey="id"
-                actions={actions}
-                searchTerm={searchTerm}
-                onSearch={setSearchTerm}
-                pagination={{
-                    currentPage,
-                    totalItems: filteredClasses.length,
-                    pageSize,
-                    onPageChange: setCurrentPage,
-                }}
-            />
+            {/* Filters */}
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-200 mb-6">
+                <div className="flex flex-col md:flex-row gap-4">
+                    <div className="flex-1 relative">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                        <input
+                            type="search"
+                            placeholder="Tìm kiếm lớp học..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary"
+                        />
+                    </div>
+                    <div className="flex gap-2">
+                        {(['all', 'active', 'upcoming', 'completed'] as StatusFilter[]).map((status) => (
+                            <button
+                                key={status}
+                                onClick={() => setStatusFilter(status)}
+                                className={`px-4 py-2 rounded-lg font-medium transition-colors ${statusFilter === status
+                                        ? 'bg-primary text-white'
+                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    }`}
+                            >
+                                {status === 'all' ? 'Tất cả' : getStatusLabel(status)}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Classes Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredClasses.map((cls) => (
+                    <div
+                        key={cls.id}
+                        onClick={() => navigate(`/instructor/classes/${cls.id}`)}
+                        className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:border-primary/30 transition-all cursor-pointer group"
+                    >
+                        {/* Thumbnail */}
+                        <div className="relative">
+                            <img
+                                src={cls.thumbnail}
+                                alt={cls.name}
+                                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                            <div className="absolute top-4 left-4">
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyle(cls.status)}`}>
+                                    {getStatusLabel(cls.status)}
+                                </span>
+                            </div>
+                            {cls.status === 'active' && (
+                                <div className="absolute top-4 right-4">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/instructor/classes/${cls.id}/live`);
+                                        }}
+                                        className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-full text-xs font-semibold flex items-center gap-1"
+                                    >
+                                        <Play className="w-3 h-3 fill-white" />
+                                        Live
+                                    </button>
+                                </div>
+                            )}
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                                <p className="text-white text-xs opacity-80">{cls.course}</p>
+                            </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-5">
+                            <h3 className="font-bold text-lg text-secondary mb-3 group-hover:text-primary transition-colors">
+                                {cls.name}
+                            </h3>
+
+                            {/* Stats */}
+                            <div className="space-y-2 text-sm text-slate-600 mb-4">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <Users className="w-4 h-4" />
+                                        <span>{cls.students}/{cls.maxStudents} học viên</span>
+                                    </div>
+                                    <div className="w-20 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-primary rounded-full"
+                                            style={{ width: `${(cls.students / cls.maxStudents) * 100}%` }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="w-4 h-4" />
+                                    <span>{cls.schedule} • {cls.time}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Clock className="w-4 h-4" />
+                                    <span>{cls.completedSessions}/{cls.totalSessions} buổi</span>
+                                </div>
+                            </div>
+
+                            {/* Next Session */}
+                            {cls.status !== 'completed' && (
+                                <div className="p-3 bg-blue-50 rounded-lg mb-4">
+                                    <p className="text-xs text-blue-600 font-medium mb-1">Buổi học tiếp theo</p>
+                                    <p className="text-sm text-blue-800 font-semibold">{formatNextSession(cls.nextSession)}</p>
+                                </div>
+                            )}
+
+                            {/* Actions */}
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/instructor/classes/${cls.id}`);
+                                    }}
+                                    className="flex-1 px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
+                                >
+                                    <Eye className="w-4 h-4" />
+                                    Chi tiết
+                                </button>
+                                {cls.status === 'active' && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/instructor/classes/${cls.id}/live`);
+                                        }}
+                                        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors flex items-center gap-2"
+                                    >
+                                        <Video className="w-4 h-4" />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Empty State */}
+            {filteredClasses.length === 0 && (
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-12 text-center">
+                    <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-secondary mb-2">Không tìm thấy lớp học</h3>
+                    <p className="text-slate-600 mb-6">Thử thay đổi bộ lọc hoặc tạo lớp học mới</p>
+                    <button
+                        onClick={() => navigate('/instructor/classes/create')}
+                        className="px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl font-semibold transition-colors inline-flex items-center gap-2"
+                    >
+                        <Plus className="w-5 h-5" />
+                        Tạo lớp mới
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
 
-export default InstructorClassList;
+export default ClassListPage;

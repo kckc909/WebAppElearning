@@ -9,6 +9,7 @@ import NotFoundPageAll from './pages/NotFoundPageAll'
 import { setupIonicReact } from '@ionic/react';
 import { useEffect } from 'react';
 import SuperAdminRoutes from './pages/SuperAdmin/_route';
+import { AuthProvider } from './contexts/AuthContext';
 setupIonicReact();
 
 function ScrollToTop() {
@@ -25,19 +26,21 @@ const App = () => {
 	return (
 		<>
 			<ErrorBoundery>
-				<HashRouter>
-					<ScrollToTop />
-					<Routes>
-						<Route path="/superadmin/*" element={<SuperAdminRoutes />} />
+				<AuthProvider>
+					<HashRouter>
+						<ScrollToTop />
+						<Routes>
+							<Route path="/superadmin/*" element={<SuperAdminRoutes />} />
 
-						<Route path="/admin/*" element={<AdminRoutes />} />
+							<Route path="/admin/*" element={<AdminRoutes />} />
 
-						<Route path="/instructor/*" element={<InstructorRoutes />} />
+							<Route path="/instructor/*" element={<InstructorRoutes />} />
 
-						<Route path="/*" element={<StudentRoutes />} />
+							<Route path="/*" element={<StudentRoutes />} />
 
-					</Routes>
-				</HashRouter>
+						</Routes>
+					</HashRouter>
+				</AuthProvider>
 			</ErrorBoundery>
 		</>
 	);

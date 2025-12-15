@@ -19,10 +19,10 @@ import ClassDetail from './ClassManagement/ClassList/ClassDetail'
 import CoursesOverview from "./CoursesManagement";
 import CourseList from "./CoursesManagement/Courses";
 import CourseCreate from './CoursesManagement/InstructorCourseCreate'
-import CourseDraft from './CoursesManagement/InstructorCourseDraft'
 
 import CourseDetail from "./CoursesManagement/Courses/CourseDetail";
-import CourseLesson from "./CoursesManagement/Courses/CourseDetail/InstructorCourseLesson";
+import CourseCurriculum from "./CoursesManagement/Courses/CourseDetail/CurriculumPage";
+import CourseLesson from "./CoursesManagement/Courses/CreateLesson";
 import CourseStudents from './CoursesManagement/Courses/Students'
 import CourseReviews from './CoursesManagement/Courses/Reviews'
 import CourseCertificates from './CoursesManagement/Courses/Certificates'
@@ -56,16 +56,16 @@ export default function InstructorRoutes() {
                 <Route path={instructor_routes.courses_overview} element={<CoursesOverview />} />
                 <Route path={instructor_routes.courses_list} element={<CourseList />} />
                 <Route path={instructor_routes.courses_create} element={<CourseCreate />} />
-                <Route path={instructor_routes.courses_draft} element={<CourseDraft />} />
 
                 {/* Course Detail */}
                 <Route path={instructor_routes.course_detail(":courseId")} element={<CourseDetail />} />
+                <Route path={instructor_routes.course_detail(":courseId") + "/curriculum"} element={<CourseCurriculum />} />
+                <Route path={instructor_routes.course_detail(":courseId") + "/settings"} element={<CourseSettings />} />
                 <Route path={instructor_routes.course_lesson(":courseId", ":lessonId")} element={<CourseLesson />} />
                 <Route path={instructor_routes.course_students(':courseId')} element={<CourseStudents />} />
                 <Route path={instructor_routes.course_certificates(':courseId')} element={<CourseCertificates />} />
                 <Route path={instructor_routes.course_reviews(':courseId')} element={<CourseReviews />} />
                 <Route path={instructor_routes.course_analytics(':courseId')} element={<CourseAnalystics />} />
-                <Route path={instructor_routes.course_settings(':courseId')} element={<CourseSettings />} />
 
                 {/* Classes Management - Main Pages */}
                 <Route path={instructor_routes.classes_overview} element={<ClassOverview />} />

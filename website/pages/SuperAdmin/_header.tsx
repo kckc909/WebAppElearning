@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Bell, Menu, LogOut, User, Home, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { MOCK_USER } from '../../mockData';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -10,6 +12,7 @@ const SuperAdminHeader: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const { user, logout } = useAuth();
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -24,10 +27,9 @@ const SuperAdminHeader: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
 
     const handleLogout = () => {
-        alert("Logged out!");
-        localStorage.setItem('Account', '')
+        logout();
         setIsDropdownOpen(false);
-        navigate('/')
+        navigate('/superadmin/login')
     }
 
     return (
@@ -70,18 +72,18 @@ const SuperAdminHeader: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
                     >
                         <img
                             className="h-8 w-8 rounded-full object-cover border border-gray-200"
-                            src="https://picsum.photos/100/100"
+                            src={user?.avatar_url || MOCK_USER.avatar}
                             alt="User Avatar"
                         />
-                        <span className="hidden md:block text-sm font-medium text-gray-700">John Doe</span>
+                        <span className="hidden md:block text-sm font-medium text-gray-700">{user?.full_name || 'Super Admin'}</span>
                         <ChevronDown size={16} className="text-gray-400 hidden md:block" />
                     </button>
 
                     {isDropdownOpen && (
                         <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transform transition-all duration-200 ease-out">
                             <div className="px-4 py-3 border-b border-gray-100">
-                                <p className="text-sm font-medium text-gray-900">John Doe</p>
-                                <p className="text-xs text-gray-500 truncate">superadmin@example.com</p>
+                                <p className="text-sm font-medium text-gray-900">{user?.full_name || 'Super Admin'}</p>
+                                <p className="text-xs text-gray-500 truncate">{user?.email || 'superadmin@example.com'}</p>
                             </div>
 
                             <div className="py-1">
@@ -101,7 +103,7 @@ const SuperAdminHeader: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
                             <div className="border-t border-gray-100 py-1">
                                 <button
-                                    onClick={() => { handleLogout }}
+                                    onClick={handleLogout}
                                     className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                 >
                                     <LogOut size={16} className="mr-3 text-red-500" />

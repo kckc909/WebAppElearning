@@ -1,4 +1,4 @@
-export default function Admin_DocumentLibrary() {
+export default function NullPage() {
 
     return (<>
         Chức năng đang được xây dựng
