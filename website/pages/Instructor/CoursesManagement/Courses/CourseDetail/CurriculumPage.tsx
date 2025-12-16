@@ -122,7 +122,7 @@ const CourseCurriculumPage: React.FC = () => {
             </div>
 
             {/* Sections List */}
-            <div className="space-y-4 max-w-4xl">
+            <div className="space-y-4 max-w-4xl mx-auto">
                 {sections.map((section, sectionIndex) => (
                     <div key={section.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                         {/* Section Header */}

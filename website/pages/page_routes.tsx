@@ -1,5 +1,3 @@
-const tmp_on_navigate = '/#/'
-
 // ------------------- Super Admin -------------------
 const superadmin_routes = {
     base: 'superadmin/',
@@ -137,4 +135,4 @@ const student_routes = {
     error: 'error',
 };
 
-export { tmp_on_navigate, superadmin_routes, admin_routes, instructor_routes, student_routes };
+export { superadmin_routes, admin_routes, instructor_routes, student_routes };

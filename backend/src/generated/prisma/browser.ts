@@ -13,10 +13,10 @@
  * 🟢 You can import this file directly.
  */
 
-import * as Prisma from './internal/prismaNamespaceBrowser'
+import * as Prisma from './internal/prismaNamespaceBrowser.js'
 export { Prisma }
-export * as $Enums from './enums'
-export * from './enums';
+export * as $Enums from './enums.js'
+export * from './enums.js';
 /**
  * Model admin_logs
  * 
@@ -34,7 +34,8 @@ export type certificates = Prisma.certificatesModel
 export type class_assignments = Prisma.class_assignmentsModel
 /**
  * Model class_calendar
- * 
+ * UPDATED: Added start_time, end_time, type (ClassCalendarType enum)
+ * Kept duration_minutes for backward compatibility / analytics
  */
 export type class_calendar = Prisma.class_calendarModel
 /**
@@ -44,7 +45,7 @@ export type class_calendar = Prisma.class_calendarModel
 export type class_exam_results = Prisma.class_exam_resultsModel
 /**
  * Model class_exams
- * 
+ * UPDATED: exam_type now uses ExamType enum
  */
 export type class_exams = Prisma.class_examsModel
 /**
@@ -109,7 +110,10 @@ export type course_reviews = Prisma.course_reviewsModel
 export type course_sections = Prisma.course_sectionsModel
 /**
  * Model courses
- * 
+ * UPDATED: 
+ * - Removed complete_at (ambiguous, unused)
+ * - level now uses CourseLevel enum
+ * - status now uses CourseStatus enum
  */
 export type courses = Prisma.coursesModel
 /**
@@ -129,7 +133,7 @@ export type lesson_contents = Prisma.lesson_contentsModel
 export type messages = Prisma.messagesModel
 /**
  * Model notifications
- * 
+ * UPDATED: type now uses NotificationType enum
  */
 export type notifications = Prisma.notificationsModel
 /**
@@ -154,6 +158,6 @@ export type transactions = Prisma.transactionsModel
 export type user_profiles = Prisma.user_profilesModel
 /**
  * Model accounts
- * 
+ * UPDATED: role now uses UserRole enum
  */
 export type accounts = Prisma.accountsModel

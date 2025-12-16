@@ -1,4 +1,29 @@
 /**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - DO NOT USE ⚠️ ⚠️ ⚠️
+ * 
+ * This file is LEGACY and will be removed.
+ * 
+ * NEW ARCHITECTURE (Phase 4-6):
+ * ✅ Use: mock-db/ - Raw DB data (seedable)
+ * ✅ Use: data/repositories/ - Business logic + JOINs
+ * ✅ Use: data/datasources/ - Data access layer
+ * 
+ * MIGRATION PATH:
+ * - API layer: Import from mock-db + repositories
+ * - UI layer: Use repositories (NOT this file)
+ * 
+ * This file contains:
+ * ❌ Computed fields (instructor object, rating)
+ * ❌ Joins done in advance
+ * ❌ Mixed concerns (raw + enriched)
+ * 
+ * KEPT FOR: Temporary backward compatibility only
+ * WILL BE DELETED: After full migration complete
+ * 
+ * @deprecated Use mock-db + repository layer instead
+ */
+
+/**
  * MOCK DATA - Dữ liệu giả khớp với Prisma Database Schema
  * Khi chuyển sang DB thật, chỉ cần thay đổi data source
  */
@@ -451,8 +476,8 @@ export const DEMO_USERS = {
 // HELPER FUNCTIONS
 // ============================================
 export const validateLogin = (emailOrUsername: string, password: string) => {
-	const user = ACCOUNTS.find(a => 
-		(a.email === emailOrUsername || a.username === emailOrUsername) && 
+	const user = ACCOUNTS.find(a =>
+		(a.email === emailOrUsername || a.username === emailOrUsername) &&
 		a.password_hash === password
 	);
 	if (user) {

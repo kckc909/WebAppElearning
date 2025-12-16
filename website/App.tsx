@@ -1,5 +1,5 @@
 
-import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import StudentRoutes from './pages/Student/StudentRoutes'
 import InstructorRoutes from './pages/Instructor/InstructorRoutes'
 import AdminRoutes from './pages/Admin/AdminRoutes'
@@ -27,7 +27,7 @@ const App = () => {
 		<>
 			<ErrorBoundery>
 				<AuthProvider>
-					<HashRouter>
+					<BrowserRouter>
 						<ScrollToTop />
 						<Routes>
 							<Route path="/superadmin/*" element={<SuperAdminRoutes />} />
@@ -39,7 +39,7 @@ const App = () => {
 							<Route path="/*" element={<StudentRoutes />} />
 
 						</Routes>
-					</HashRouter>
+					</BrowserRouter>
 				</AuthProvider>
 			</ErrorBoundery>
 		</>

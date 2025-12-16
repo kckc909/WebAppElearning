@@ -9,12 +9,15 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model courses
- * 
+ * UPDATED: 
+ * - Removed complete_at (ambiguous, unused)
+ * - level now uses CourseLevel enum
+ * - status now uses CourseStatus enum
  */
 export type coursesModel = runtime.Types.Result.DefaultSelection<Prisma.$coursesPayload>
 
@@ -30,22 +33,16 @@ export type CoursesAvgAggregateOutputType = {
   id: number | null
   instructor_id: number | null
   category_id: number | null
-  level: number | null
   price: number | null
   discount_price: number | null
-  complete_at: number | null
-  status: number | null
 }
 
 export type CoursesSumAggregateOutputType = {
   id: number | null
   instructor_id: number | null
   category_id: number | null
-  level: number | null
   price: number | null
   discount_price: number | null
-  complete_at: number | null
-  status: number | null
 }
 
 export type CoursesMinAggregateOutputType = {
@@ -55,14 +52,14 @@ export type CoursesMinAggregateOutputType = {
   title: string | null
   short_description: string | null
   description: string | null
-  level: number | null
+  level: $Enums.CourseLevel | null
   language: string | null
   price: number | null
   discount_price: number | null
   thumbnail: string | null
-  complete_at: number | null
-  status: number | null
+  status: $Enums.CourseStatus | null
   created_at: Date | null
+  updated_at: Date | null
 }
 
 export type CoursesMaxAggregateOutputType = {
@@ -72,14 +69,14 @@ export type CoursesMaxAggregateOutputType = {
   title: string | null
   short_description: string | null
   description: string | null
-  level: number | null
+  level: $Enums.CourseLevel | null
   language: string | null
   price: number | null
   discount_price: number | null
   thumbnail: string | null
-  complete_at: number | null
-  status: number | null
+  status: $Enums.CourseStatus | null
   created_at: Date | null
+  updated_at: Date | null
 }
 
 export type CoursesCountAggregateOutputType = {
@@ -94,9 +91,9 @@ export type CoursesCountAggregateOutputType = {
   price: number
   discount_price: number
   thumbnail: number
-  complete_at: number
   status: number
   created_at: number
+  updated_at: number
   _all: number
 }
 
@@ -105,22 +102,16 @@ export type CoursesAvgAggregateInputType = {
   id?: true
   instructor_id?: true
   category_id?: true
-  level?: true
   price?: true
   discount_price?: true
-  complete_at?: true
-  status?: true
 }
 
 export type CoursesSumAggregateInputType = {
   id?: true
   instructor_id?: true
   category_id?: true
-  level?: true
   price?: true
   discount_price?: true
-  complete_at?: true
-  status?: true
 }
 
 export type CoursesMinAggregateInputType = {
@@ -135,9 +126,9 @@ export type CoursesMinAggregateInputType = {
   price?: true
   discount_price?: true
   thumbnail?: true
-  complete_at?: true
   status?: true
   created_at?: true
+  updated_at?: true
 }
 
 export type CoursesMaxAggregateInputType = {
@@ -152,9 +143,9 @@ export type CoursesMaxAggregateInputType = {
   price?: true
   discount_price?: true
   thumbnail?: true
-  complete_at?: true
   status?: true
   created_at?: true
+  updated_at?: true
 }
 
 export type CoursesCountAggregateInputType = {
@@ -169,9 +160,9 @@ export type CoursesCountAggregateInputType = {
   price?: true
   discount_price?: true
   thumbnail?: true
-  complete_at?: true
   status?: true
   created_at?: true
+  updated_at?: true
   _all?: true
 }
 
@@ -268,14 +259,14 @@ export type CoursesGroupByOutputType = {
   title: string
   short_description: string | null
   description: string | null
-  level: number | null
+  level: $Enums.CourseLevel | null
   language: string | null
   price: number | null
   discount_price: number | null
   thumbnail: string | null
-  complete_at: number | null
-  status: number | null
+  status: $Enums.CourseStatus | null
   created_at: Date | null
+  updated_at: Date | null
   _count: CoursesCountAggregateOutputType | null
   _avg: CoursesAvgAggregateOutputType | null
   _sum: CoursesSumAggregateOutputType | null
@@ -308,14 +299,14 @@ export type coursesWhereInput = {
   title?: Prisma.StringFilter<"courses"> | string
   short_description?: Prisma.StringNullableFilter<"courses"> | string | null
   description?: Prisma.StringNullableFilter<"courses"> | string | null
-  level?: Prisma.IntNullableFilter<"courses"> | number | null
+  level?: Prisma.EnumCourseLevelNullableFilter<"courses"> | $Enums.CourseLevel | null
   language?: Prisma.StringNullableFilter<"courses"> | string | null
   price?: Prisma.IntNullableFilter<"courses"> | number | null
   discount_price?: Prisma.IntNullableFilter<"courses"> | number | null
   thumbnail?: Prisma.StringNullableFilter<"courses"> | string | null
-  complete_at?: Prisma.IntNullableFilter<"courses"> | number | null
-  status?: Prisma.IntNullableFilter<"courses"> | number | null
+  status?: Prisma.EnumCourseStatusNullableFilter<"courses"> | $Enums.CourseStatus | null
   created_at?: Prisma.DateTimeNullableFilter<"courses"> | Date | string | null
+  updated_at?: Prisma.DateTimeNullableFilter<"courses"> | Date | string | null
   certificates?: Prisma.CertificatesListRelationFilter
   classes?: Prisma.ClassesListRelationFilter
   course_enrollments?: Prisma.Course_enrollmentsListRelationFilter
@@ -338,9 +329,9 @@ export type coursesOrderByWithRelationInput = {
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   discount_price?: Prisma.SortOrderInput | Prisma.SortOrder
   thumbnail?: Prisma.SortOrderInput | Prisma.SortOrder
-  complete_at?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder
   certificates?: Prisma.certificatesOrderByRelationAggregateInput
   classes?: Prisma.classesOrderByRelationAggregateInput
   course_enrollments?: Prisma.course_enrollmentsOrderByRelationAggregateInput
@@ -362,14 +353,14 @@ export type coursesWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"courses"> | string
   short_description?: Prisma.StringNullableFilter<"courses"> | string | null
   description?: Prisma.StringNullableFilter<"courses"> | string | null
-  level?: Prisma.IntNullableFilter<"courses"> | number | null
+  level?: Prisma.EnumCourseLevelNullableFilter<"courses"> | $Enums.CourseLevel | null
   language?: Prisma.StringNullableFilter<"courses"> | string | null
   price?: Prisma.IntNullableFilter<"courses"> | number | null
   discount_price?: Prisma.IntNullableFilter<"courses"> | number | null
   thumbnail?: Prisma.StringNullableFilter<"courses"> | string | null
-  complete_at?: Prisma.IntNullableFilter<"courses"> | number | null
-  status?: Prisma.IntNullableFilter<"courses"> | number | null
+  status?: Prisma.EnumCourseStatusNullableFilter<"courses"> | $Enums.CourseStatus | null
   created_at?: Prisma.DateTimeNullableFilter<"courses"> | Date | string | null
+  updated_at?: Prisma.DateTimeNullableFilter<"courses"> | Date | string | null
   certificates?: Prisma.CertificatesListRelationFilter
   classes?: Prisma.ClassesListRelationFilter
   course_enrollments?: Prisma.Course_enrollmentsListRelationFilter
@@ -392,9 +383,9 @@ export type coursesOrderByWithAggregationInput = {
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   discount_price?: Prisma.SortOrderInput | Prisma.SortOrder
   thumbnail?: Prisma.SortOrderInput | Prisma.SortOrder
-  complete_at?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.coursesCountOrderByAggregateInput
   _avg?: Prisma.coursesAvgOrderByAggregateInput
   _max?: Prisma.coursesMaxOrderByAggregateInput
@@ -412,28 +403,28 @@ export type coursesScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"courses"> | string
   short_description?: Prisma.StringNullableWithAggregatesFilter<"courses"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"courses"> | string | null
-  level?: Prisma.IntNullableWithAggregatesFilter<"courses"> | number | null
+  level?: Prisma.EnumCourseLevelNullableWithAggregatesFilter<"courses"> | $Enums.CourseLevel | null
   language?: Prisma.StringNullableWithAggregatesFilter<"courses"> | string | null
   price?: Prisma.IntNullableWithAggregatesFilter<"courses"> | number | null
   discount_price?: Prisma.IntNullableWithAggregatesFilter<"courses"> | number | null
   thumbnail?: Prisma.StringNullableWithAggregatesFilter<"courses"> | string | null
-  complete_at?: Prisma.IntNullableWithAggregatesFilter<"courses"> | number | null
-  status?: Prisma.IntNullableWithAggregatesFilter<"courses"> | number | null
+  status?: Prisma.EnumCourseStatusNullableWithAggregatesFilter<"courses"> | $Enums.CourseStatus | null
   created_at?: Prisma.DateTimeNullableWithAggregatesFilter<"courses"> | Date | string | null
+  updated_at?: Prisma.DateTimeNullableWithAggregatesFilter<"courses"> | Date | string | null
 }
 
 export type coursesCreateInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsCreateNestedManyWithoutCoursesInput
@@ -451,14 +442,14 @@ export type coursesUncheckedCreateInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesUncheckedCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
@@ -471,14 +462,14 @@ export type coursesUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUpdateManyWithoutCoursesNestedInput
@@ -496,14 +487,14 @@ export type coursesUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUncheckedUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUncheckedUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -519,28 +510,28 @@ export type coursesCreateManyInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
 }
 
 export type coursesUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type coursesUncheckedUpdateManyInput = {
@@ -550,14 +541,14 @@ export type coursesUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CoursesScalarRelationFilter = {
@@ -593,20 +584,17 @@ export type coursesCountOrderByAggregateInput = {
   price?: Prisma.SortOrder
   discount_price?: Prisma.SortOrder
   thumbnail?: Prisma.SortOrder
-  complete_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
 export type coursesAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instructor_id?: Prisma.SortOrder
   category_id?: Prisma.SortOrder
-  level?: Prisma.SortOrder
   price?: Prisma.SortOrder
   discount_price?: Prisma.SortOrder
-  complete_at?: Prisma.SortOrder
-  status?: Prisma.SortOrder
 }
 
 export type coursesMaxOrderByAggregateInput = {
@@ -621,9 +609,9 @@ export type coursesMaxOrderByAggregateInput = {
   price?: Prisma.SortOrder
   discount_price?: Prisma.SortOrder
   thumbnail?: Prisma.SortOrder
-  complete_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
 export type coursesMinOrderByAggregateInput = {
@@ -638,20 +626,17 @@ export type coursesMinOrderByAggregateInput = {
   price?: Prisma.SortOrder
   discount_price?: Prisma.SortOrder
   thumbnail?: Prisma.SortOrder
-  complete_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
 export type coursesSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instructor_id?: Prisma.SortOrder
   category_id?: Prisma.SortOrder
-  level?: Prisma.SortOrder
   price?: Prisma.SortOrder
   discount_price?: Prisma.SortOrder
-  complete_at?: Prisma.SortOrder
-  status?: Prisma.SortOrder
 }
 
 export type CoursesNullableScalarRelationFilter = {
@@ -771,6 +756,14 @@ export type coursesUpdateOneRequiredWithoutCourse_sectionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.coursesUpdateToOneWithWhereWithoutCourse_sectionsInput, Prisma.coursesUpdateWithoutCourse_sectionsInput>, Prisma.coursesUncheckedUpdateWithoutCourse_sectionsInput>
 }
 
+export type NullableEnumCourseLevelFieldUpdateOperationsInput = {
+  set?: $Enums.CourseLevel | null
+}
+
+export type NullableEnumCourseStatusFieldUpdateOperationsInput = {
+  set?: $Enums.CourseStatus | null
+}
+
 export type coursesCreateNestedOneWithoutTransactionsInput = {
   create?: Prisma.XOR<Prisma.coursesCreateWithoutTransactionsInput, Prisma.coursesUncheckedCreateWithoutTransactionsInput>
   connectOrCreate?: Prisma.coursesCreateOrConnectWithoutTransactionsInput
@@ -833,14 +826,14 @@ export type coursesCreateWithoutCertificatesInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   classes?: Prisma.classesCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsCreateNestedManyWithoutCoursesInput
   course_reviews?: Prisma.course_reviewsCreateNestedManyWithoutCoursesInput
@@ -857,14 +850,14 @@ export type coursesUncheckedCreateWithoutCertificatesInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
   course_reviews?: Prisma.course_reviewsUncheckedCreateNestedManyWithoutCoursesInput
@@ -892,14 +885,14 @@ export type coursesUpdateWithoutCertificatesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   classes?: Prisma.classesUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUpdateManyWithoutCoursesNestedInput
   course_reviews?: Prisma.course_reviewsUpdateManyWithoutCoursesNestedInput
@@ -916,14 +909,14 @@ export type coursesUncheckedUpdateWithoutCertificatesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   classes?: Prisma.classesUncheckedUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
   course_reviews?: Prisma.course_reviewsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -935,14 +928,14 @@ export type coursesCreateWithoutClassesInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsCreateNestedManyWithoutCoursesInput
   course_reviews?: Prisma.course_reviewsCreateNestedManyWithoutCoursesInput
@@ -959,14 +952,14 @@ export type coursesUncheckedCreateWithoutClassesInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesUncheckedCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
   course_reviews?: Prisma.course_reviewsUncheckedCreateNestedManyWithoutCoursesInput
@@ -994,14 +987,14 @@ export type coursesUpdateWithoutClassesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUpdateManyWithoutCoursesNestedInput
   course_reviews?: Prisma.course_reviewsUpdateManyWithoutCoursesNestedInput
@@ -1018,14 +1011,14 @@ export type coursesUncheckedUpdateWithoutClassesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUncheckedUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
   course_reviews?: Prisma.course_reviewsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -1037,14 +1030,14 @@ export type coursesCreateWithoutCourse_categoriesInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsCreateNestedManyWithoutCoursesInput
@@ -1060,14 +1053,14 @@ export type coursesUncheckedCreateWithoutCourse_categoriesInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesUncheckedCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
@@ -1112,28 +1105,28 @@ export type coursesScalarWhereInput = {
   title?: Prisma.StringFilter<"courses"> | string
   short_description?: Prisma.StringNullableFilter<"courses"> | string | null
   description?: Prisma.StringNullableFilter<"courses"> | string | null
-  level?: Prisma.IntNullableFilter<"courses"> | number | null
+  level?: Prisma.EnumCourseLevelNullableFilter<"courses"> | $Enums.CourseLevel | null
   language?: Prisma.StringNullableFilter<"courses"> | string | null
   price?: Prisma.IntNullableFilter<"courses"> | number | null
   discount_price?: Prisma.IntNullableFilter<"courses"> | number | null
   thumbnail?: Prisma.StringNullableFilter<"courses"> | string | null
-  complete_at?: Prisma.IntNullableFilter<"courses"> | number | null
-  status?: Prisma.IntNullableFilter<"courses"> | number | null
+  status?: Prisma.EnumCourseStatusNullableFilter<"courses"> | $Enums.CourseStatus | null
   created_at?: Prisma.DateTimeNullableFilter<"courses"> | Date | string | null
+  updated_at?: Prisma.DateTimeNullableFilter<"courses"> | Date | string | null
 }
 
 export type coursesCreateWithoutCourse_enrollmentsInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesCreateNestedManyWithoutCoursesInput
   course_reviews?: Prisma.course_reviewsCreateNestedManyWithoutCoursesInput
@@ -1150,14 +1143,14 @@ export type coursesUncheckedCreateWithoutCourse_enrollmentsInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesUncheckedCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutCoursesInput
   course_reviews?: Prisma.course_reviewsUncheckedCreateNestedManyWithoutCoursesInput
@@ -1185,14 +1178,14 @@ export type coursesUpdateWithoutCourse_enrollmentsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUpdateManyWithoutCoursesNestedInput
   course_reviews?: Prisma.course_reviewsUpdateManyWithoutCoursesNestedInput
@@ -1209,14 +1202,14 @@ export type coursesUncheckedUpdateWithoutCourse_enrollmentsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUncheckedUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUncheckedUpdateManyWithoutCoursesNestedInput
   course_reviews?: Prisma.course_reviewsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -1228,14 +1221,14 @@ export type coursesCreateWithoutCourse_reviewsInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsCreateNestedManyWithoutCoursesInput
@@ -1252,14 +1245,14 @@ export type coursesUncheckedCreateWithoutCourse_reviewsInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesUncheckedCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
@@ -1287,14 +1280,14 @@ export type coursesUpdateWithoutCourse_reviewsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUpdateManyWithoutCoursesNestedInput
@@ -1311,14 +1304,14 @@ export type coursesUncheckedUpdateWithoutCourse_reviewsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUncheckedUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUncheckedUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -1330,14 +1323,14 @@ export type coursesCreateWithoutCourse_sectionsInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsCreateNestedManyWithoutCoursesInput
@@ -1354,14 +1347,14 @@ export type coursesUncheckedCreateWithoutCourse_sectionsInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesUncheckedCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
@@ -1389,14 +1382,14 @@ export type coursesUpdateWithoutCourse_sectionsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUpdateManyWithoutCoursesNestedInput
@@ -1413,14 +1406,14 @@ export type coursesUncheckedUpdateWithoutCourse_sectionsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUncheckedUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUncheckedUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -1432,14 +1425,14 @@ export type coursesCreateWithoutTransactionsInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsCreateNestedManyWithoutCoursesInput
@@ -1456,14 +1449,14 @@ export type coursesUncheckedCreateWithoutTransactionsInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesUncheckedCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
@@ -1491,14 +1484,14 @@ export type coursesUpdateWithoutTransactionsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUpdateManyWithoutCoursesNestedInput
@@ -1515,14 +1508,14 @@ export type coursesUncheckedUpdateWithoutTransactionsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUncheckedUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUncheckedUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -1534,14 +1527,14 @@ export type coursesCreateWithoutUsersInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsCreateNestedManyWithoutCoursesInput
@@ -1557,14 +1550,14 @@ export type coursesUncheckedCreateWithoutUsersInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
   certificates?: Prisma.certificatesUncheckedCreateNestedManyWithoutCoursesInput
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutCoursesInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
@@ -1605,28 +1598,28 @@ export type coursesCreateManyCourse_categoriesInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
 }
 
 export type coursesUpdateWithoutCourse_categoriesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUpdateManyWithoutCoursesNestedInput
@@ -1642,14 +1635,14 @@ export type coursesUncheckedUpdateWithoutCourse_categoriesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUncheckedUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUncheckedUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -1664,14 +1657,14 @@ export type coursesUncheckedUpdateManyWithoutCourse_categoriesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type coursesCreateManyUsersInput = {
@@ -1680,28 +1673,28 @@ export type coursesCreateManyUsersInput = {
   title: string
   short_description?: string | null
   description?: string | null
-  level?: number | null
+  level?: $Enums.CourseLevel | null
   language?: string | null
   price?: number | null
   discount_price?: number | null
   thumbnail?: string | null
-  complete_at?: number | null
-  status?: number | null
+  status?: $Enums.CourseStatus | null
   created_at?: Date | string | null
+  updated_at?: Date | string | null
 }
 
 export type coursesUpdateWithoutUsersInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUpdateManyWithoutCoursesNestedInput
@@ -1717,14 +1710,14 @@ export type coursesUncheckedUpdateWithoutUsersInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   certificates?: Prisma.certificatesUncheckedUpdateManyWithoutCoursesNestedInput
   classes?: Prisma.classesUncheckedUpdateManyWithoutCoursesNestedInput
   course_enrollments?: Prisma.course_enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -1739,14 +1732,14 @@ export type coursesUncheckedUpdateManyWithoutUsersInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   short_description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  level?: Prisma.NullableEnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel | null
   language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   discount_price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  complete_at?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.NullableEnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1837,9 +1830,9 @@ export type coursesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   price?: boolean
   discount_price?: boolean
   thumbnail?: boolean
-  complete_at?: boolean
   status?: boolean
   created_at?: boolean
+  updated_at?: boolean
   certificates?: boolean | Prisma.courses$certificatesArgs<ExtArgs>
   classes?: boolean | Prisma.courses$classesArgs<ExtArgs>
   course_enrollments?: boolean | Prisma.courses$course_enrollmentsArgs<ExtArgs>
@@ -1865,12 +1858,12 @@ export type coursesSelectScalar = {
   price?: boolean
   discount_price?: boolean
   thumbnail?: boolean
-  complete_at?: boolean
   status?: boolean
   created_at?: boolean
+  updated_at?: boolean
 }
 
-export type coursesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instructor_id" | "category_id" | "title" | "short_description" | "description" | "level" | "language" | "price" | "discount_price" | "thumbnail" | "complete_at" | "status" | "created_at", ExtArgs["result"]["courses"]>
+export type coursesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instructor_id" | "category_id" | "title" | "short_description" | "description" | "level" | "language" | "price" | "discount_price" | "thumbnail" | "status" | "created_at" | "updated_at", ExtArgs["result"]["courses"]>
 export type coursesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   certificates?: boolean | Prisma.courses$certificatesArgs<ExtArgs>
   classes?: boolean | Prisma.courses$classesArgs<ExtArgs>
@@ -1902,14 +1895,14 @@ export type $coursesPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     title: string
     short_description: string | null
     description: string | null
-    level: number | null
+    level: $Enums.CourseLevel | null
     language: string | null
     price: number | null
     discount_price: number | null
     thumbnail: string | null
-    complete_at: number | null
-    status: number | null
+    status: $Enums.CourseStatus | null
     created_at: Date | null
+    updated_at: Date | null
   }, ExtArgs["result"]["courses"]>
   composites: {}
 }
@@ -2293,14 +2286,14 @@ export interface coursesFieldRefs {
   readonly title: Prisma.FieldRef<"courses", 'String'>
   readonly short_description: Prisma.FieldRef<"courses", 'String'>
   readonly description: Prisma.FieldRef<"courses", 'String'>
-  readonly level: Prisma.FieldRef<"courses", 'Int'>
+  readonly level: Prisma.FieldRef<"courses", 'CourseLevel'>
   readonly language: Prisma.FieldRef<"courses", 'String'>
   readonly price: Prisma.FieldRef<"courses", 'Int'>
   readonly discount_price: Prisma.FieldRef<"courses", 'Int'>
   readonly thumbnail: Prisma.FieldRef<"courses", 'String'>
-  readonly complete_at: Prisma.FieldRef<"courses", 'Int'>
-  readonly status: Prisma.FieldRef<"courses", 'Int'>
+  readonly status: Prisma.FieldRef<"courses", 'CourseStatus'>
   readonly created_at: Prisma.FieldRef<"courses", 'DateTime'>
+  readonly updated_at: Prisma.FieldRef<"courses", 'DateTime'>
 }
     
 

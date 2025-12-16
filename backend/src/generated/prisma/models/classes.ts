@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model classes
@@ -30,6 +30,7 @@ export type ClassesAvgAggregateOutputType = {
   id: number | null
   course_id: number | null
   instructor_id: number | null
+  max_students: number | null
   status: number | null
 }
 
@@ -37,6 +38,7 @@ export type ClassesSumAggregateOutputType = {
   id: number | null
   course_id: number | null
   instructor_id: number | null
+  max_students: number | null
   status: number | null
 }
 
@@ -49,6 +51,8 @@ export type ClassesMinAggregateOutputType = {
   start_date: Date | null
   end_date: Date | null
   meeting_link: string | null
+  max_students: number | null
+  schedule: string | null
   status: number | null
   created_at: Date | null
 }
@@ -62,6 +66,8 @@ export type ClassesMaxAggregateOutputType = {
   start_date: Date | null
   end_date: Date | null
   meeting_link: string | null
+  max_students: number | null
+  schedule: string | null
   status: number | null
   created_at: Date | null
 }
@@ -75,6 +81,8 @@ export type ClassesCountAggregateOutputType = {
   start_date: number
   end_date: number
   meeting_link: number
+  max_students: number
+  schedule: number
   status: number
   created_at: number
   _all: number
@@ -85,6 +93,7 @@ export type ClassesAvgAggregateInputType = {
   id?: true
   course_id?: true
   instructor_id?: true
+  max_students?: true
   status?: true
 }
 
@@ -92,6 +101,7 @@ export type ClassesSumAggregateInputType = {
   id?: true
   course_id?: true
   instructor_id?: true
+  max_students?: true
   status?: true
 }
 
@@ -104,6 +114,8 @@ export type ClassesMinAggregateInputType = {
   start_date?: true
   end_date?: true
   meeting_link?: true
+  max_students?: true
+  schedule?: true
   status?: true
   created_at?: true
 }
@@ -117,6 +129,8 @@ export type ClassesMaxAggregateInputType = {
   start_date?: true
   end_date?: true
   meeting_link?: true
+  max_students?: true
+  schedule?: true
   status?: true
   created_at?: true
 }
@@ -130,6 +144,8 @@ export type ClassesCountAggregateInputType = {
   start_date?: true
   end_date?: true
   meeting_link?: true
+  max_students?: true
+  schedule?: true
   status?: true
   created_at?: true
   _all?: true
@@ -230,6 +246,8 @@ export type ClassesGroupByOutputType = {
   start_date: Date | null
   end_date: Date | null
   meeting_link: string | null
+  max_students: number | null
+  schedule: string | null
   status: number | null
   created_at: Date | null
   _count: ClassesCountAggregateOutputType | null
@@ -266,6 +284,8 @@ export type classesWhereInput = {
   start_date?: Prisma.DateTimeNullableFilter<"classes"> | Date | string | null
   end_date?: Prisma.DateTimeNullableFilter<"classes"> | Date | string | null
   meeting_link?: Prisma.StringNullableFilter<"classes"> | string | null
+  max_students?: Prisma.IntNullableFilter<"classes"> | number | null
+  schedule?: Prisma.StringNullableFilter<"classes"> | string | null
   status?: Prisma.IntNullableFilter<"classes"> | number | null
   created_at?: Prisma.DateTimeNullableFilter<"classes"> | Date | string | null
   class_assignments?: Prisma.Class_assignmentsListRelationFilter
@@ -286,6 +306,8 @@ export type classesOrderByWithRelationInput = {
   start_date?: Prisma.SortOrderInput | Prisma.SortOrder
   end_date?: Prisma.SortOrderInput | Prisma.SortOrder
   meeting_link?: Prisma.SortOrderInput | Prisma.SortOrder
+  max_students?: Prisma.SortOrderInput | Prisma.SortOrder
+  schedule?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrderInput | Prisma.SortOrder
   class_assignments?: Prisma.class_assignmentsOrderByRelationAggregateInput
@@ -310,6 +332,8 @@ export type classesWhereUniqueInput = Prisma.AtLeast<{
   start_date?: Prisma.DateTimeNullableFilter<"classes"> | Date | string | null
   end_date?: Prisma.DateTimeNullableFilter<"classes"> | Date | string | null
   meeting_link?: Prisma.StringNullableFilter<"classes"> | string | null
+  max_students?: Prisma.IntNullableFilter<"classes"> | number | null
+  schedule?: Prisma.StringNullableFilter<"classes"> | string | null
   status?: Prisma.IntNullableFilter<"classes"> | number | null
   created_at?: Prisma.DateTimeNullableFilter<"classes"> | Date | string | null
   class_assignments?: Prisma.Class_assignmentsListRelationFilter
@@ -330,6 +354,8 @@ export type classesOrderByWithAggregationInput = {
   start_date?: Prisma.SortOrderInput | Prisma.SortOrder
   end_date?: Prisma.SortOrderInput | Prisma.SortOrder
   meeting_link?: Prisma.SortOrderInput | Prisma.SortOrder
+  max_students?: Prisma.SortOrderInput | Prisma.SortOrder
+  schedule?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.classesCountOrderByAggregateInput
@@ -351,6 +377,8 @@ export type classesScalarWhereWithAggregatesInput = {
   start_date?: Prisma.DateTimeNullableWithAggregatesFilter<"classes"> | Date | string | null
   end_date?: Prisma.DateTimeNullableWithAggregatesFilter<"classes"> | Date | string | null
   meeting_link?: Prisma.StringNullableWithAggregatesFilter<"classes"> | string | null
+  max_students?: Prisma.IntNullableWithAggregatesFilter<"classes"> | number | null
+  schedule?: Prisma.StringNullableWithAggregatesFilter<"classes"> | string | null
   status?: Prisma.IntNullableWithAggregatesFilter<"classes"> | number | null
   created_at?: Prisma.DateTimeNullableWithAggregatesFilter<"classes"> | Date | string | null
 }
@@ -361,6 +389,8 @@ export type classesCreateInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsCreateNestedManyWithoutClassesInput
@@ -381,6 +411,8 @@ export type classesUncheckedCreateInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedCreateNestedManyWithoutClassesInput
@@ -396,6 +428,8 @@ export type classesUpdateInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUpdateManyWithoutClassesNestedInput
@@ -416,6 +450,8 @@ export type classesUncheckedUpdateInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedUpdateManyWithoutClassesNestedInput
@@ -434,6 +470,8 @@ export type classesCreateManyInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
 }
@@ -444,6 +482,8 @@ export type classesUpdateManyMutationInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -457,6 +497,8 @@ export type classesUncheckedUpdateManyInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -481,6 +523,8 @@ export type classesCountOrderByAggregateInput = {
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   meeting_link?: Prisma.SortOrder
+  max_students?: Prisma.SortOrder
+  schedule?: Prisma.SortOrder
   status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
 }
@@ -489,6 +533,7 @@ export type classesAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   course_id?: Prisma.SortOrder
   instructor_id?: Prisma.SortOrder
+  max_students?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -501,6 +546,8 @@ export type classesMaxOrderByAggregateInput = {
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   meeting_link?: Prisma.SortOrder
+  max_students?: Prisma.SortOrder
+  schedule?: Prisma.SortOrder
   status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
 }
@@ -514,6 +561,8 @@ export type classesMinOrderByAggregateInput = {
   start_date?: Prisma.SortOrder
   end_date?: Prisma.SortOrder
   meeting_link?: Prisma.SortOrder
+  max_students?: Prisma.SortOrder
+  schedule?: Prisma.SortOrder
   status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
 }
@@ -522,6 +571,7 @@ export type classesSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   course_id?: Prisma.SortOrder
   instructor_id?: Prisma.SortOrder
+  max_students?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -699,6 +749,8 @@ export type classesCreateWithoutClass_assignmentsInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_calendar?: Prisma.class_calendarCreateNestedManyWithoutClassesInput
@@ -718,6 +770,8 @@ export type classesUncheckedCreateWithoutClass_assignmentsInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_calendar?: Prisma.class_calendarUncheckedCreateNestedManyWithoutClassesInput
@@ -748,6 +802,8 @@ export type classesUpdateWithoutClass_assignmentsInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_calendar?: Prisma.class_calendarUpdateManyWithoutClassesNestedInput
@@ -767,6 +823,8 @@ export type classesUncheckedUpdateWithoutClass_assignmentsInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_calendar?: Prisma.class_calendarUncheckedUpdateManyWithoutClassesNestedInput
@@ -781,6 +839,8 @@ export type classesCreateWithoutClass_calendarInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsCreateNestedManyWithoutClassesInput
@@ -800,6 +860,8 @@ export type classesUncheckedCreateWithoutClass_calendarInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedCreateNestedManyWithoutClassesInput
@@ -830,6 +892,8 @@ export type classesUpdateWithoutClass_calendarInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUpdateManyWithoutClassesNestedInput
@@ -849,6 +913,8 @@ export type classesUncheckedUpdateWithoutClass_calendarInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedUpdateManyWithoutClassesNestedInput
@@ -863,6 +929,8 @@ export type classesCreateWithoutClass_examsInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsCreateNestedManyWithoutClassesInput
@@ -882,6 +950,8 @@ export type classesUncheckedCreateWithoutClass_examsInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedCreateNestedManyWithoutClassesInput
@@ -912,6 +982,8 @@ export type classesUpdateWithoutClass_examsInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUpdateManyWithoutClassesNestedInput
@@ -931,6 +1003,8 @@ export type classesUncheckedUpdateWithoutClass_examsInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedUpdateManyWithoutClassesNestedInput
@@ -945,6 +1019,8 @@ export type classesCreateWithoutClass_materialsInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsCreateNestedManyWithoutClassesInput
@@ -964,6 +1040,8 @@ export type classesUncheckedCreateWithoutClass_materialsInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedCreateNestedManyWithoutClassesInput
@@ -994,6 +1072,8 @@ export type classesUpdateWithoutClass_materialsInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUpdateManyWithoutClassesNestedInput
@@ -1013,6 +1093,8 @@ export type classesUncheckedUpdateWithoutClass_materialsInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedUpdateManyWithoutClassesNestedInput
@@ -1027,6 +1109,8 @@ export type classesCreateWithoutClass_studentsInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsCreateNestedManyWithoutClassesInput
@@ -1046,6 +1130,8 @@ export type classesUncheckedCreateWithoutClass_studentsInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedCreateNestedManyWithoutClassesInput
@@ -1076,6 +1162,8 @@ export type classesUpdateWithoutClass_studentsInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUpdateManyWithoutClassesNestedInput
@@ -1095,6 +1183,8 @@ export type classesUncheckedUpdateWithoutClass_studentsInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedUpdateManyWithoutClassesNestedInput
@@ -1109,6 +1199,8 @@ export type classesCreateWithoutCoursesInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsCreateNestedManyWithoutClassesInput
@@ -1127,6 +1219,8 @@ export type classesUncheckedCreateWithoutCoursesInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedCreateNestedManyWithoutClassesInput
@@ -1174,6 +1268,8 @@ export type classesScalarWhereInput = {
   start_date?: Prisma.DateTimeNullableFilter<"classes"> | Date | string | null
   end_date?: Prisma.DateTimeNullableFilter<"classes"> | Date | string | null
   meeting_link?: Prisma.StringNullableFilter<"classes"> | string | null
+  max_students?: Prisma.IntNullableFilter<"classes"> | number | null
+  schedule?: Prisma.StringNullableFilter<"classes"> | string | null
   status?: Prisma.IntNullableFilter<"classes"> | number | null
   created_at?: Prisma.DateTimeNullableFilter<"classes"> | Date | string | null
 }
@@ -1184,6 +1280,8 @@ export type classesCreateWithoutUsersInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsCreateNestedManyWithoutClassesInput
@@ -1202,6 +1300,8 @@ export type classesUncheckedCreateWithoutUsersInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedCreateNestedManyWithoutClassesInput
@@ -1245,6 +1345,8 @@ export type classesCreateManyCoursesInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
 }
@@ -1255,6 +1357,8 @@ export type classesUpdateWithoutCoursesInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUpdateManyWithoutClassesNestedInput
@@ -1273,6 +1377,8 @@ export type classesUncheckedUpdateWithoutCoursesInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedUpdateManyWithoutClassesNestedInput
@@ -1290,6 +1396,8 @@ export type classesUncheckedUpdateManyWithoutCoursesInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -1302,6 +1410,8 @@ export type classesCreateManyUsersInput = {
   start_date?: Date | string | null
   end_date?: Date | string | null
   meeting_link?: string | null
+  max_students?: number | null
+  schedule?: string | null
   status?: number | null
   created_at?: Date | string | null
 }
@@ -1312,6 +1422,8 @@ export type classesUpdateWithoutUsersInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUpdateManyWithoutClassesNestedInput
@@ -1330,6 +1442,8 @@ export type classesUncheckedUpdateWithoutUsersInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_assignments?: Prisma.class_assignmentsUncheckedUpdateManyWithoutClassesNestedInput
@@ -1347,6 +1461,8 @@ export type classesUncheckedUpdateManyWithoutUsersInput = {
   start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meeting_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  max_students?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  schedule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -1427,6 +1543,8 @@ export type classesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   start_date?: boolean
   end_date?: boolean
   meeting_link?: boolean
+  max_students?: boolean
+  schedule?: boolean
   status?: boolean
   created_at?: boolean
   class_assignments?: boolean | Prisma.classes$class_assignmentsArgs<ExtArgs>
@@ -1450,11 +1568,13 @@ export type classesSelectScalar = {
   start_date?: boolean
   end_date?: boolean
   meeting_link?: boolean
+  max_students?: boolean
+  schedule?: boolean
   status?: boolean
   created_at?: boolean
 }
 
-export type classesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "course_id" | "instructor_id" | "title" | "description" | "start_date" | "end_date" | "meeting_link" | "status" | "created_at", ExtArgs["result"]["classes"]>
+export type classesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "course_id" | "instructor_id" | "title" | "description" | "start_date" | "end_date" | "meeting_link" | "max_students" | "schedule" | "status" | "created_at", ExtArgs["result"]["classes"]>
 export type classesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   class_assignments?: boolean | Prisma.classes$class_assignmentsArgs<ExtArgs>
   class_calendar?: boolean | Prisma.classes$class_calendarArgs<ExtArgs>
@@ -1486,6 +1606,8 @@ export type $classesPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     start_date: Date | null
     end_date: Date | null
     meeting_link: string | null
+    max_students: number | null
+    schedule: string | null
     status: number | null
     created_at: Date | null
   }, ExtArgs["result"]["classes"]>
@@ -1872,6 +1994,8 @@ export interface classesFieldRefs {
   readonly start_date: Prisma.FieldRef<"classes", 'DateTime'>
   readonly end_date: Prisma.FieldRef<"classes", 'DateTime'>
   readonly meeting_link: Prisma.FieldRef<"classes", 'String'>
+  readonly max_students: Prisma.FieldRef<"classes", 'Int'>
+  readonly schedule: Prisma.FieldRef<"classes", 'String'>
   readonly status: Prisma.FieldRef<"classes", 'Int'>
   readonly created_at: Prisma.FieldRef<"classes", 'DateTime'>
 }

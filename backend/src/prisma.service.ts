@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClient } from './generated/prisma/client.js';
+import { PrismaClient, UserRole } from './generated/prisma/client.js';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 
 import mariadb, { PoolConfig } from 'mariadb';
@@ -54,7 +54,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
                     full_name: 'Super Administrator',
                     email: 'kckc253261@gmail.com',
                     password_hash: '000000', // password đã mã hoá
-                    role: -1,
+                    role: UserRole.SUPER_ADMIN,
                 },
             });
             console.log('⚠️ SuperAdmin bị xóa - đã tự động khôi phục!');

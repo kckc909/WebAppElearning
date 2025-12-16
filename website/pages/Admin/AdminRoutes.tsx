@@ -7,7 +7,6 @@ import { admin_routes } from "../page_routes";
 import Admin_AllClasses from './ClassesManagement/AllClasses'
 import Admin_ClassDetail from "./ClassesManagement/AllClasses/ClassDetail";
 import Admin_ClassesOverview from "./ClassesManagement/ClassesOverview";
-import Admin_Documents from "./DocumentLibrary";
 import Admin_ClassGrades from "./ClassesManagement/Grades";
 import Admin_Schedule from "./ClassesManagement/Schedule";
 
@@ -53,7 +52,7 @@ export default function AdminRoutes() {
                     <Route path={admin_routes.all_classes} element={<Admin_AllClasses />} />
                     <Route path={admin_routes.class_detail(':id')} element={<Admin_ClassDetail />} />
                     <Route path={admin_routes.classes_overview} element={<Admin_ClassesOverview />} />
-                    <Route path={admin_routes.documents} element={<Admin_Documents />} />
+                    <Route path={admin_routes.documents} element={<Admin_DocumentLibrary />} />
                     <Route path={admin_routes.class_grades} element={<Admin_ClassGrades />} />
                     <Route path={admin_routes.schedule} element={<Admin_Schedule />} />
 

@@ -5,18 +5,18 @@
 
 import { USE_MOCK_API, simulateDelay, successResponse, errorResponse, ApiResponse, handleApiError } from './config';
 import axiosInstance from './api';
+
+// NEW: Use mock-db + repository (NOT old mockData)
+import { mockDataSource } from '../data/datasources/mock.datasource';
+import { courseRepository } from '../data/repositories/course.repository';
 import {
-    COURSES,
-    COURSE_SECTIONS,
-    COURSE_LESSONS,
     COURSE_REVIEWS,
     COURSE_ENROLLMENTS,
+    COURSE_SECTIONS,
+    COURSE_LESSONS,
     COURSE_CATEGORIES,
-    ACCOUNTS,
-    getCourseById,
-    getCoursesByCategory,
-    getCoursesByInstructor,
-} from '../mockData';
+    ACCOUNTS
+} from '../mock-db';
 
 export interface Course {
     id: number;
@@ -48,21 +48,27 @@ class CoursesApiService {
     async getAll(params?: { category_id?: number; instructor_id?: number; search?: string; limit?: number; page?: number }): Promise<ApiResponse<Course[]>> {
         if (USE_MOCK_API) {
             await simulateDelay();
-            let result = [...COURSES] as any[];
 
+            // Use repository for enriched data
+            let result: any[];
             if (params?.category_id) {
-                result = result.filter(c => c.category_id === params.category_id);
+                result = courseRepository.getCoursesByCategory(params.category_id);
+            } else if (params?.instructor_id) {
+                result = courseRepository.getCoursesByInstructor(params.instructor_id);
+            } else {
+                result = courseRepository.getAllCourses();
             }
-            if (params?.instructor_id) {
-                result = result.filter(c => c.instructor_id === params.instructor_id);
-            }
+
+            // Apply search filter
             if (params?.search) {
                 const searchLower = params.search.toLowerCase();
                 result = result.filter(c =>
                     c.title.toLowerCase().includes(searchLower) ||
-                    c.short_description.toLowerCase().includes(searchLower)
+                    (c.short_description && c.short_description.toLowerCase().includes(searchLower))
                 );
             }
+
+            // Pagination
             if (params?.limit) {
                 const page = params.page || 1;
                 const start = (page - 1) * params.limit;
@@ -91,11 +97,11 @@ class CoursesApiService {
     async getById(id: number): Promise<ApiResponse<Course | null>> {
         if (USE_MOCK_API) {
             await simulateDelay();
-            const course = getCourseById(id) as any;
+            const course = courseRepository.getCourseDetail(id);
             if (!course) {
                 return errorResponse('Course not found', null);
             }
-            return successResponse(course);
+            return successResponse(course as any);
         }
 
         try {
@@ -247,8 +253,8 @@ class CoursesApiService {
     async getByCategory(categoryId: number): Promise<ApiResponse<Course[]>> {
         if (USE_MOCK_API) {
             await simulateDelay();
-            const courses = getCoursesByCategory(categoryId) as any[];
-            return successResponse(courses);
+            const courses = courseRepository.getCoursesByCategory(categoryId);
+            return successResponse(courses as any[]);
         }
 
         try {

@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model class_students
@@ -244,6 +244,7 @@ export type class_studentsOrderByWithRelationInput = {
 
 export type class_studentsWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  class_id_student_id?: Prisma.class_studentsClass_idStudent_idCompoundUniqueInput
   AND?: Prisma.class_studentsWhereInput | Prisma.class_studentsWhereInput[]
   OR?: Prisma.class_studentsWhereInput[]
   NOT?: Prisma.class_studentsWhereInput | Prisma.class_studentsWhereInput[]
@@ -253,7 +254,7 @@ export type class_studentsWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.IntNullableFilter<"class_students"> | number | null
   classes?: Prisma.XOR<Prisma.ClassesScalarRelationFilter, Prisma.classesWhereInput>
   users?: Prisma.XOR<Prisma.AccountsScalarRelationFilter, Prisma.accountsWhereInput>
-}, "id">
+}, "id" | "class_id_student_id">
 
 export type class_studentsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -328,6 +329,11 @@ export type class_studentsUncheckedUpdateManyInput = {
   student_id?: Prisma.IntFieldUpdateOperationsInput | number
   joined_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type class_studentsClass_idStudent_idCompoundUniqueInput = {
+  class_id: number
+  student_id: number
 }
 
 export type class_studentsCountOrderByAggregateInput = {

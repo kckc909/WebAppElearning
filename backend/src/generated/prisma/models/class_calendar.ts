@@ -9,12 +9,13 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model class_calendar
- * 
+ * UPDATED: Added start_time, end_time, type (ClassCalendarType enum)
+ * Kept duration_minutes for backward compatibility / analytics
  */
 export type class_calendarModel = runtime.Types.Result.DefaultSelection<Prisma.$class_calendarPayload>
 
@@ -46,6 +47,9 @@ export type Class_calendarMinAggregateOutputType = {
   title: string | null
   description: string | null
   event_date: Date | null
+  start_time: string | null
+  end_time: string | null
+  type: $Enums.ClassCalendarType | null
   duration_minutes: number | null
   lesson: number | null
 }
@@ -56,6 +60,9 @@ export type Class_calendarMaxAggregateOutputType = {
   title: string | null
   description: string | null
   event_date: Date | null
+  start_time: string | null
+  end_time: string | null
+  type: $Enums.ClassCalendarType | null
   duration_minutes: number | null
   lesson: number | null
 }
@@ -66,6 +73,9 @@ export type Class_calendarCountAggregateOutputType = {
   title: number
   description: number
   event_date: number
+  start_time: number
+  end_time: number
+  type: number
   duration_minutes: number
   lesson: number
   _all: number
@@ -92,6 +102,9 @@ export type Class_calendarMinAggregateInputType = {
   title?: true
   description?: true
   event_date?: true
+  start_time?: true
+  end_time?: true
+  type?: true
   duration_minutes?: true
   lesson?: true
 }
@@ -102,6 +115,9 @@ export type Class_calendarMaxAggregateInputType = {
   title?: true
   description?: true
   event_date?: true
+  start_time?: true
+  end_time?: true
+  type?: true
   duration_minutes?: true
   lesson?: true
 }
@@ -112,6 +128,9 @@ export type Class_calendarCountAggregateInputType = {
   title?: true
   description?: true
   event_date?: true
+  start_time?: true
+  end_time?: true
+  type?: true
   duration_minutes?: true
   lesson?: true
   _all?: true
@@ -209,6 +228,9 @@ export type Class_calendarGroupByOutputType = {
   title: string | null
   description: string | null
   event_date: Date | null
+  start_time: string | null
+  end_time: string | null
+  type: $Enums.ClassCalendarType | null
   duration_minutes: number | null
   lesson: number | null
   _count: Class_calendarCountAggregateOutputType | null
@@ -242,6 +264,9 @@ export type class_calendarWhereInput = {
   title?: Prisma.StringNullableFilter<"class_calendar"> | string | null
   description?: Prisma.StringNullableFilter<"class_calendar"> | string | null
   event_date?: Prisma.DateTimeNullableFilter<"class_calendar"> | Date | string | null
+  start_time?: Prisma.StringNullableFilter<"class_calendar"> | string | null
+  end_time?: Prisma.StringNullableFilter<"class_calendar"> | string | null
+  type?: Prisma.EnumClassCalendarTypeNullableFilter<"class_calendar"> | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.IntNullableFilter<"class_calendar"> | number | null
   lesson?: Prisma.IntNullableFilter<"class_calendar"> | number | null
   classes?: Prisma.XOR<Prisma.ClassesScalarRelationFilter, Prisma.classesWhereInput>
@@ -253,6 +278,9 @@ export type class_calendarOrderByWithRelationInput = {
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   event_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  start_time?: Prisma.SortOrderInput | Prisma.SortOrder
+  end_time?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrderInput | Prisma.SortOrder
   duration_minutes?: Prisma.SortOrderInput | Prisma.SortOrder
   lesson?: Prisma.SortOrderInput | Prisma.SortOrder
   classes?: Prisma.classesOrderByWithRelationInput
@@ -268,6 +296,9 @@ export type class_calendarWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringNullableFilter<"class_calendar"> | string | null
   description?: Prisma.StringNullableFilter<"class_calendar"> | string | null
   event_date?: Prisma.DateTimeNullableFilter<"class_calendar"> | Date | string | null
+  start_time?: Prisma.StringNullableFilter<"class_calendar"> | string | null
+  end_time?: Prisma.StringNullableFilter<"class_calendar"> | string | null
+  type?: Prisma.EnumClassCalendarTypeNullableFilter<"class_calendar"> | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.IntNullableFilter<"class_calendar"> | number | null
   lesson?: Prisma.IntNullableFilter<"class_calendar"> | number | null
   classes?: Prisma.XOR<Prisma.ClassesScalarRelationFilter, Prisma.classesWhereInput>
@@ -279,6 +310,9 @@ export type class_calendarOrderByWithAggregationInput = {
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   event_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  start_time?: Prisma.SortOrderInput | Prisma.SortOrder
+  end_time?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrderInput | Prisma.SortOrder
   duration_minutes?: Prisma.SortOrderInput | Prisma.SortOrder
   lesson?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.class_calendarCountOrderByAggregateInput
@@ -297,6 +331,9 @@ export type class_calendarScalarWhereWithAggregatesInput = {
   title?: Prisma.StringNullableWithAggregatesFilter<"class_calendar"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"class_calendar"> | string | null
   event_date?: Prisma.DateTimeNullableWithAggregatesFilter<"class_calendar"> | Date | string | null
+  start_time?: Prisma.StringNullableWithAggregatesFilter<"class_calendar"> | string | null
+  end_time?: Prisma.StringNullableWithAggregatesFilter<"class_calendar"> | string | null
+  type?: Prisma.EnumClassCalendarTypeNullableWithAggregatesFilter<"class_calendar"> | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.IntNullableWithAggregatesFilter<"class_calendar"> | number | null
   lesson?: Prisma.IntNullableWithAggregatesFilter<"class_calendar"> | number | null
 }
@@ -305,6 +342,9 @@ export type class_calendarCreateInput = {
   title?: string | null
   description?: string | null
   event_date?: Date | string | null
+  start_time?: string | null
+  end_time?: string | null
+  type?: $Enums.ClassCalendarType | null
   duration_minutes?: number | null
   lesson?: number | null
   classes: Prisma.classesCreateNestedOneWithoutClass_calendarInput
@@ -316,6 +356,9 @@ export type class_calendarUncheckedCreateInput = {
   title?: string | null
   description?: string | null
   event_date?: Date | string | null
+  start_time?: string | null
+  end_time?: string | null
+  type?: $Enums.ClassCalendarType | null
   duration_minutes?: number | null
   lesson?: number | null
 }
@@ -324,6 +367,9 @@ export type class_calendarUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   event_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  start_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  end_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableEnumClassCalendarTypeFieldUpdateOperationsInput | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lesson?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   classes?: Prisma.classesUpdateOneRequiredWithoutClass_calendarNestedInput
@@ -335,6 +381,9 @@ export type class_calendarUncheckedUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   event_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  start_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  end_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableEnumClassCalendarTypeFieldUpdateOperationsInput | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lesson?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -345,6 +394,9 @@ export type class_calendarCreateManyInput = {
   title?: string | null
   description?: string | null
   event_date?: Date | string | null
+  start_time?: string | null
+  end_time?: string | null
+  type?: $Enums.ClassCalendarType | null
   duration_minutes?: number | null
   lesson?: number | null
 }
@@ -353,6 +405,9 @@ export type class_calendarUpdateManyMutationInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   event_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  start_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  end_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableEnumClassCalendarTypeFieldUpdateOperationsInput | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lesson?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -363,6 +418,9 @@ export type class_calendarUncheckedUpdateManyInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   event_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  start_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  end_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableEnumClassCalendarTypeFieldUpdateOperationsInput | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lesson?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -379,6 +437,9 @@ export type class_calendarCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   event_date?: Prisma.SortOrder
+  start_time?: Prisma.SortOrder
+  end_time?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   duration_minutes?: Prisma.SortOrder
   lesson?: Prisma.SortOrder
 }
@@ -396,6 +457,9 @@ export type class_calendarMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   event_date?: Prisma.SortOrder
+  start_time?: Prisma.SortOrder
+  end_time?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   duration_minutes?: Prisma.SortOrder
   lesson?: Prisma.SortOrder
 }
@@ -406,6 +470,9 @@ export type class_calendarMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   event_date?: Prisma.SortOrder
+  start_time?: Prisma.SortOrder
+  end_time?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   duration_minutes?: Prisma.SortOrder
   lesson?: Prisma.SortOrder
 }
@@ -425,6 +492,10 @@ export type Class_calendarListRelationFilter = {
 
 export type class_calendarOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type NullableEnumClassCalendarTypeFieldUpdateOperationsInput = {
+  set?: $Enums.ClassCalendarType | null
 }
 
 export type class_calendarCreateNestedManyWithoutClassesInput = {
@@ -473,6 +544,9 @@ export type class_calendarCreateWithoutClassesInput = {
   title?: string | null
   description?: string | null
   event_date?: Date | string | null
+  start_time?: string | null
+  end_time?: string | null
+  type?: $Enums.ClassCalendarType | null
   duration_minutes?: number | null
   lesson?: number | null
 }
@@ -482,6 +556,9 @@ export type class_calendarUncheckedCreateWithoutClassesInput = {
   title?: string | null
   description?: string | null
   event_date?: Date | string | null
+  start_time?: string | null
+  end_time?: string | null
+  type?: $Enums.ClassCalendarType | null
   duration_minutes?: number | null
   lesson?: number | null
 }
@@ -521,6 +598,9 @@ export type class_calendarScalarWhereInput = {
   title?: Prisma.StringNullableFilter<"class_calendar"> | string | null
   description?: Prisma.StringNullableFilter<"class_calendar"> | string | null
   event_date?: Prisma.DateTimeNullableFilter<"class_calendar"> | Date | string | null
+  start_time?: Prisma.StringNullableFilter<"class_calendar"> | string | null
+  end_time?: Prisma.StringNullableFilter<"class_calendar"> | string | null
+  type?: Prisma.EnumClassCalendarTypeNullableFilter<"class_calendar"> | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.IntNullableFilter<"class_calendar"> | number | null
   lesson?: Prisma.IntNullableFilter<"class_calendar"> | number | null
 }
@@ -530,6 +610,9 @@ export type class_calendarCreateManyClassesInput = {
   title?: string | null
   description?: string | null
   event_date?: Date | string | null
+  start_time?: string | null
+  end_time?: string | null
+  type?: $Enums.ClassCalendarType | null
   duration_minutes?: number | null
   lesson?: number | null
 }
@@ -538,6 +621,9 @@ export type class_calendarUpdateWithoutClassesInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   event_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  start_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  end_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableEnumClassCalendarTypeFieldUpdateOperationsInput | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lesson?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -547,6 +633,9 @@ export type class_calendarUncheckedUpdateWithoutClassesInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   event_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  start_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  end_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableEnumClassCalendarTypeFieldUpdateOperationsInput | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lesson?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -556,6 +645,9 @@ export type class_calendarUncheckedUpdateManyWithoutClassesInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   event_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  start_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  end_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableEnumClassCalendarTypeFieldUpdateOperationsInput | $Enums.ClassCalendarType | null
   duration_minutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lesson?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -568,6 +660,9 @@ export type class_calendarSelect<ExtArgs extends runtime.Types.Extensions.Intern
   title?: boolean
   description?: boolean
   event_date?: boolean
+  start_time?: boolean
+  end_time?: boolean
+  type?: boolean
   duration_minutes?: boolean
   lesson?: boolean
   classes?: boolean | Prisma.classesDefaultArgs<ExtArgs>
@@ -581,11 +676,14 @@ export type class_calendarSelectScalar = {
   title?: boolean
   description?: boolean
   event_date?: boolean
+  start_time?: boolean
+  end_time?: boolean
+  type?: boolean
   duration_minutes?: boolean
   lesson?: boolean
 }
 
-export type class_calendarOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "class_id" | "title" | "description" | "event_date" | "duration_minutes" | "lesson", ExtArgs["result"]["class_calendar"]>
+export type class_calendarOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "class_id" | "title" | "description" | "event_date" | "start_time" | "end_time" | "type" | "duration_minutes" | "lesson", ExtArgs["result"]["class_calendar"]>
 export type class_calendarInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   classes?: boolean | Prisma.classesDefaultArgs<ExtArgs>
 }
@@ -601,6 +699,9 @@ export type $class_calendarPayload<ExtArgs extends runtime.Types.Extensions.Inte
     title: string | null
     description: string | null
     event_date: Date | null
+    start_time: string | null
+    end_time: string | null
+    type: $Enums.ClassCalendarType | null
     duration_minutes: number | null
     lesson: number | null
   }, ExtArgs["result"]["class_calendar"]>
@@ -978,6 +1079,9 @@ export interface class_calendarFieldRefs {
   readonly title: Prisma.FieldRef<"class_calendar", 'String'>
   readonly description: Prisma.FieldRef<"class_calendar", 'String'>
   readonly event_date: Prisma.FieldRef<"class_calendar", 'DateTime'>
+  readonly start_time: Prisma.FieldRef<"class_calendar", 'String'>
+  readonly end_time: Prisma.FieldRef<"class_calendar", 'String'>
+  readonly type: Prisma.FieldRef<"class_calendar", 'ClassCalendarType'>
   readonly duration_minutes: Prisma.FieldRef<"class_calendar", 'Int'>
   readonly lesson: Prisma.FieldRef<"class_calendar", 'Int'>
 }

@@ -9,12 +9,12 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model accounts
- * 
+ * UPDATED: role now uses UserRole enum
  */
 export type accountsModel = runtime.Types.Result.DefaultSelection<Prisma.$accountsPayload>
 
@@ -28,13 +28,11 @@ export type AggregateAccounts = {
 
 export type AccountsAvgAggregateOutputType = {
   id: number | null
-  role: number | null
   status: number | null
 }
 
 export type AccountsSumAggregateOutputType = {
   id: number | null
-  role: number | null
   status: number | null
 }
 
@@ -44,7 +42,7 @@ export type AccountsMinAggregateOutputType = {
   email: string | null
   password_hash: string | null
   avatar_url: string | null
-  role: number | null
+  role: $Enums.UserRole | null
   status: number | null
   created_at: Date | null
   updated_at: Date | null
@@ -57,7 +55,7 @@ export type AccountsMaxAggregateOutputType = {
   email: string | null
   password_hash: string | null
   avatar_url: string | null
-  role: number | null
+  role: $Enums.UserRole | null
   status: number | null
   created_at: Date | null
   updated_at: Date | null
@@ -81,13 +79,11 @@ export type AccountsCountAggregateOutputType = {
 
 export type AccountsAvgAggregateInputType = {
   id?: true
-  role?: true
   status?: true
 }
 
 export type AccountsSumAggregateInputType = {
   id?: true
-  role?: true
   status?: true
 }
 
@@ -223,7 +219,7 @@ export type AccountsGroupByOutputType = {
   email: string
   password_hash: string
   avatar_url: string | null
-  role: number | null
+  role: $Enums.UserRole | null
   status: number | null
   created_at: Date | null
   updated_at: Date | null
@@ -259,7 +255,7 @@ export type accountsWhereInput = {
   email?: Prisma.StringFilter<"accounts"> | string
   password_hash?: Prisma.StringFilter<"accounts"> | string
   avatar_url?: Prisma.StringNullableFilter<"accounts"> | string | null
-  role?: Prisma.IntNullableFilter<"accounts"> | number | null
+  role?: Prisma.EnumUserRoleNullableFilter<"accounts"> | $Enums.UserRole | null
   status?: Prisma.IntNullableFilter<"accounts"> | number | null
   created_at?: Prisma.DateTimeNullableFilter<"accounts"> | Date | string | null
   updated_at?: Prisma.DateTimeNullableFilter<"accounts"> | Date | string | null
@@ -324,7 +320,7 @@ export type accountsWhereUniqueInput = Prisma.AtLeast<{
   full_name?: Prisma.StringFilter<"accounts"> | string
   password_hash?: Prisma.StringFilter<"accounts"> | string
   avatar_url?: Prisma.StringNullableFilter<"accounts"> | string | null
-  role?: Prisma.IntNullableFilter<"accounts"> | number | null
+  role?: Prisma.EnumUserRoleNullableFilter<"accounts"> | $Enums.UserRole | null
   status?: Prisma.IntNullableFilter<"accounts"> | number | null
   created_at?: Prisma.DateTimeNullableFilter<"accounts"> | Date | string | null
   updated_at?: Prisma.DateTimeNullableFilter<"accounts"> | Date | string | null
@@ -374,7 +370,7 @@ export type accountsScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"accounts"> | string
   password_hash?: Prisma.StringWithAggregatesFilter<"accounts"> | string
   avatar_url?: Prisma.StringNullableWithAggregatesFilter<"accounts"> | string | null
-  role?: Prisma.IntNullableWithAggregatesFilter<"accounts"> | number | null
+  role?: Prisma.EnumUserRoleNullableWithAggregatesFilter<"accounts"> | $Enums.UserRole | null
   status?: Prisma.IntNullableWithAggregatesFilter<"accounts"> | number | null
   created_at?: Prisma.DateTimeNullableWithAggregatesFilter<"accounts"> | Date | string | null
   updated_at?: Prisma.DateTimeNullableWithAggregatesFilter<"accounts"> | Date | string | null
@@ -386,7 +382,7 @@ export type accountsCreateInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -416,7 +412,7 @@ export type accountsUncheckedCreateInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -445,7 +441,7 @@ export type accountsUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -475,7 +471,7 @@ export type accountsUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -505,7 +501,7 @@ export type accountsCreateManyInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -517,7 +513,7 @@ export type accountsUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -530,7 +526,7 @@ export type accountsUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -563,7 +559,6 @@ export type accountsCountOrderByAggregateInput = {
 
 export type accountsAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -595,7 +590,6 @@ export type accountsMinOrderByAggregateInput = {
 
 export type accountsSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -837,12 +831,16 @@ export type accountsUpdateOneRequiredWithoutUser_profilesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.accountsUpdateToOneWithWhereWithoutUser_profilesInput, Prisma.accountsUpdateWithoutUser_profilesInput>, Prisma.accountsUncheckedUpdateWithoutUser_profilesInput>
 }
 
+export type NullableEnumUserRoleFieldUpdateOperationsInput = {
+  set?: $Enums.UserRole | null
+}
+
 export type accountsCreateWithoutAdmin_logsInput = {
   full_name: string
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -871,7 +869,7 @@ export type accountsUncheckedCreateWithoutAdmin_logsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -915,7 +913,7 @@ export type accountsUpdateWithoutAdmin_logsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -944,7 +942,7 @@ export type accountsUncheckedUpdateWithoutAdmin_logsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -972,7 +970,7 @@ export type accountsCreateWithoutCertificatesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1001,7 +999,7 @@ export type accountsUncheckedCreateWithoutCertificatesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1045,7 +1043,7 @@ export type accountsUpdateWithoutCertificatesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1074,7 +1072,7 @@ export type accountsUncheckedUpdateWithoutCertificatesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1102,7 +1100,7 @@ export type accountsCreateWithoutClass_exam_resultsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1131,7 +1129,7 @@ export type accountsUncheckedCreateWithoutClass_exam_resultsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1175,7 +1173,7 @@ export type accountsUpdateWithoutClass_exam_resultsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1204,7 +1202,7 @@ export type accountsUncheckedUpdateWithoutClass_exam_resultsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1232,7 +1230,7 @@ export type accountsCreateWithoutClass_studentsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1261,7 +1259,7 @@ export type accountsUncheckedCreateWithoutClass_studentsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1305,7 +1303,7 @@ export type accountsUpdateWithoutClass_studentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1334,7 +1332,7 @@ export type accountsUncheckedUpdateWithoutClass_studentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1362,7 +1360,7 @@ export type accountsCreateWithoutClass_submissionsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1391,7 +1389,7 @@ export type accountsUncheckedCreateWithoutClass_submissionsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1435,7 +1433,7 @@ export type accountsUpdateWithoutClass_submissionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1464,7 +1462,7 @@ export type accountsUncheckedUpdateWithoutClass_submissionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1492,7 +1490,7 @@ export type accountsCreateWithoutClassesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1521,7 +1519,7 @@ export type accountsUncheckedCreateWithoutClassesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1565,7 +1563,7 @@ export type accountsUpdateWithoutClassesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1594,7 +1592,7 @@ export type accountsUncheckedUpdateWithoutClassesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1622,7 +1620,7 @@ export type accountsCreateWithoutContent_idesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1651,7 +1649,7 @@ export type accountsUncheckedCreateWithoutContent_idesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1695,7 +1693,7 @@ export type accountsUpdateWithoutContent_idesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1724,7 +1722,7 @@ export type accountsUncheckedUpdateWithoutContent_idesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1752,7 +1750,7 @@ export type accountsCreateWithoutCourse_enrollmentsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1781,7 +1779,7 @@ export type accountsUncheckedCreateWithoutCourse_enrollmentsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1825,7 +1823,7 @@ export type accountsUpdateWithoutCourse_enrollmentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1854,7 +1852,7 @@ export type accountsUncheckedUpdateWithoutCourse_enrollmentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1882,7 +1880,7 @@ export type accountsCreateWithoutCourse_reviewsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1911,7 +1909,7 @@ export type accountsUncheckedCreateWithoutCourse_reviewsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -1955,7 +1953,7 @@ export type accountsUpdateWithoutCourse_reviewsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1984,7 +1982,7 @@ export type accountsUncheckedUpdateWithoutCourse_reviewsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2012,7 +2010,7 @@ export type accountsCreateWithoutCoursesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2041,7 +2039,7 @@ export type accountsUncheckedCreateWithoutCoursesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2085,7 +2083,7 @@ export type accountsUpdateWithoutCoursesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2114,7 +2112,7 @@ export type accountsUncheckedUpdateWithoutCoursesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2142,7 +2140,7 @@ export type accountsCreateWithoutInstructor_verificationsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2171,7 +2169,7 @@ export type accountsUncheckedCreateWithoutInstructor_verificationsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2215,7 +2213,7 @@ export type accountsUpdateWithoutInstructor_verificationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2244,7 +2242,7 @@ export type accountsUncheckedUpdateWithoutInstructor_verificationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2272,7 +2270,7 @@ export type accountsCreateWithoutMessages_messages_sender_idTousersInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2301,7 +2299,7 @@ export type accountsUncheckedCreateWithoutMessages_messages_sender_idTousersInpu
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2334,7 +2332,7 @@ export type accountsCreateWithoutMessages_messages_receiver_idTousersInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2363,7 +2361,7 @@ export type accountsUncheckedCreateWithoutMessages_messages_receiver_idTousersIn
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2407,7 +2405,7 @@ export type accountsUpdateWithoutMessages_messages_sender_idTousersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2436,7 +2434,7 @@ export type accountsUncheckedUpdateWithoutMessages_messages_sender_idTousersInpu
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2475,7 +2473,7 @@ export type accountsUpdateWithoutMessages_messages_receiver_idTousersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2504,7 +2502,7 @@ export type accountsUncheckedUpdateWithoutMessages_messages_receiver_idTousersIn
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2532,7 +2530,7 @@ export type accountsCreateWithoutNotificationsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2561,7 +2559,7 @@ export type accountsUncheckedCreateWithoutNotificationsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2605,7 +2603,7 @@ export type accountsUpdateWithoutNotificationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2634,7 +2632,7 @@ export type accountsUncheckedUpdateWithoutNotificationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2662,7 +2660,7 @@ export type accountsCreateWithoutPayoutsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2691,7 +2689,7 @@ export type accountsUncheckedCreateWithoutPayoutsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2735,7 +2733,7 @@ export type accountsUpdateWithoutPayoutsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2764,7 +2762,7 @@ export type accountsUncheckedUpdateWithoutPayoutsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2792,7 +2790,7 @@ export type accountsCreateWithoutTransactionsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2821,7 +2819,7 @@ export type accountsUncheckedCreateWithoutTransactionsInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2865,7 +2863,7 @@ export type accountsUpdateWithoutTransactionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2894,7 +2892,7 @@ export type accountsUncheckedUpdateWithoutTransactionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2922,7 +2920,7 @@ export type accountsCreateWithoutUser_profilesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2951,7 +2949,7 @@ export type accountsUncheckedCreateWithoutUser_profilesInput = {
   email: string
   password_hash: string
   avatar_url?: string | null
-  role?: number | null
+  role?: $Enums.UserRole | null
   status?: number | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
@@ -2995,7 +2993,7 @@ export type accountsUpdateWithoutUser_profilesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3024,7 +3022,7 @@ export type accountsUncheckedUpdateWithoutUser_profilesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.StringFieldUpdateOperationsInput | string
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  role?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3317,7 +3315,7 @@ export type $accountsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     email: string
     password_hash: string
     avatar_url: string | null
-    role: number | null
+    role: $Enums.UserRole | null
     status: number | null
     created_at: Date | null
     updated_at: Date | null
@@ -3713,7 +3711,7 @@ export interface accountsFieldRefs {
   readonly email: Prisma.FieldRef<"accounts", 'String'>
   readonly password_hash: Prisma.FieldRef<"accounts", 'String'>
   readonly avatar_url: Prisma.FieldRef<"accounts", 'String'>
-  readonly role: Prisma.FieldRef<"accounts", 'Int'>
+  readonly role: Prisma.FieldRef<"accounts", 'UserRole'>
   readonly status: Prisma.FieldRef<"accounts", 'Int'>
   readonly created_at: Prisma.FieldRef<"accounts", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"accounts", 'DateTime'>

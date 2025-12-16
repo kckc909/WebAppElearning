@@ -36,7 +36,7 @@ import {
 } from "lucide-react";
 
 import { NavLink } from 'react-router-dom';
-import { admin_routes, tmp_on_navigate } from '../page_routes';
+import { admin_routes } from '../page_routes';
 import ApiModeSwitch from '../../components/ApiModeSwitch';
 
 interface SidebarProps {
@@ -45,48 +45,48 @@ interface SidebarProps {
 }
 
 const menuItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard />, path: tmp_on_navigate + admin_routes.base + admin_routes.dashboard },
+    { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' + admin_routes.base + admin_routes.dashboard },
     {
         name: 'Classes Management',
         icon: <BookOpen />,
         subItems: [
-            { name: 'Classes Overview', icon: <FileChartPie />, path: tmp_on_navigate + admin_routes.base + admin_routes.classes_overview },
-            { name: 'All Classes', icon: <BookOpenText />, path: tmp_on_navigate + admin_routes.base + admin_routes.all_classes },
-            { name: 'Schedule', icon: <Calendar />, path: tmp_on_navigate + admin_routes.base + admin_routes.schedule },
-            { name: 'Grades', icon: <BadgeCheck />, path: tmp_on_navigate + admin_routes.base + admin_routes.class_grades },
-            { name: `Documents`, icon: <Files />, path: tmp_on_navigate + admin_routes.base + admin_routes.documents },
+            { name: 'Classes Overview', icon: <FileChartPie />, path: '/' + admin_routes.base + admin_routes.classes_overview },
+            { name: 'All Classes', icon: <BookOpenText />, path: '/' + admin_routes.base + admin_routes.all_classes },
+            { name: 'Schedule', icon: <Calendar />, path: '/' + admin_routes.base + admin_routes.schedule },
+            { name: 'Class Grades', icon: <BadgeCheck />, path: '/' + admin_routes.base + admin_routes.class_grades },
+            { name: `Documents`, icon: <Files />, path: '/' + admin_routes.base + admin_routes.documents },
         ]
     },
     {
         name: 'Course Management', icon: <Book />,
         subItems: [
-            { name: 'Courses Overview', icon: <FileChartPie />, path: tmp_on_navigate + admin_routes.base + admin_routes.courses_overview },
-            { name: 'All Courses', icon: <BookText />, path: tmp_on_navigate + admin_routes.base + admin_routes.all_courses },
-            { name: 'Approval', icon: <ClipboardClock />, path: tmp_on_navigate + admin_routes.base + admin_routes.approval },
-            { name: 'Grades', icon: <BadgeCheck />, path: tmp_on_navigate + admin_routes.base + admin_routes.course_grades },
-            { name: 'Certificates', icon: <Award />, path: tmp_on_navigate + admin_routes.base + admin_routes.certificates },
+            { name: 'Courses Overview', icon: <FileChartPie />, path: '/' + admin_routes.base + admin_routes.courses_overview },
+            { name: 'All Courses', icon: <BookText />, path: '/' + admin_routes.base + admin_routes.all_courses },
+            { name: 'Approval', icon: <ClipboardClock />, path: '/' + admin_routes.base + admin_routes.approval },
+            { name: 'Course Grades', icon: <BadgeCheck />, path: '/' + admin_routes.base + admin_routes.course_grades },
+            { name: 'Certificates', icon: <Award />, path: '/' + admin_routes.base + admin_routes.certificates },
         ]
     },
-    { name: 'CMS', icon: <FolderKanban />, path: tmp_on_navigate + admin_routes.base + admin_routes.cms },
+    { name: 'CMS', icon: <FolderKanban />, path: '/' + admin_routes.base + admin_routes.cms },
 
-    { name: 'Students Management', icon: <Users />, path: tmp_on_navigate + admin_routes.base + admin_routes.student_management },
+    { name: 'Students Management', icon: <Users />, path: '/' + admin_routes.base + admin_routes.student_management },
 
-    { name: 'Instructors Management', icon: <GraduationCap />, path: tmp_on_navigate + admin_routes.base + admin_routes.instructor_management },
-    { name: 'Instructors Vertification', icon: <UserRoundCheck />, path: tmp_on_navigate + admin_routes.base + admin_routes.instructor_verification },
+    { name: 'Instructors Management', icon: <GraduationCap />, path: '/' + admin_routes.base + admin_routes.instructor_management },
+    { name: 'Instructors Vertification', icon: <UserRoundCheck />, path: '/' + admin_routes.base + admin_routes.instructor_verification },
 
     {
         name: 'Finance', icon: <DollarSign />,
         subItems: [
-            { name: 'Transactions', icon: <Repeat2 />, path: tmp_on_navigate + admin_routes.base + admin_routes.transactions },
-            { name: 'Revenue', icon: <TrendingUp />, path: tmp_on_navigate + admin_routes.base + admin_routes.revenue },
-            { name: 'Payouts', icon: <Wallet />, path: tmp_on_navigate + admin_routes.base + admin_routes.payouts },
+            { name: 'Transactions', icon: <Repeat2 />, path: '/' + admin_routes.base + admin_routes.transactions },
+            { name: 'Revenue', icon: <TrendingUp />, path: '/' + admin_routes.base + admin_routes.revenue },
+            { name: 'Payouts', icon: <Wallet />, path: '/' + admin_routes.base + admin_routes.payouts },
         ]
     },
 
-    { name: 'Document Library', icon: <FileText />, path: tmp_on_navigate + admin_routes.base + admin_routes.document_library },
-    { name: 'Notifications', icon: <Bell />, path: tmp_on_navigate + admin_routes.base + admin_routes.notification },
-    { name: 'Analytics & Reports', icon: <LineChart />, path: tmp_on_navigate + admin_routes.base + admin_routes.analytics_reports },
-    { name: 'Settings', icon: <Settings />, path: tmp_on_navigate + admin_routes.base + admin_routes.settings },
+    { name: 'Document Library', icon: <FileText />, path: '/' + admin_routes.base + admin_routes.document_library },
+    { name: 'Notifications', icon: <Bell />, path: '/' + admin_routes.base + admin_routes.notification },
+    { name: 'Analytics & Reports', icon: <LineChart />, path: '/' + admin_routes.base + admin_routes.analytics_reports },
+    { name: 'Settings', icon: <Settings />, path: '/' + admin_routes.base + admin_routes.settings },
 
     // { name: 'Users & Roles', icon: <ShieldCheck />, path: temp }, => superadmin
 ];
@@ -175,7 +175,7 @@ const AdminPageSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                         )
                     ))}
                 </nav>
-                
+
                 {/* Footer with API Mode Switch */}
                 <div className="p-3 border-t border-gray-200">
                     <ApiModeSwitch />

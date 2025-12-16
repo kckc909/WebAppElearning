@@ -9,12 +9,12 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model class_exams
- * 
+ * UPDATED: exam_type now uses ExamType enum
  */
 export type class_examsModel = runtime.Types.Result.DefaultSelection<Prisma.$class_examsPayload>
 
@@ -42,7 +42,7 @@ export type Class_examsMinAggregateOutputType = {
   id: number | null
   class_id: number | null
   title: string | null
-  exam_type: $Enums.class_exams_exam_type | null
+  exam_type: $Enums.ExamType | null
   total_score: runtime.Decimal | null
   created_at: Date | null
 }
@@ -51,7 +51,7 @@ export type Class_examsMaxAggregateOutputType = {
   id: number | null
   class_id: number | null
   title: string | null
-  exam_type: $Enums.class_exams_exam_type | null
+  exam_type: $Enums.ExamType | null
   total_score: runtime.Decimal | null
   created_at: Date | null
 }
@@ -197,7 +197,7 @@ export type Class_examsGroupByOutputType = {
   id: number
   class_id: number
   title: string | null
-  exam_type: $Enums.class_exams_exam_type | null
+  exam_type: $Enums.ExamType | null
   total_score: runtime.Decimal | null
   created_at: Date | null
   _count: Class_examsCountAggregateOutputType | null
@@ -229,7 +229,7 @@ export type class_examsWhereInput = {
   id?: Prisma.IntFilter<"class_exams"> | number
   class_id?: Prisma.IntFilter<"class_exams"> | number
   title?: Prisma.StringNullableFilter<"class_exams"> | string | null
-  exam_type?: Prisma.Enumclass_exams_exam_typeNullableFilter<"class_exams"> | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.EnumExamTypeNullableFilter<"class_exams"> | $Enums.ExamType | null
   total_score?: Prisma.DecimalNullableFilter<"class_exams"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeNullableFilter<"class_exams"> | Date | string | null
   class_exam_results?: Prisma.Class_exam_resultsListRelationFilter
@@ -255,7 +255,7 @@ export type class_examsWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.class_examsWhereInput | Prisma.class_examsWhereInput[]
   class_id?: Prisma.IntFilter<"class_exams"> | number
   title?: Prisma.StringNullableFilter<"class_exams"> | string | null
-  exam_type?: Prisma.Enumclass_exams_exam_typeNullableFilter<"class_exams"> | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.EnumExamTypeNullableFilter<"class_exams"> | $Enums.ExamType | null
   total_score?: Prisma.DecimalNullableFilter<"class_exams"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeNullableFilter<"class_exams"> | Date | string | null
   class_exam_results?: Prisma.Class_exam_resultsListRelationFilter
@@ -283,14 +283,14 @@ export type class_examsScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"class_exams"> | number
   class_id?: Prisma.IntWithAggregatesFilter<"class_exams"> | number
   title?: Prisma.StringNullableWithAggregatesFilter<"class_exams"> | string | null
-  exam_type?: Prisma.Enumclass_exams_exam_typeNullableWithAggregatesFilter<"class_exams"> | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.EnumExamTypeNullableWithAggregatesFilter<"class_exams"> | $Enums.ExamType | null
   total_score?: Prisma.DecimalNullableWithAggregatesFilter<"class_exams"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeNullableWithAggregatesFilter<"class_exams"> | Date | string | null
 }
 
 export type class_examsCreateInput = {
   title?: string | null
-  exam_type?: $Enums.class_exams_exam_type | null
+  exam_type?: $Enums.ExamType | null
   total_score?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string | null
   class_exam_results?: Prisma.class_exam_resultsCreateNestedManyWithoutClass_examsInput
@@ -301,7 +301,7 @@ export type class_examsUncheckedCreateInput = {
   id?: number
   class_id: number
   title?: string | null
-  exam_type?: $Enums.class_exams_exam_type | null
+  exam_type?: $Enums.ExamType | null
   total_score?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string | null
   class_exam_results?: Prisma.class_exam_resultsUncheckedCreateNestedManyWithoutClass_examsInput
@@ -309,7 +309,7 @@ export type class_examsUncheckedCreateInput = {
 
 export type class_examsUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  exam_type?: Prisma.NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.NullableEnumExamTypeFieldUpdateOperationsInput | $Enums.ExamType | null
   total_score?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_exam_results?: Prisma.class_exam_resultsUpdateManyWithoutClass_examsNestedInput
@@ -320,7 +320,7 @@ export type class_examsUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   class_id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  exam_type?: Prisma.NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.NullableEnumExamTypeFieldUpdateOperationsInput | $Enums.ExamType | null
   total_score?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_exam_results?: Prisma.class_exam_resultsUncheckedUpdateManyWithoutClass_examsNestedInput
@@ -330,14 +330,14 @@ export type class_examsCreateManyInput = {
   id?: number
   class_id: number
   title?: string | null
-  exam_type?: $Enums.class_exams_exam_type | null
+  exam_type?: $Enums.ExamType | null
   total_score?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string | null
 }
 
 export type class_examsUpdateManyMutationInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  exam_type?: Prisma.NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.NullableEnumExamTypeFieldUpdateOperationsInput | $Enums.ExamType | null
   total_score?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -346,7 +346,7 @@ export type class_examsUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   class_id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  exam_type?: Prisma.NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.NullableEnumExamTypeFieldUpdateOperationsInput | $Enums.ExamType | null
   total_score?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -425,8 +425,8 @@ export type class_examsUpdateOneRequiredWithoutClass_exam_resultsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.class_examsUpdateToOneWithWhereWithoutClass_exam_resultsInput, Prisma.class_examsUpdateWithoutClass_exam_resultsInput>, Prisma.class_examsUncheckedUpdateWithoutClass_exam_resultsInput>
 }
 
-export type NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput = {
-  set?: $Enums.class_exams_exam_type | null
+export type NullableEnumExamTypeFieldUpdateOperationsInput = {
+  set?: $Enums.ExamType | null
 }
 
 export type class_examsCreateNestedManyWithoutClassesInput = {
@@ -473,7 +473,7 @@ export type class_examsUncheckedUpdateManyWithoutClassesNestedInput = {
 
 export type class_examsCreateWithoutClass_exam_resultsInput = {
   title?: string | null
-  exam_type?: $Enums.class_exams_exam_type | null
+  exam_type?: $Enums.ExamType | null
   total_score?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string | null
   classes: Prisma.classesCreateNestedOneWithoutClass_examsInput
@@ -483,7 +483,7 @@ export type class_examsUncheckedCreateWithoutClass_exam_resultsInput = {
   id?: number
   class_id: number
   title?: string | null
-  exam_type?: $Enums.class_exams_exam_type | null
+  exam_type?: $Enums.ExamType | null
   total_score?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string | null
 }
@@ -506,7 +506,7 @@ export type class_examsUpdateToOneWithWhereWithoutClass_exam_resultsInput = {
 
 export type class_examsUpdateWithoutClass_exam_resultsInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  exam_type?: Prisma.NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.NullableEnumExamTypeFieldUpdateOperationsInput | $Enums.ExamType | null
   total_score?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   classes?: Prisma.classesUpdateOneRequiredWithoutClass_examsNestedInput
@@ -516,14 +516,14 @@ export type class_examsUncheckedUpdateWithoutClass_exam_resultsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   class_id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  exam_type?: Prisma.NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.NullableEnumExamTypeFieldUpdateOperationsInput | $Enums.ExamType | null
   total_score?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type class_examsCreateWithoutClassesInput = {
   title?: string | null
-  exam_type?: $Enums.class_exams_exam_type | null
+  exam_type?: $Enums.ExamType | null
   total_score?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string | null
   class_exam_results?: Prisma.class_exam_resultsCreateNestedManyWithoutClass_examsInput
@@ -532,7 +532,7 @@ export type class_examsCreateWithoutClassesInput = {
 export type class_examsUncheckedCreateWithoutClassesInput = {
   id?: number
   title?: string | null
-  exam_type?: $Enums.class_exams_exam_type | null
+  exam_type?: $Enums.ExamType | null
   total_score?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string | null
   class_exam_results?: Prisma.class_exam_resultsUncheckedCreateNestedManyWithoutClass_examsInput
@@ -571,7 +571,7 @@ export type class_examsScalarWhereInput = {
   id?: Prisma.IntFilter<"class_exams"> | number
   class_id?: Prisma.IntFilter<"class_exams"> | number
   title?: Prisma.StringNullableFilter<"class_exams"> | string | null
-  exam_type?: Prisma.Enumclass_exams_exam_typeNullableFilter<"class_exams"> | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.EnumExamTypeNullableFilter<"class_exams"> | $Enums.ExamType | null
   total_score?: Prisma.DecimalNullableFilter<"class_exams"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeNullableFilter<"class_exams"> | Date | string | null
 }
@@ -579,14 +579,14 @@ export type class_examsScalarWhereInput = {
 export type class_examsCreateManyClassesInput = {
   id?: number
   title?: string | null
-  exam_type?: $Enums.class_exams_exam_type | null
+  exam_type?: $Enums.ExamType | null
   total_score?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string | null
 }
 
 export type class_examsUpdateWithoutClassesInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  exam_type?: Prisma.NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.NullableEnumExamTypeFieldUpdateOperationsInput | $Enums.ExamType | null
   total_score?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_exam_results?: Prisma.class_exam_resultsUpdateManyWithoutClass_examsNestedInput
@@ -595,7 +595,7 @@ export type class_examsUpdateWithoutClassesInput = {
 export type class_examsUncheckedUpdateWithoutClassesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  exam_type?: Prisma.NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.NullableEnumExamTypeFieldUpdateOperationsInput | $Enums.ExamType | null
   total_score?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   class_exam_results?: Prisma.class_exam_resultsUncheckedUpdateManyWithoutClass_examsNestedInput
@@ -604,7 +604,7 @@ export type class_examsUncheckedUpdateWithoutClassesInput = {
 export type class_examsUncheckedUpdateManyWithoutClassesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  exam_type?: Prisma.NullableEnumclass_exams_exam_typeFieldUpdateOperationsInput | $Enums.class_exams_exam_type | null
+  exam_type?: Prisma.NullableEnumExamTypeFieldUpdateOperationsInput | $Enums.ExamType | null
   total_score?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -680,7 +680,7 @@ export type $class_examsPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: number
     class_id: number
     title: string | null
-    exam_type: $Enums.class_exams_exam_type | null
+    exam_type: $Enums.ExamType | null
     total_score: runtime.Decimal | null
     created_at: Date | null
   }, ExtArgs["result"]["class_exams"]>
@@ -1057,7 +1057,7 @@ export interface class_examsFieldRefs {
   readonly id: Prisma.FieldRef<"class_exams", 'Int'>
   readonly class_id: Prisma.FieldRef<"class_exams", 'Int'>
   readonly title: Prisma.FieldRef<"class_exams", 'String'>
-  readonly exam_type: Prisma.FieldRef<"class_exams", 'class_exams_exam_type'>
+  readonly exam_type: Prisma.FieldRef<"class_exams", 'ExamType'>
   readonly total_score: Prisma.FieldRef<"class_exams", 'Decimal'>
   readonly created_at: Prisma.FieldRef<"class_exams", 'DateTime'>
 }

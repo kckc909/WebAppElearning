@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model course_enrollments
@@ -31,6 +31,7 @@ export type Course_enrollmentsAvgAggregateOutputType = {
   course_id: number | null
   student_id: number | null
   progress: runtime.Decimal | null
+  last_lesson_id: number | null
   status: number | null
 }
 
@@ -39,6 +40,7 @@ export type Course_enrollmentsSumAggregateOutputType = {
   course_id: number | null
   student_id: number | null
   progress: runtime.Decimal | null
+  last_lesson_id: number | null
   status: number | null
 }
 
@@ -49,6 +51,7 @@ export type Course_enrollmentsMinAggregateOutputType = {
   enrolled_at: Date | null
   progress: runtime.Decimal | null
   certificate_url: string | null
+  last_lesson_id: number | null
   status: number | null
 }
 
@@ -59,6 +62,7 @@ export type Course_enrollmentsMaxAggregateOutputType = {
   enrolled_at: Date | null
   progress: runtime.Decimal | null
   certificate_url: string | null
+  last_lesson_id: number | null
   status: number | null
 }
 
@@ -69,6 +73,7 @@ export type Course_enrollmentsCountAggregateOutputType = {
   enrolled_at: number
   progress: number
   certificate_url: number
+  last_lesson_id: number
   status: number
   _all: number
 }
@@ -79,6 +84,7 @@ export type Course_enrollmentsAvgAggregateInputType = {
   course_id?: true
   student_id?: true
   progress?: true
+  last_lesson_id?: true
   status?: true
 }
 
@@ -87,6 +93,7 @@ export type Course_enrollmentsSumAggregateInputType = {
   course_id?: true
   student_id?: true
   progress?: true
+  last_lesson_id?: true
   status?: true
 }
 
@@ -97,6 +104,7 @@ export type Course_enrollmentsMinAggregateInputType = {
   enrolled_at?: true
   progress?: true
   certificate_url?: true
+  last_lesson_id?: true
   status?: true
 }
 
@@ -107,6 +115,7 @@ export type Course_enrollmentsMaxAggregateInputType = {
   enrolled_at?: true
   progress?: true
   certificate_url?: true
+  last_lesson_id?: true
   status?: true
 }
 
@@ -117,6 +126,7 @@ export type Course_enrollmentsCountAggregateInputType = {
   enrolled_at?: true
   progress?: true
   certificate_url?: true
+  last_lesson_id?: true
   status?: true
   _all?: true
 }
@@ -214,6 +224,7 @@ export type Course_enrollmentsGroupByOutputType = {
   enrolled_at: Date | null
   progress: runtime.Decimal | null
   certificate_url: string | null
+  last_lesson_id: number | null
   status: number | null
   _count: Course_enrollmentsCountAggregateOutputType | null
   _avg: Course_enrollmentsAvgAggregateOutputType | null
@@ -247,6 +258,7 @@ export type course_enrollmentsWhereInput = {
   enrolled_at?: Prisma.DateTimeNullableFilter<"course_enrollments"> | Date | string | null
   progress?: Prisma.DecimalNullableFilter<"course_enrollments"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.StringNullableFilter<"course_enrollments"> | string | null
+  last_lesson_id?: Prisma.IntNullableFilter<"course_enrollments"> | number | null
   status?: Prisma.IntNullableFilter<"course_enrollments"> | number | null
   courses?: Prisma.XOR<Prisma.CoursesScalarRelationFilter, Prisma.coursesWhereInput>
   users?: Prisma.XOR<Prisma.AccountsScalarRelationFilter, Prisma.accountsWhereInput>
@@ -260,6 +272,7 @@ export type course_enrollmentsOrderByWithRelationInput = {
   enrolled_at?: Prisma.SortOrderInput | Prisma.SortOrder
   progress?: Prisma.SortOrderInput | Prisma.SortOrder
   certificate_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  last_lesson_id?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   courses?: Prisma.coursesOrderByWithRelationInput
   users?: Prisma.accountsOrderByWithRelationInput
@@ -269,6 +282,7 @@ export type course_enrollmentsOrderByWithRelationInput = {
 
 export type course_enrollmentsWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  course_id_student_id?: Prisma.course_enrollmentsCourse_idStudent_idCompoundUniqueInput
   AND?: Prisma.course_enrollmentsWhereInput | Prisma.course_enrollmentsWhereInput[]
   OR?: Prisma.course_enrollmentsWhereInput[]
   NOT?: Prisma.course_enrollmentsWhereInput | Prisma.course_enrollmentsWhereInput[]
@@ -277,11 +291,12 @@ export type course_enrollmentsWhereUniqueInput = Prisma.AtLeast<{
   enrolled_at?: Prisma.DateTimeNullableFilter<"course_enrollments"> | Date | string | null
   progress?: Prisma.DecimalNullableFilter<"course_enrollments"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.StringNullableFilter<"course_enrollments"> | string | null
+  last_lesson_id?: Prisma.IntNullableFilter<"course_enrollments"> | number | null
   status?: Prisma.IntNullableFilter<"course_enrollments"> | number | null
   courses?: Prisma.XOR<Prisma.CoursesScalarRelationFilter, Prisma.coursesWhereInput>
   users?: Prisma.XOR<Prisma.AccountsScalarRelationFilter, Prisma.accountsWhereInput>
   course_progress?: Prisma.Course_progressListRelationFilter
-}, "id">
+}, "id" | "course_id_student_id">
 
 export type course_enrollmentsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -290,6 +305,7 @@ export type course_enrollmentsOrderByWithAggregationInput = {
   enrolled_at?: Prisma.SortOrderInput | Prisma.SortOrder
   progress?: Prisma.SortOrderInput | Prisma.SortOrder
   certificate_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  last_lesson_id?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.course_enrollmentsCountOrderByAggregateInput
   _avg?: Prisma.course_enrollmentsAvgOrderByAggregateInput
@@ -308,6 +324,7 @@ export type course_enrollmentsScalarWhereWithAggregatesInput = {
   enrolled_at?: Prisma.DateTimeNullableWithAggregatesFilter<"course_enrollments"> | Date | string | null
   progress?: Prisma.DecimalNullableWithAggregatesFilter<"course_enrollments"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.StringNullableWithAggregatesFilter<"course_enrollments"> | string | null
+  last_lesson_id?: Prisma.IntNullableWithAggregatesFilter<"course_enrollments"> | number | null
   status?: Prisma.IntNullableWithAggregatesFilter<"course_enrollments"> | number | null
 }
 
@@ -315,6 +332,7 @@ export type course_enrollmentsCreateInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
   courses: Prisma.coursesCreateNestedOneWithoutCourse_enrollmentsInput
   users: Prisma.accountsCreateNestedOneWithoutCourse_enrollmentsInput
@@ -328,6 +346,7 @@ export type course_enrollmentsUncheckedCreateInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
   course_progress?: Prisma.course_progressUncheckedCreateNestedManyWithoutCourse_enrollmentsInput
 }
@@ -336,6 +355,7 @@ export type course_enrollmentsUpdateInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   courses?: Prisma.coursesUpdateOneRequiredWithoutCourse_enrollmentsNestedInput
   users?: Prisma.accountsUpdateOneRequiredWithoutCourse_enrollmentsNestedInput
@@ -349,6 +369,7 @@ export type course_enrollmentsUncheckedUpdateInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   course_progress?: Prisma.course_progressUncheckedUpdateManyWithoutCourse_enrollmentsNestedInput
 }
@@ -360,6 +381,7 @@ export type course_enrollmentsCreateManyInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
 }
 
@@ -367,6 +389,7 @@ export type course_enrollmentsUpdateManyMutationInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
@@ -377,6 +400,7 @@ export type course_enrollmentsUncheckedUpdateManyInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
@@ -386,6 +410,11 @@ export type course_enrollmentsOrderByRelevanceInput = {
   search: string
 }
 
+export type course_enrollmentsCourse_idStudent_idCompoundUniqueInput = {
+  course_id: number
+  student_id: number
+}
+
 export type course_enrollmentsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   course_id?: Prisma.SortOrder
@@ -393,6 +422,7 @@ export type course_enrollmentsCountOrderByAggregateInput = {
   enrolled_at?: Prisma.SortOrder
   progress?: Prisma.SortOrder
   certificate_url?: Prisma.SortOrder
+  last_lesson_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -401,6 +431,7 @@ export type course_enrollmentsAvgOrderByAggregateInput = {
   course_id?: Prisma.SortOrder
   student_id?: Prisma.SortOrder
   progress?: Prisma.SortOrder
+  last_lesson_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -411,6 +442,7 @@ export type course_enrollmentsMaxOrderByAggregateInput = {
   enrolled_at?: Prisma.SortOrder
   progress?: Prisma.SortOrder
   certificate_url?: Prisma.SortOrder
+  last_lesson_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -421,6 +453,7 @@ export type course_enrollmentsMinOrderByAggregateInput = {
   enrolled_at?: Prisma.SortOrder
   progress?: Prisma.SortOrder
   certificate_url?: Prisma.SortOrder
+  last_lesson_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -429,6 +462,7 @@ export type course_enrollmentsSumOrderByAggregateInput = {
   course_id?: Prisma.SortOrder
   student_id?: Prisma.SortOrder
   progress?: Prisma.SortOrder
+  last_lesson_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
 }
 
@@ -549,6 +583,7 @@ export type course_enrollmentsCreateWithoutCourse_progressInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
   courses: Prisma.coursesCreateNestedOneWithoutCourse_enrollmentsInput
   users: Prisma.accountsCreateNestedOneWithoutCourse_enrollmentsInput
@@ -561,6 +596,7 @@ export type course_enrollmentsUncheckedCreateWithoutCourse_progressInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
 }
 
@@ -584,6 +620,7 @@ export type course_enrollmentsUpdateWithoutCourse_progressInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   courses?: Prisma.coursesUpdateOneRequiredWithoutCourse_enrollmentsNestedInput
   users?: Prisma.accountsUpdateOneRequiredWithoutCourse_enrollmentsNestedInput
@@ -596,6 +633,7 @@ export type course_enrollmentsUncheckedUpdateWithoutCourse_progressInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
@@ -603,6 +641,7 @@ export type course_enrollmentsCreateWithoutCoursesInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
   users: Prisma.accountsCreateNestedOneWithoutCourse_enrollmentsInput
   course_progress?: Prisma.course_progressCreateNestedManyWithoutCourse_enrollmentsInput
@@ -614,6 +653,7 @@ export type course_enrollmentsUncheckedCreateWithoutCoursesInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
   course_progress?: Prisma.course_progressUncheckedCreateNestedManyWithoutCourse_enrollmentsInput
 }
@@ -654,6 +694,7 @@ export type course_enrollmentsScalarWhereInput = {
   enrolled_at?: Prisma.DateTimeNullableFilter<"course_enrollments"> | Date | string | null
   progress?: Prisma.DecimalNullableFilter<"course_enrollments"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.StringNullableFilter<"course_enrollments"> | string | null
+  last_lesson_id?: Prisma.IntNullableFilter<"course_enrollments"> | number | null
   status?: Prisma.IntNullableFilter<"course_enrollments"> | number | null
 }
 
@@ -661,6 +702,7 @@ export type course_enrollmentsCreateWithoutUsersInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
   courses: Prisma.coursesCreateNestedOneWithoutCourse_enrollmentsInput
   course_progress?: Prisma.course_progressCreateNestedManyWithoutCourse_enrollmentsInput
@@ -672,6 +714,7 @@ export type course_enrollmentsUncheckedCreateWithoutUsersInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
   course_progress?: Prisma.course_progressUncheckedCreateNestedManyWithoutCourse_enrollmentsInput
 }
@@ -708,6 +751,7 @@ export type course_enrollmentsCreateManyCoursesInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
 }
 
@@ -715,6 +759,7 @@ export type course_enrollmentsUpdateWithoutCoursesInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   users?: Prisma.accountsUpdateOneRequiredWithoutCourse_enrollmentsNestedInput
   course_progress?: Prisma.course_progressUpdateManyWithoutCourse_enrollmentsNestedInput
@@ -726,6 +771,7 @@ export type course_enrollmentsUncheckedUpdateWithoutCoursesInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   course_progress?: Prisma.course_progressUncheckedUpdateManyWithoutCourse_enrollmentsNestedInput
 }
@@ -736,6 +782,7 @@ export type course_enrollmentsUncheckedUpdateManyWithoutCoursesInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
@@ -745,6 +792,7 @@ export type course_enrollmentsCreateManyUsersInput = {
   enrolled_at?: Date | string | null
   progress?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: string | null
+  last_lesson_id?: number | null
   status?: number | null
 }
 
@@ -752,6 +800,7 @@ export type course_enrollmentsUpdateWithoutUsersInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   courses?: Prisma.coursesUpdateOneRequiredWithoutCourse_enrollmentsNestedInput
   course_progress?: Prisma.course_progressUpdateManyWithoutCourse_enrollmentsNestedInput
@@ -763,6 +812,7 @@ export type course_enrollmentsUncheckedUpdateWithoutUsersInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   course_progress?: Prisma.course_progressUncheckedUpdateManyWithoutCourse_enrollmentsNestedInput
 }
@@ -773,6 +823,7 @@ export type course_enrollmentsUncheckedUpdateManyWithoutUsersInput = {
   enrolled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   progress?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   certificate_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  last_lesson_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
@@ -814,6 +865,7 @@ export type course_enrollmentsSelect<ExtArgs extends runtime.Types.Extensions.In
   enrolled_at?: boolean
   progress?: boolean
   certificate_url?: boolean
+  last_lesson_id?: boolean
   status?: boolean
   courses?: boolean | Prisma.coursesDefaultArgs<ExtArgs>
   users?: boolean | Prisma.accountsDefaultArgs<ExtArgs>
@@ -830,10 +882,11 @@ export type course_enrollmentsSelectScalar = {
   enrolled_at?: boolean
   progress?: boolean
   certificate_url?: boolean
+  last_lesson_id?: boolean
   status?: boolean
 }
 
-export type course_enrollmentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "course_id" | "student_id" | "enrolled_at" | "progress" | "certificate_url" | "status", ExtArgs["result"]["course_enrollments"]>
+export type course_enrollmentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "course_id" | "student_id" | "enrolled_at" | "progress" | "certificate_url" | "last_lesson_id" | "status", ExtArgs["result"]["course_enrollments"]>
 export type course_enrollmentsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   courses?: boolean | Prisma.coursesDefaultArgs<ExtArgs>
   users?: boolean | Prisma.accountsDefaultArgs<ExtArgs>
@@ -855,6 +908,7 @@ export type $course_enrollmentsPayload<ExtArgs extends runtime.Types.Extensions.
     enrolled_at: Date | null
     progress: runtime.Decimal | null
     certificate_url: string | null
+    last_lesson_id: number | null
     status: number | null
   }, ExtArgs["result"]["course_enrollments"]>
   composites: {}
@@ -1234,6 +1288,7 @@ export interface course_enrollmentsFieldRefs {
   readonly enrolled_at: Prisma.FieldRef<"course_enrollments", 'DateTime'>
   readonly progress: Prisma.FieldRef<"course_enrollments", 'Decimal'>
   readonly certificate_url: Prisma.FieldRef<"course_enrollments", 'String'>
+  readonly last_lesson_id: Prisma.FieldRef<"course_enrollments", 'Int'>
   readonly status: Prisma.FieldRef<"course_enrollments", 'Int'>
 }
     

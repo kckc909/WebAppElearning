@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model course_reviews
@@ -254,6 +254,7 @@ export type course_reviewsOrderByWithRelationInput = {
 
 export type course_reviewsWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  course_id_student_id?: Prisma.course_reviewsCourse_idStudent_idCompoundUniqueInput
   AND?: Prisma.course_reviewsWhereInput | Prisma.course_reviewsWhereInput[]
   OR?: Prisma.course_reviewsWhereInput[]
   NOT?: Prisma.course_reviewsWhereInput | Prisma.course_reviewsWhereInput[]
@@ -264,7 +265,7 @@ export type course_reviewsWhereUniqueInput = Prisma.AtLeast<{
   created_at?: Prisma.DateTimeNullableFilter<"course_reviews"> | Date | string | null
   courses?: Prisma.XOR<Prisma.CoursesScalarRelationFilter, Prisma.coursesWhereInput>
   users?: Prisma.XOR<Prisma.AccountsScalarRelationFilter, Prisma.accountsWhereInput>
-}, "id">
+}, "id" | "course_id_student_id">
 
 export type course_reviewsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -354,6 +355,11 @@ export type course_reviewsOrderByRelevanceInput = {
   fields: Prisma.course_reviewsOrderByRelevanceFieldEnum | Prisma.course_reviewsOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
+}
+
+export type course_reviewsCourse_idStudent_idCompoundUniqueInput = {
+  course_id: number
+  student_id: number
 }
 
 export type course_reviewsCountOrderByAggregateInput = {

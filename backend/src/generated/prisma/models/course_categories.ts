@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model course_categories
@@ -39,18 +39,27 @@ export type Course_categoriesSumAggregateOutputType = {
 export type Course_categoriesMinAggregateOutputType = {
   id: number | null
   name: string | null
+  slug: string | null
+  icon: string | null
+  description: string | null
   parent_id: number | null
 }
 
 export type Course_categoriesMaxAggregateOutputType = {
   id: number | null
   name: string | null
+  slug: string | null
+  icon: string | null
+  description: string | null
   parent_id: number | null
 }
 
 export type Course_categoriesCountAggregateOutputType = {
   id: number
   name: number
+  slug: number
+  icon: number
+  description: number
   parent_id: number
   _all: number
 }
@@ -69,18 +78,27 @@ export type Course_categoriesSumAggregateInputType = {
 export type Course_categoriesMinAggregateInputType = {
   id?: true
   name?: true
+  slug?: true
+  icon?: true
+  description?: true
   parent_id?: true
 }
 
 export type Course_categoriesMaxAggregateInputType = {
   id?: true
   name?: true
+  slug?: true
+  icon?: true
+  description?: true
   parent_id?: true
 }
 
 export type Course_categoriesCountAggregateInputType = {
   id?: true
   name?: true
+  slug?: true
+  icon?: true
+  description?: true
   parent_id?: true
   _all?: true
 }
@@ -174,6 +192,9 @@ export type course_categoriesGroupByArgs<ExtArgs extends runtime.Types.Extension
 export type Course_categoriesGroupByOutputType = {
   id: number
   name: string
+  slug: string | null
+  icon: string | null
+  description: string | null
   parent_id: number | null
   _count: Course_categoriesCountAggregateOutputType | null
   _avg: Course_categoriesAvgAggregateOutputType | null
@@ -203,6 +224,9 @@ export type course_categoriesWhereInput = {
   NOT?: Prisma.course_categoriesWhereInput | Prisma.course_categoriesWhereInput[]
   id?: Prisma.IntFilter<"course_categories"> | number
   name?: Prisma.StringFilter<"course_categories"> | string
+  slug?: Prisma.StringNullableFilter<"course_categories"> | string | null
+  icon?: Prisma.StringNullableFilter<"course_categories"> | string | null
+  description?: Prisma.StringNullableFilter<"course_categories"> | string | null
   parent_id?: Prisma.IntNullableFilter<"course_categories"> | number | null
   course_categories?: Prisma.XOR<Prisma.Course_categoriesNullableScalarRelationFilter, Prisma.course_categoriesWhereInput> | null
   other_course_categories?: Prisma.Course_categoriesListRelationFilter
@@ -212,6 +236,9 @@ export type course_categoriesWhereInput = {
 export type course_categoriesOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrderInput | Prisma.SortOrder
+  icon?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   parent_id?: Prisma.SortOrderInput | Prisma.SortOrder
   course_categories?: Prisma.course_categoriesOrderByWithRelationInput
   other_course_categories?: Prisma.course_categoriesOrderByRelationAggregateInput
@@ -221,19 +248,25 @@ export type course_categoriesOrderByWithRelationInput = {
 
 export type course_categoriesWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  slug?: string
   AND?: Prisma.course_categoriesWhereInput | Prisma.course_categoriesWhereInput[]
   OR?: Prisma.course_categoriesWhereInput[]
   NOT?: Prisma.course_categoriesWhereInput | Prisma.course_categoriesWhereInput[]
   name?: Prisma.StringFilter<"course_categories"> | string
+  icon?: Prisma.StringNullableFilter<"course_categories"> | string | null
+  description?: Prisma.StringNullableFilter<"course_categories"> | string | null
   parent_id?: Prisma.IntNullableFilter<"course_categories"> | number | null
   course_categories?: Prisma.XOR<Prisma.Course_categoriesNullableScalarRelationFilter, Prisma.course_categoriesWhereInput> | null
   other_course_categories?: Prisma.Course_categoriesListRelationFilter
   courses?: Prisma.CoursesListRelationFilter
-}, "id">
+}, "id" | "slug">
 
 export type course_categoriesOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrderInput | Prisma.SortOrder
+  icon?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   parent_id?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.course_categoriesCountOrderByAggregateInput
   _avg?: Prisma.course_categoriesAvgOrderByAggregateInput
@@ -248,11 +281,17 @@ export type course_categoriesScalarWhereWithAggregatesInput = {
   NOT?: Prisma.course_categoriesScalarWhereWithAggregatesInput | Prisma.course_categoriesScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"course_categories"> | number
   name?: Prisma.StringWithAggregatesFilter<"course_categories"> | string
+  slug?: Prisma.StringNullableWithAggregatesFilter<"course_categories"> | string | null
+  icon?: Prisma.StringNullableWithAggregatesFilter<"course_categories"> | string | null
+  description?: Prisma.StringNullableWithAggregatesFilter<"course_categories"> | string | null
   parent_id?: Prisma.IntNullableWithAggregatesFilter<"course_categories"> | number | null
 }
 
 export type course_categoriesCreateInput = {
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
   course_categories?: Prisma.course_categoriesCreateNestedOneWithoutOther_course_categoriesInput
   other_course_categories?: Prisma.course_categoriesCreateNestedManyWithoutCourse_categoriesInput
   courses?: Prisma.coursesCreateNestedManyWithoutCourse_categoriesInput
@@ -261,6 +300,9 @@ export type course_categoriesCreateInput = {
 export type course_categoriesUncheckedCreateInput = {
   id?: number
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
   parent_id?: number | null
   other_course_categories?: Prisma.course_categoriesUncheckedCreateNestedManyWithoutCourse_categoriesInput
   courses?: Prisma.coursesUncheckedCreateNestedManyWithoutCourse_categoriesInput
@@ -268,6 +310,9 @@ export type course_categoriesUncheckedCreateInput = {
 
 export type course_categoriesUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   course_categories?: Prisma.course_categoriesUpdateOneWithoutOther_course_categoriesNestedInput
   other_course_categories?: Prisma.course_categoriesUpdateManyWithoutCourse_categoriesNestedInput
   courses?: Prisma.coursesUpdateManyWithoutCourse_categoriesNestedInput
@@ -276,6 +321,9 @@ export type course_categoriesUpdateInput = {
 export type course_categoriesUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   other_course_categories?: Prisma.course_categoriesUncheckedUpdateManyWithoutCourse_categoriesNestedInput
   courses?: Prisma.coursesUncheckedUpdateManyWithoutCourse_categoriesNestedInput
@@ -284,16 +332,25 @@ export type course_categoriesUncheckedUpdateInput = {
 export type course_categoriesCreateManyInput = {
   id?: number
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
   parent_id?: number | null
 }
 
 export type course_categoriesUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type course_categoriesUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
@@ -321,6 +378,9 @@ export type course_categoriesOrderByRelevanceInput = {
 export type course_categoriesCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   parent_id?: Prisma.SortOrder
 }
 
@@ -332,12 +392,18 @@ export type course_categoriesAvgOrderByAggregateInput = {
 export type course_categoriesMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   parent_id?: Prisma.SortOrder
 }
 
 export type course_categoriesMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   parent_id?: Prisma.SortOrder
 }
 
@@ -422,6 +488,9 @@ export type course_categoriesUpdateOneWithoutCoursesNestedInput = {
 
 export type course_categoriesCreateWithoutOther_course_categoriesInput = {
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
   course_categories?: Prisma.course_categoriesCreateNestedOneWithoutOther_course_categoriesInput
   courses?: Prisma.coursesCreateNestedManyWithoutCourse_categoriesInput
 }
@@ -429,6 +498,9 @@ export type course_categoriesCreateWithoutOther_course_categoriesInput = {
 export type course_categoriesUncheckedCreateWithoutOther_course_categoriesInput = {
   id?: number
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
   parent_id?: number | null
   courses?: Prisma.coursesUncheckedCreateNestedManyWithoutCourse_categoriesInput
 }
@@ -440,6 +512,9 @@ export type course_categoriesCreateOrConnectWithoutOther_course_categoriesInput 
 
 export type course_categoriesCreateWithoutCourse_categoriesInput = {
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
   other_course_categories?: Prisma.course_categoriesCreateNestedManyWithoutCourse_categoriesInput
   courses?: Prisma.coursesCreateNestedManyWithoutCourse_categoriesInput
 }
@@ -447,6 +522,9 @@ export type course_categoriesCreateWithoutCourse_categoriesInput = {
 export type course_categoriesUncheckedCreateWithoutCourse_categoriesInput = {
   id?: number
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
   other_course_categories?: Prisma.course_categoriesUncheckedCreateNestedManyWithoutCourse_categoriesInput
   courses?: Prisma.coursesUncheckedCreateNestedManyWithoutCourse_categoriesInput
 }
@@ -474,6 +552,9 @@ export type course_categoriesUpdateToOneWithWhereWithoutOther_course_categoriesI
 
 export type course_categoriesUpdateWithoutOther_course_categoriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   course_categories?: Prisma.course_categoriesUpdateOneWithoutOther_course_categoriesNestedInput
   courses?: Prisma.coursesUpdateManyWithoutCourse_categoriesNestedInput
 }
@@ -481,6 +562,9 @@ export type course_categoriesUpdateWithoutOther_course_categoriesInput = {
 export type course_categoriesUncheckedUpdateWithoutOther_course_categoriesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   courses?: Prisma.coursesUncheckedUpdateManyWithoutCourse_categoriesNestedInput
 }
@@ -507,11 +591,17 @@ export type course_categoriesScalarWhereInput = {
   NOT?: Prisma.course_categoriesScalarWhereInput | Prisma.course_categoriesScalarWhereInput[]
   id?: Prisma.IntFilter<"course_categories"> | number
   name?: Prisma.StringFilter<"course_categories"> | string
+  slug?: Prisma.StringNullableFilter<"course_categories"> | string | null
+  icon?: Prisma.StringNullableFilter<"course_categories"> | string | null
+  description?: Prisma.StringNullableFilter<"course_categories"> | string | null
   parent_id?: Prisma.IntNullableFilter<"course_categories"> | number | null
 }
 
 export type course_categoriesCreateWithoutCoursesInput = {
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
   course_categories?: Prisma.course_categoriesCreateNestedOneWithoutOther_course_categoriesInput
   other_course_categories?: Prisma.course_categoriesCreateNestedManyWithoutCourse_categoriesInput
 }
@@ -519,6 +609,9 @@ export type course_categoriesCreateWithoutCoursesInput = {
 export type course_categoriesUncheckedCreateWithoutCoursesInput = {
   id?: number
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
   parent_id?: number | null
   other_course_categories?: Prisma.course_categoriesUncheckedCreateNestedManyWithoutCourse_categoriesInput
 }
@@ -541,6 +634,9 @@ export type course_categoriesUpdateToOneWithWhereWithoutCoursesInput = {
 
 export type course_categoriesUpdateWithoutCoursesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   course_categories?: Prisma.course_categoriesUpdateOneWithoutOther_course_categoriesNestedInput
   other_course_categories?: Prisma.course_categoriesUpdateManyWithoutCourse_categoriesNestedInput
 }
@@ -548,6 +644,9 @@ export type course_categoriesUpdateWithoutCoursesInput = {
 export type course_categoriesUncheckedUpdateWithoutCoursesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   other_course_categories?: Prisma.course_categoriesUncheckedUpdateManyWithoutCourse_categoriesNestedInput
 }
@@ -555,10 +654,16 @@ export type course_categoriesUncheckedUpdateWithoutCoursesInput = {
 export type course_categoriesCreateManyCourse_categoriesInput = {
   id?: number
   name: string
+  slug?: string | null
+  icon?: string | null
+  description?: string | null
 }
 
 export type course_categoriesUpdateWithoutCourse_categoriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   other_course_categories?: Prisma.course_categoriesUpdateManyWithoutCourse_categoriesNestedInput
   courses?: Prisma.coursesUpdateManyWithoutCourse_categoriesNestedInput
 }
@@ -566,6 +671,9 @@ export type course_categoriesUpdateWithoutCourse_categoriesInput = {
 export type course_categoriesUncheckedUpdateWithoutCourse_categoriesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   other_course_categories?: Prisma.course_categoriesUncheckedUpdateManyWithoutCourse_categoriesNestedInput
   courses?: Prisma.coursesUncheckedUpdateManyWithoutCourse_categoriesNestedInput
 }
@@ -573,6 +681,9 @@ export type course_categoriesUncheckedUpdateWithoutCourse_categoriesInput = {
 export type course_categoriesUncheckedUpdateManyWithoutCourse_categoriesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -618,6 +729,9 @@ export type Course_categoriesCountOutputTypeCountCoursesArgs<ExtArgs extends run
 export type course_categoriesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  slug?: boolean
+  icon?: boolean
+  description?: boolean
   parent_id?: boolean
   course_categories?: boolean | Prisma.course_categories$course_categoriesArgs<ExtArgs>
   other_course_categories?: boolean | Prisma.course_categories$other_course_categoriesArgs<ExtArgs>
@@ -630,10 +744,13 @@ export type course_categoriesSelect<ExtArgs extends runtime.Types.Extensions.Int
 export type course_categoriesSelectScalar = {
   id?: boolean
   name?: boolean
+  slug?: boolean
+  icon?: boolean
+  description?: boolean
   parent_id?: boolean
 }
 
-export type course_categoriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "parent_id", ExtArgs["result"]["course_categories"]>
+export type course_categoriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "icon" | "description" | "parent_id", ExtArgs["result"]["course_categories"]>
 export type course_categoriesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   course_categories?: boolean | Prisma.course_categories$course_categoriesArgs<ExtArgs>
   other_course_categories?: boolean | Prisma.course_categories$other_course_categoriesArgs<ExtArgs>
@@ -651,6 +768,9 @@ export type $course_categoriesPayload<ExtArgs extends runtime.Types.Extensions.I
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     name: string
+    slug: string | null
+    icon: string | null
+    description: string | null
     parent_id: number | null
   }, ExtArgs["result"]["course_categories"]>
   composites: {}
@@ -1026,6 +1146,9 @@ export interface Prisma__course_categoriesClient<T, Null = never, ExtArgs extend
 export interface course_categoriesFieldRefs {
   readonly id: Prisma.FieldRef<"course_categories", 'Int'>
   readonly name: Prisma.FieldRef<"course_categories", 'String'>
+  readonly slug: Prisma.FieldRef<"course_categories", 'String'>
+  readonly icon: Prisma.FieldRef<"course_categories", 'String'>
+  readonly description: Prisma.FieldRef<"course_categories", 'String'>
   readonly parent_id: Prisma.FieldRef<"course_categories", 'Int'>
 }
     

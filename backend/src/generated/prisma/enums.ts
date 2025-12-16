@@ -9,10 +9,58 @@
 * 🟢 You can import this file directly.
 */
 
-export const class_exams_exam_type = {
-  quiz: 'quiz',
-  written: 'written',
-  oral: 'oral'
+export const UserRole = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
+  INSTRUCTOR: 'INSTRUCTOR',
+  STUDENT: 'STUDENT'
 } as const
 
-export type class_exams_exam_type = (typeof class_exams_exam_type)[keyof typeof class_exams_exam_type]
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const CourseStatus = {
+  DRAFT: 'DRAFT',
+  PENDING: 'PENDING',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type CourseStatus = (typeof CourseStatus)[keyof typeof CourseStatus]
+
+
+export const CourseLevel = {
+  ALL_LEVELS: 'ALL_LEVELS',
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED'
+} as const
+
+export type CourseLevel = (typeof CourseLevel)[keyof typeof CourseLevel]
+
+
+export const NotificationType = {
+  SYSTEM: 'SYSTEM',
+  COURSE: 'COURSE',
+  REMINDER: 'REMINDER'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const ClassCalendarType = {
+  CLASS: 'CLASS',
+  EXAM: 'EXAM',
+  ASSIGNMENT: 'ASSIGNMENT'
+} as const
+
+export type ClassCalendarType = (typeof ClassCalendarType)[keyof typeof ClassCalendarType]
+
+
+export const ExamType = {
+  QUIZ: 'QUIZ',
+  WRITTEN: 'WRITTEN',
+  ORAL: 'ORAL'
+} as const
+
+export type ExamType = (typeof ExamType)[keyof typeof ExamType]

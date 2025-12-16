@@ -17,8 +17,8 @@
 
 import * as runtime from "@prisma/client/runtime/index-browser"
 
-export type * from '../models'
-export type * from './prismaNamespace'
+export type * from '../models.js'
+export type * from './prismaNamespace.js'
 
 export const Decimal = runtime.Decimal
 
@@ -140,6 +140,9 @@ export const Class_calendarScalarFieldEnum = {
   title: 'title',
   description: 'description',
   event_date: 'event_date',
+  start_time: 'start_time',
+  end_time: 'end_time',
+  type: 'type',
   duration_minutes: 'duration_minutes',
   lesson: 'lesson'
 } as const
@@ -216,6 +219,8 @@ export const ClassesScalarFieldEnum = {
   start_date: 'start_date',
   end_date: 'end_date',
   meeting_link: 'meeting_link',
+  max_students: 'max_students',
+  schedule: 'schedule',
   status: 'status',
   created_at: 'created_at'
 } as const
@@ -250,6 +255,9 @@ export type Content_ides_starterScalarFieldEnum = (typeof Content_ides_starterSc
 export const Course_categoriesScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  slug: 'slug',
+  icon: 'icon',
+  description: 'description',
   parent_id: 'parent_id'
 } as const
 
@@ -263,6 +271,7 @@ export const Course_enrollmentsScalarFieldEnum = {
   enrolled_at: 'enrolled_at',
   progress: 'progress',
   certificate_url: 'certificate_url',
+  last_lesson_id: 'last_lesson_id',
   status: 'status'
 } as const
 
@@ -325,9 +334,9 @@ export const CoursesScalarFieldEnum = {
   price: 'price',
   discount_price: 'discount_price',
   thumbnail: 'thumbnail',
-  complete_at: 'complete_at',
   status: 'status',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
 export type CoursesScalarFieldEnum = (typeof CoursesScalarFieldEnum)[keyof typeof CoursesScalarFieldEnum]
@@ -502,7 +511,9 @@ export type class_assignmentsOrderByRelevanceFieldEnum = (typeof class_assignmen
 
 export const class_calendarOrderByRelevanceFieldEnum = {
   title: 'title',
-  description: 'description'
+  description: 'description',
+  start_time: 'start_time',
+  end_time: 'end_time'
 } as const
 
 export type class_calendarOrderByRelevanceFieldEnum = (typeof class_calendarOrderByRelevanceFieldEnum)[keyof typeof class_calendarOrderByRelevanceFieldEnum]
@@ -542,7 +553,8 @@ export type class_submissionsOrderByRelevanceFieldEnum = (typeof class_submissio
 export const classesOrderByRelevanceFieldEnum = {
   title: 'title',
   description: 'description',
-  meeting_link: 'meeting_link'
+  meeting_link: 'meeting_link',
+  schedule: 'schedule'
 } as const
 
 export type classesOrderByRelevanceFieldEnum = (typeof classesOrderByRelevanceFieldEnum)[keyof typeof classesOrderByRelevanceFieldEnum]
@@ -582,7 +594,10 @@ export type content_ides_starterOrderByRelevanceFieldEnum = (typeof content_ides
 
 
 export const course_categoriesOrderByRelevanceFieldEnum = {
-  name: 'name'
+  name: 'name',
+  slug: 'slug',
+  icon: 'icon',
+  description: 'description'
 } as const
 
 export type course_categoriesOrderByRelevanceFieldEnum = (typeof course_categoriesOrderByRelevanceFieldEnum)[keyof typeof course_categoriesOrderByRelevanceFieldEnum]

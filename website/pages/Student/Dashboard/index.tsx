@@ -227,7 +227,11 @@ const StudentDashboard: React.FC = () => {
                         </div>
                         <div className="space-y-4">
                             {studentCourses.slice(0, 3).map((course: any) => (
-                                <Link to={`/lesson/1`} key={course.id} className="block group">
+                                <Link
+                                    to={student_routes.lesson(course.course?.id || course.id, course.lastLesson?.id || 1)}
+                                    key={course.id}
+                                    className="block group"
+                                >
                                     <div className="flex items-center space-x-3">
                                         <img src={course.course?.thumbnail || course.thumbnail} alt={course.course?.title || course.title} className="w-12 h-12 rounded object-cover" />
                                         <div className="flex-1 min-w-0">

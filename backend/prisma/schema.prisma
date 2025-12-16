@@ -8,6 +8,62 @@ datasource db {
   provider = "mysql"
 }
 
+// ============================================
+// ENUMS - Type Safety Layer
+// ============================================
+
+/// User roles in the system
+/// Maps to: ROLES constant in frontend (-1, 0, 1, 2)
+enum UserRole {
+  SUPER_ADMIN  // -1
+  ADMIN        // 0
+  INSTRUCTOR   // 1
+  STUDENT      // 2
+}
+
+/// Course publication status
+/// Maps to: COURSE_STATUS constant in frontend
+enum CourseStatus {
+  DRAFT      // 0 - Being created
+  PENDING    // 1 - Awaiting approval
+  PUBLISHED  // 2 - Live
+  ARCHIVED   // 3 - Deprecated
+}
+
+/// Course difficulty level
+/// Maps to: COURSE_LEVELS constant in frontend
+enum CourseLevel {
+  ALL_LEVELS     // 0
+  BEGINNER       // 1
+  INTERMEDIATE   // 2
+  ADVANCED       // 3
+}
+
+/// Notification category
+enum NotificationType {
+  SYSTEM    // 0 - System announcements
+  COURSE    // 1 - Course updates
+  REMINDER  // 2 - Deadline reminders
+}
+
+/// Calendar event type (class_calendar)
+enum ClassCalendarType {
+  CLASS       // Regular class session
+  EXAM        // Examination
+  ASSIGNMENT  // Assignment deadline
+}
+
+/// Exam types
+enum ExamType {
+  QUIZ
+  WRITTEN
+  ORAL
+}
+
+// ============================================
+// MODELS
+// ============================================
+
 model admin_logs {
   id           Int       @id @default(autoincrement())
   admin_id     Int
@@ -48,15 +104,20 @@ model class_assignments {
   @@index([class_id], map: "class_id")
 }
 
+/// UPDATED: Added start_time, end_time, type (ClassCalendarType enum)
+/// Kept duration_minutes for backward compatibility / analytics
 model class_calendar {
-  id               Int       @id @default(autoincrement())
+  id               Int                 @id @default(autoincrement())
   class_id         Int
-  title            String?   @db.VarChar(255)
-  description      String?   @db.Text
-  event_date       DateTime? @db.DateTime(0)
-  duration_minutes Int?
-  lesson           Int?      @default(0)
-  classes          classes   @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_calendar_ibfk_1")
+  title            String?             @db.VarChar(255)
+  description      String?             @db.Text
+  event_date       DateTime?           @db.DateTime(0)
+  start_time       String?             @db.VarChar(10)  // '19:30' format
+  end_time         String?             @db.VarChar(10)  // '21:00' format
+  type             ClassCalendarType?  @default(CLASS)  // NEW: enum type
+  duration_minutes Int?                // KEPT: for analytics, not source of truth
+  lesson           Int?                @default(0)
+  classes          classes             @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_calendar_ibfk_1")
 
   @@index([class_id], map: "class_id")
 }
@@ -75,15 +136,16 @@ model class_exam_results {
   @@index([student_id], map: "student_id")
 }
 
+/// UPDATED: exam_type now uses ExamType enum
 model class_exams {
-  id                 Int                    @id @default(autoincrement())
+  id                 Int                  @id @default(autoincrement())
   class_id           Int
-  title              String?                @db.VarChar(255)
-  exam_type          class_exams_exam_type? @default(quiz)
-  total_score        Decimal?               @db.Decimal(5, 2)
-  created_at         DateTime?              @default(now()) @db.DateTime(0)
+  title              String?              @db.VarChar(255)
+  exam_type          ExamType?            @default(QUIZ)
+  total_score        Decimal?             @db.Decimal(5, 2)
+  created_at         DateTime?            @default(now()) @db.DateTime(0)
   class_exam_results class_exam_results[]
-  classes            classes                @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_exams_ibfk_1")
+  classes            classes              @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "class_exams_ibfk_1")
 
   @@index([class_id], map: "class_id")
 }
@@ -265,6 +327,10 @@ model course_sections {
   @@index([course_id], map: "course_id")
 }
 
+/// UPDATED: 
+/// - Removed complete_at (ambiguous, unused)
+/// - level now uses CourseLevel enum
+/// - status now uses CourseStatus enum
 model courses {
   id                 Int                  @id @default(autoincrement())
   instructor_id      Int
@@ -272,13 +338,12 @@ model courses {
   title              String               @db.VarChar(255)
   short_description  String?              @db.VarChar(255)
   description        String?              @db.Text
-  level              Int?                 @default(0)
+  level              CourseLevel?         @default(ALL_LEVELS)
   language           String?              @db.VarChar(100)
   price              Int?                 @default(0)
   discount_price     Int?                 @default(0)
   thumbnail          String?              @db.VarChar(255)
-  complete_at        Int?
-  status             Int?                 @default(0)
+  status             CourseStatus?        @default(DRAFT)
   created_at         DateTime?            @default(now()) @db.DateTime(0)
   updated_at         DateTime?            @default(now()) @updatedAt @db.DateTime(0)
   certificates       certificates[]
@@ -336,15 +401,16 @@ model messages {
   @@index([sender_id], map: "sender_id")
 }
 
+/// UPDATED: type now uses NotificationType enum
 model notifications {
-  id         Int       @id @default(autoincrement())
+  id         Int                @id @default(autoincrement())
   user_id    Int
-  title      String?   @db.VarChar(255)
-  message    String?   @db.Text
-  type       Int?      @default(0)
-  is_read    Boolean?  @default(false)
-  created_at DateTime? @default(now()) @db.DateTime(0)
-  users      accounts  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notifications_ibfk_1")
+  title      String?            @db.VarChar(255)
+  message    String?            @db.Text
+  type       NotificationType?  @default(SYSTEM)
+  is_read    Boolean?           @default(false)
+  created_at DateTime?          @default(now()) @db.DateTime(0)
+  users      accounts           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notifications_ibfk_1")
 
   @@index([user_id], map: "user_id")
 }
@@ -402,13 +468,14 @@ model user_profiles {
   @@index([user_id], map: "user_id")
 }
 
+/// UPDATED: role now uses UserRole enum
 model accounts {
   id                                   Int                        @id @default(autoincrement())
   full_name                            String                     @db.VarChar(255)
   email                                String                     @unique(map: "email") @db.VarChar(255)
   password_hash                        String                     @db.VarChar(255)
   avatar_url                           String?                    @db.VarChar(255)
-  role                                 Int?                       @default(2)
+  role                                 UserRole?                  @default(STUDENT)
   status                               Int?                       @default(0)
   created_at                           DateTime?                  @default(now()) @db.DateTime(0)
   updated_at                           DateTime?                  @default(now()) @db.DateTime(0)
@@ -430,10 +497,4 @@ model accounts {
   payouts                              payouts[]
   transactions                         transactions[]
   user_profiles                        user_profiles[]
-}
-
-enum class_exams_exam_type {
-  quiz
-  written
-  oral
 }
