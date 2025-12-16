@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { IoChevronForward, IoChevronBack } from "react-icons/io5";
 import { Outlet } from "react-router-dom";
 import SidebarButton from '../../components/SidebarLink'
@@ -15,6 +15,7 @@ const Student_LogedInLayout = () => {
             className={`
                 bg-white border-r border-slate-200 
                 transition-all duration-300 ease-in-out 
+                min-h-screen
                 hidden md:flex flex-col
                 h-full sticky top-0
                 shadow-sm
@@ -70,6 +71,7 @@ const Student_LogedInLayout = () => {
                 <SidebarButton to={student_routes.certificates} icon="Award" label="Chứng chỉ" isCollapsed={isCollapsed} />
                 <SidebarButton to={student_routes.stats} icon="BarChart" label="Thống kê học tập" isCollapsed={isCollapsed} />
                 <div className="my-3 border-t border-slate-200"></div>
+                <SidebarButton to={student_routes.checkout} icon="ShoppingCart" label="Giỏ hàng" isCollapsed={isCollapsed} />
                 <SidebarButton to={student_routes.payment_history} icon="CreditCard" label="Lịch sử thanh toán" isCollapsed={isCollapsed} />
                 <SidebarButton to={student_routes.profile} icon="User" label="Hồ sơ cá nhân" isCollapsed={isCollapsed} />
                 <SidebarButton to={student_routes.settings} icon="Settings" label="Cài đặt" isCollapsed={isCollapsed} />
@@ -85,7 +87,7 @@ const Student_LogedInLayout = () => {
         </aside>
     );
     return (
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 min-h-screen overflow-hidden">
             {sidebar}
             <div className="flex-1 overflow-y-auto bg-slate-50 p-6">
                 <Outlet />

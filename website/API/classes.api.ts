@@ -2,7 +2,7 @@
  * Classes API Service (Lớp học trực tuyến)
  */
 
-import { USE_MOCK_API, simulateDelay, successResponse, errorResponse, ApiResponse } from './config';
+import { USE_MOCK_API, simulateDelay, successResponse, errorResponse, ApiResponse, handleApiError } from './config';
 import axiosInstance from './api';
 import {
     CLASSES,
@@ -41,9 +41,12 @@ class ClassesApiService {
 
         try {
             const response = await axiosInstance.get('/classes', { params });
-            return successResponse(response.data);
+            const data = response.data || [];
+            return successResponse(Array.isArray(data) ? data : []);
         } catch (error: any) {
-            return errorResponse(error.message || 'Failed to fetch classes');
+            const apiError = handleApiError(error);
+            console.error('[Classes API] getAll error:', apiError);
+            return errorResponse(apiError.message, []);
         }
     }
 
@@ -74,9 +77,14 @@ class ClassesApiService {
 
         try {
             const response = await axiosInstance.get(`/classes/${id}`);
+            if (!response.data) {
+                return errorResponse('Không tìm thấy lớp học', null);
+            }
             return successResponse(response.data);
         } catch (error: any) {
-            return errorResponse(error.message || 'Failed to fetch class');
+            const apiError = handleApiError(error);
+            console.error('[Classes API] getById error:', apiError);
+            return errorResponse(apiError.message, null);
         }
     }
 
@@ -114,9 +122,12 @@ class ClassesApiService {
 
         try {
             const response = await axiosInstance.get('/classes/my', { params: { student_id: studentId } });
-            return successResponse(response.data);
+            const data = response.data || [];
+            return successResponse(Array.isArray(data) ? data : []);
         } catch (error: any) {
-            return errorResponse(error.message || 'Failed to fetch my classes');
+            const apiError = handleApiError(error);
+            console.error('[Classes API] getMyClasses error:', apiError);
+            return errorResponse(apiError.message, []);
         }
     }
 

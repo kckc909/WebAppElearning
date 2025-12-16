@@ -2,7 +2,7 @@
  * Accounts API Service (Tài khoản & Auth)
  */
 
-import { USE_MOCK_API, simulateDelay, successResponse, errorResponse, ApiResponse } from './config';
+import { USE_MOCK_API, simulateDelay, successResponse, errorResponse, ApiResponse, handleApiError } from './config';
 import axiosInstance from './api';
 import { ACCOUNTS, USER_PROFILES, validateLogin, ROLES } from '../mockData';
 
@@ -38,9 +38,12 @@ class AccountsService {
 
         try {
             const response = await axiosInstance.get('/accounts', { params });
-            return successResponse(response.data);
+            const data = response.data || [];
+            return successResponse(Array.isArray(data) ? data : []);
         } catch (error: any) {
-            return errorResponse(error.message || 'Failed to fetch accounts');
+            const apiError = handleApiError(error);
+            console.error('[Accounts API] getAll error:', apiError);
+            return errorResponse(apiError.message, []);
         }
     }
 
@@ -98,9 +101,18 @@ class AccountsService {
 
         try {
             const response = await axiosInstance.post('/accounts', data);
-            return successResponse(response.data);
+            return successResponse(response.data, 'Tạo tài khoản thành công');
         } catch (error: any) {
-            return errorResponse(error.message || 'Failed to create account');
+            const apiError = handleApiError(error);
+            console.error('[Accounts API] create error:', apiError);
+            // Xử lý lỗi duplicate
+            if (error.response?.data?.message?.includes('email') || error.response?.data?.message?.includes('Email')) {
+                return errorResponse('Email đã được sử dụng');
+            }
+            if (error.response?.data?.message?.includes('username') || error.response?.data?.message?.includes('Username')) {
+                return errorResponse('Username đã được sử dụng');
+            }
+            return errorResponse(apiError.message);
         }
     }
 
@@ -152,12 +164,12 @@ class AccountsService {
     }
 
     // POST /accounts/login - Đăng nhập
-    async login(email: string, password: string): Promise<ApiResponse<any>> {
+    async login(emailOrUsername: string, password: string): Promise<ApiResponse<any>> {
         if (USE_MOCK_API) {
             await simulateDelay();
-            const user = validateLogin(email, password);
+            const user = validateLogin(emailOrUsername, password);
             if (!user) {
-                return errorResponse('Invalid email or password', null);
+                return errorResponse('Invalid email or username or password', null);
             }
 
             // Generate fake token
@@ -170,10 +182,24 @@ class AccountsService {
         }
 
         try {
-            const response = await axiosInstance.post('/accounts/login', { username: email, password });
-            return successResponse(response.data);
+            const response = await axiosInstance.post('/accounts/login', { emailOrUsername: emailOrUsername, password });
+            if (!response.data) {
+                return errorResponse('Sai tài khoản hoặc mật khẩu', null);
+            }
+            // Backend trả về user trực tiếp, wrap lại cho consistent
+            return successResponse({
+                user: response.data,
+                token: `db_token_${response.data.id}_${Date.now()}`,
+                expiresIn: 86400
+            }, 'Login successful');
         } catch (error: any) {
-            return errorResponse(error.message || 'Login failed');
+            const apiError = handleApiError(error);
+            console.error('[Accounts API] login error:', apiError);
+            // Xử lý lỗi 401 đặc biệt
+            if (error.response?.status === 401) {
+                return errorResponse('Sai tài khoản hoặc mật khẩu', null);
+            }
+            return errorResponse(apiError.message, null);
         }
     }
 

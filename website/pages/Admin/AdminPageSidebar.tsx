@@ -37,6 +37,7 @@ import {
 
 import { NavLink } from 'react-router-dom';
 import { admin_routes, tmp_on_navigate } from '../page_routes';
+import ApiModeSwitch from '../../components/ApiModeSwitch';
 
 interface SidebarProps {
     isOpen: boolean;
@@ -174,6 +175,11 @@ const AdminPageSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                         )
                     ))}
                 </nav>
+                
+                {/* Footer with API Mode Switch */}
+                <div className="p-3 border-t border-gray-200">
+                    <ApiModeSwitch />
+                </div>
             </aside>
         </>
     );

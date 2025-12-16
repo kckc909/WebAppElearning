@@ -26,10 +26,13 @@ export class Accounts_Service {
         return accFound
     }
 
-    async getByLoginForm(username: string, password: string) {
+    async getByLoginForm(emailOrUsername: string, password: string) {
         const accFound = await this.prisma.accounts.findFirst({
             where: {
-                username: username,
+                OR: [
+                    { email: emailOrUsername },
+                    { username: emailOrUsername }
+                ],
                 password_hash: password
             }
         })

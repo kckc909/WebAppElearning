@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  Play,
   Clock,
   Users,
   Award,
@@ -10,8 +9,6 @@ import {
   CheckCircle2,
   Globe,
   FileText,
-  Share2,
-  Heart,
   ChevronDown,
   ChevronUp,
   PlayCircle,
@@ -23,7 +20,8 @@ import {
 import toast from 'react-hot-toast';
 import { CourseCard } from './CourseCard';
 import { student_routes } from '../../../page_routes';
-import { coursesApi } from '../../../../API';
+import { useCourse, useCourseSections, useCourseReviews } from '../../../../hooks/useApi';
+import { ErrorState } from '../../../../components/DataStates';
 
 // Mock data
 const MOCK_COURSE = {
@@ -199,15 +197,15 @@ const EnrollmentDialog: React.FC<{
               <div className="flex items-center gap-4 text-sm text-slate-600">
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                  <span>{course.rating}</span>
+                  <span>{course.rating ?? 0}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Users className="w-4 h-4" />
-                  <span>{course.total_students.toLocaleString()}</span>
+                  <span>{(course.total_students ?? 0).toLocaleString()}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  <span>{Math.floor(course.total_duration / 60)}h</span>
+                  <span>{Math.floor((course.total_duration ?? 0) / 60)}h</span>
                 </div>
               </div>
             </div>
@@ -287,38 +285,47 @@ const CourseDetail: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const [expandedSections, setExpandedSections] = useState<number[]>([1]);
-  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isEnrolled] = useState(false);
   const [showEnrollmentDialog, setShowEnrollmentDialog] = useState(false);
-  const [course, setCourse] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
 
-  // Fetch course data from API
-  useEffect(() => {
-    const fetchCourse = async () => {
-      if (!courseId) return;
-      setLoading(true);
-      try {
-        const response = await coursesApi.getById(parseInt(courseId));
-        if (response.success && response.data) {
-          // Merge API data với default structure
-          setCourse({
-            ...MOCK_COURSE, // Default structure làm fallback
-            ...response.data,
-            short_description: response.data.short_description || response.data.description?.substring(0, 150) + '...',
-            sections: response.data.sections || MOCK_COURSE.sections
-          });
-        } else {
-          // Fallback to mock data if API fails
-          setCourse(MOCK_COURSE);
-        }
-      } catch (error) {
-        console.error('Failed to fetch course:', error);
-        setCourse(MOCK_COURSE);
-      }
-      setLoading(false);
-    };
-    fetchCourse();
-  }, [courseId]);
+  // Use API hooks
+  const { data: courseData, loading: courseLoading, error: courseError, refetch: refetchCourse } = useCourse(parseInt(courseId || '0'));
+  const { data: sectionsData, loading: sectionsLoading } = useCourseSections(parseInt(courseId || '0'));
+  const { data: reviewsData, loading: reviewsLoading } = useCourseReviews(parseInt(courseId || '0'));
+
+  // Merge course data with defaults - ensure all numeric fields have fallback values
+  const courseAny = courseData as any;
+  const course = courseData ? {
+    ...MOCK_COURSE, // Default structure làm fallback cho các field thiếu
+    ...courseData,
+    // Ensure numeric fields have default values to prevent toLocaleString errors
+    total_students: courseAny.total_students ?? 0,
+    total_lessons: courseAny.total_lessons ?? 0,
+    total_duration: courseAny.total_duration ?? 0,
+    rating: courseAny.rating ?? 0,
+    price: courseAny.price ?? 0,
+    discount_price: courseAny.discount_price ?? courseAny.price ?? 0,
+    level: courseAny.level ?? 0,
+    short_description: courseAny.short_description || courseAny.description?.substring(0, 150) + '...' || '',
+    sections: Array.isArray(sectionsData) && sectionsData.length > 0 ? sectionsData : MOCK_COURSE.sections,
+    reviews: Array.isArray(reviewsData) && reviewsData.length > 0 ? reviewsData : MOCK_COURSE.reviews,
+    instructor: {
+      ...MOCK_COURSE.instructor,
+      ...(courseAny.instructor || {}),
+      // Ensure instructor numeric fields have defaults
+      total_students: courseAny.instructor?.total_students ?? 0,
+      total_courses: courseAny.instructor?.total_courses ?? 0,
+      rating: courseAny.instructor?.rating ?? 0,
+      full_name: courseAny.instructor?.full_name || 'Chưa có thông tin',
+      avatar_url: courseAny.instructor?.avatar_url || MOCK_COURSE.instructor.avatar_url,
+      title: courseAny.instructor?.title || '',
+      bio: courseAny.instructor?.bio || ''
+    },
+    what_you_will_learn: courseAny.what_you_will_learn || MOCK_COURSE.what_you_will_learn,
+    requirements: courseAny.requirements || MOCK_COURSE.requirements
+  } : null;
+
+  const loading = courseLoading || sectionsLoading || reviewsLoading;
 
   const toggleSection = (sectionId: number) => {
     setExpandedSections(prev =>
@@ -379,6 +386,15 @@ const CourseDetail: React.FC = () => {
     );
   }
 
+  // Error state
+  if (courseError) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+        <ErrorState error={courseError} onRetry={refetchCourse} />
+      </div>
+    );
+  }
+
   // No course found
   if (!course) {
     return (
@@ -386,6 +402,12 @@ const CourseDetail: React.FC = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-secondary">Không tìm thấy khóa học</h1>
           <p className="text-slate-600 mt-2">Khóa học này không tồn tại hoặc đã bị xóa.</p>
+          <button
+            onClick={() => navigate('/' + student_routes.courses)}
+            className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
+          >
+            Quay lại danh sách khóa học
+          </button>
         </div>
       </div>
     );
@@ -412,16 +434,16 @@ const CourseDetail: React.FC = () => {
               <div className="flex flex-wrap items-center gap-6 mb-6">
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                  <span className="font-bold">{course.rating}</span>
-                  <span className="text-slate-400">({course.total_students.toLocaleString()} học viên)</span>
+                  <span className="font-bold">{course.rating ?? 0}</span>
+                  <span className="text-slate-400">({(course.total_students ?? 0).toLocaleString()} học viên)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
-                  <span>{course.total_students.toLocaleString()} học viên</span>
+                  <span>{(course.total_students ?? 0).toLocaleString()} học viên</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5" />
-                  <span>{formatDuration(course.total_duration)}</span>
+                  <span>{formatDuration(course.total_duration ?? 0)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Globe className="w-5 h-5" />
@@ -475,7 +497,7 @@ const CourseDetail: React.FC = () => {
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-secondary">Nội dung khóa học</h2>
                   <span className="text-sm text-slate-600">
-                    {course.sections.length} phần • {course.total_lessons} bài học • {formatDuration(course.total_duration)}
+                    {course.sections?.length ?? 0} phần • {course.total_lessons ?? 0} bài học • {formatDuration(course.total_duration ?? 0)}
                   </span>
                 </div>
 
@@ -559,12 +581,12 @@ const CourseDetail: React.FC = () => {
 
                 <div className="flex items-center gap-8 mb-8 pb-8 border-b border-slate-200">
                   <div className="text-center">
-                    <div className="text-5xl font-bold text-secondary mb-2">{course.rating}</div>
+                    <div className="text-5xl font-bold text-secondary mb-2">{course.rating ?? 0}</div>
                     <div className="flex items-center gap-1 mb-2">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
-                          className={`w-5 h-5 ${star <= Math.round(course.rating)
+                          className={`w-5 h-5 ${star <= Math.round(course.rating ?? 0)
                             ? 'text-yellow-400 fill-yellow-400'
                             : 'text-slate-300'
                             }`}
@@ -641,15 +663,15 @@ const CourseDetail: React.FC = () => {
                     <div className="flex flex-wrap gap-6 mb-4 text-sm">
                       <div className="flex items-center gap-2">
                         <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                        <span>{course.instructor.rating} đánh giá</span>
+                        <span>{course.instructor?.rating ?? 0} đánh giá</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-primary" />
-                        <span>{course.instructor.total_students.toLocaleString()} học viên</span>
+                        <span>{(course.instructor?.total_students ?? 0).toLocaleString()} học viên</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <BookOpen className="w-4 h-4 text-primary" />
-                        <span>{course.instructor.total_courses} khóa học</span>
+                        <span>{course.instructor?.total_courses ?? 0} khóa học</span>
                       </div>
                     </div>
 

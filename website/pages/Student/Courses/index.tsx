@@ -1,21 +1,35 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { useCourses } from '../../../hooks/useApi';
 import CourseCard from '../../../components/CourseCard';
-import { IoHomeOutline } from 'react-icons/io5';
-import { Loader2 } from 'lucide-react';
 
-const FilterCheckbox: React.FC<{ label: string, id: string, checked?: boolean, onChange?: () => void }> = ({ label, id, checked, onChange }) => (
+import { Loader2, BookOpen, Search } from 'lucide-react';
+import { ErrorState, EmptyState } from '../../../components/DataStates';
+
+const FilterCheckbox: React.FC<{ label: string; id: string; checked?: boolean; onChange?: () => void }> = ({
+    label,
+    id,
+    checked,
+    onChange,
+}) => (
     <div className="flex items-center">
-        <input id={id} type="checkbox" checked={checked} onChange={onChange} className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" />
-        <label htmlFor={id} className="ml-3 text-sm text-slate-600">{label}</label>
+        <input
+            id={id}
+            type="checkbox"
+            checked={checked}
+            onChange={onChange}
+            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+        />
+        <label htmlFor={id} className="ml-3 text-sm text-slate-600">
+            {label}
+        </label>
     </div>
 );
 
-
 const CoursesPage: React.FC = () => {
-    const { data: courses, loading, error } = useCourses();
+    const { data: courses, loading, error, refetch } = useCourses();
 
+    // Đảm bảo courses luôn là array
+    const courseList = Array.isArray(courses) ? courses : [];
 
     return (
         <div className="container mx-auto px-4 py-12">
@@ -25,7 +39,7 @@ const CoursesPage: React.FC = () => {
                 <div className="mt-6 flex justify-center">
                     <div className="relative w-full max-w-2xl">
                         <input type="search" placeholder="Tìm kiếm khóa học, giảng viên..." className="w-full rounded-full border-slate-300 py-3 pl-5 pr-12 text-base focus:ring-primary focus:border-primary" />
-                        <IoHomeOutline name="search-outline" className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl text-slate-400"></IoHomeOutline>
+                        <Search name="search-outline" className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl text-slate-400" />
                     </div>
                 </div>
             </header>
@@ -66,10 +80,19 @@ const CoursesPage: React.FC = () => {
                     {loading ? (
                         <div className="flex items-center justify-center py-20">
                             <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                            <span className="ml-3 text-slate-500">Đang tải khóa học...</span>
                         </div>
+                    ) : error ? (
+                        <ErrorState error={error} onRetry={refetch} />
+                    ) : courseList.length === 0 ? (
+                        <EmptyState
+                            title="Chưa có khóa học nào"
+                            message="Hiện tại chưa có khóa học nào trong hệ thống. Vui lòng quay lại sau."
+                            icon={<BookOpen className="w-8 h-8 text-slate-400" />}
+                        />
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                            {(courses || []).map((course: any) => (
+                            {courseList.map((course: any) => (
                                 <CourseCard key={course.id} course={course} />
                             ))}
                         </div>

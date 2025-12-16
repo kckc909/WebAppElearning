@@ -5,6 +5,7 @@ import {
 
 import { NavLink, useLocation } from 'react-router-dom';
 import { superadmin_routes, tmp_on_navigate } from '../page_routes';
+import ApiModeSwitch from '../../components/ApiModeSwitch';
 
 interface SidebarProps {
     isOpen?: boolean;
@@ -167,6 +168,17 @@ const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                         )
                     ))}
                 </nav>
+                
+                {/* Footer with API Mode Switch */}
+                <div className="p-3 border-t border-gray-200">
+                    {!isCollapsed ? (
+                        <ApiModeSwitch />
+                    ) : (
+                        <div className="flex justify-center">
+                            <ApiModeSwitch compact showLabel={false} />
+                        </div>
+                    )}
+                </div>
             </aside>
         </>
     );

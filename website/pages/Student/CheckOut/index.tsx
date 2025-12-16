@@ -329,10 +329,10 @@ const StudentCheckout: React.FC = () => {
                                                     <span>{item.rating}</span>
                                                 </div>
                                             )}
-                                            {item.total_students && (
+                                            {item.total_students != null && (
                                                 <div className="flex items-center gap-1">
                                                     <Users className="w-3 h-3" />
-                                                    <span>{item.total_students.toLocaleString()}</span>
+                                                    <span>{(item.total_students ?? 0).toLocaleString()}</span>
                                                 </div>
                                             )}
                                             {item.total_duration && (

@@ -43,7 +43,10 @@ import { ContentIdesStarter_Module } from './modules/content_ides_starter/conten
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: '.env',
+        }),
         PrismaModule,
         EmailModule,
         HelperModule,

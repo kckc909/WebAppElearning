@@ -4,6 +4,7 @@ import { IoLogoGoogle, IoLogoFacebook } from 'react-icons/io';
 import { Eye, EyeOff, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { accService } from '../../API/accounts.api';
 import SocialButton from '../../components/SocialButton';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Toast Notification Component
 const Toast: React.FC<{ message: string; type: 'success' | 'error' | 'info'; onClose: () => void }> = ({ message, type, onClose }) => {
@@ -43,6 +44,7 @@ const LoginForm: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -62,19 +64,26 @@ const LoginForm: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const accFound = await accService.login(username, password);
+            const response = await accService.login(username, password);
 
-            if (!accFound || !accFound.id) {
+            if (!response.success || !response.data) {
                 setError("Sai tài khoản hoặc mật khẩu!");
                 setIsLoading(false);
                 return;
             }
 
-            // Save to localStorage
-            localStorage.setItem("Account", JSON.stringify(accFound));
+            const loginData = response.data;
+            const userData = loginData.user || loginData; // Support cả 2 format
+
+            // Use AuthContext login to update state AND localStorage
+            login(userData);
+            
+            if (loginData.token) {
+                localStorage.setItem("Token", loginData.token);
+            }
 
             // Show success toast
-            setToast({ message: `Chào mừng ${accFound.full_name}!`, type: 'success' });
+            setToast({ message: `Chào mừng ${userData.full_name}!`, type: 'success' });
 
             // Navigate after short delay
             setTimeout(() => {
@@ -243,7 +252,7 @@ const RegisterForm: React.FC = () => {
             }
 
             // Send OTP
-            await accService.sendEmailVertifyCode(email);
+            await accService.sendEmailVerifyCode(email);
             setToast({ message: 'Mã OTP đã được gửi đến email của bạn!', type: 'info' });
             setStep('otp');
             setResendTimer(60); // 60 seconds countdown
@@ -309,7 +318,7 @@ const RegisterForm: React.FC = () => {
 
         setIsLoading(true);
         try {
-            await accService.sendEmailVertifyCode(email);
+            await accService.sendEmailVerifyCode(email);
             setToast({ message: 'Mã OTP mới đã được gửi!', type: 'info' });
             setResendTimer(60);
             setOtpErrorCount(0);

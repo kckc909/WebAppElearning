@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { BookOpen, CalendarDays, ChevronDown, ChevronDownIcon, LayoutDashboard, LogOut, Settings, User, Users, GraduationCap, Shield } from 'lucide-react';
+import { BookOpen, CalendarDays, ChevronDown, ChevronDownIcon, LayoutDashboard, LogOut, Settings, User, Users, GraduationCap, Shield, ShoppingCart } from 'lucide-react';
 import { student_routes, instructor_routes, admin_routes } from '../page_routes'
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -59,6 +59,15 @@ const Header: React.FC = () => {
           </div>
 
           <div className="hidden items-center space-x-4 md:flex">
+            {/* Cart Icon */}
+            <Link
+              to={'/' + student_routes.checkout}
+              className="relative p-2 text-slate-600 hover:text-primary hover:bg-slate-100 rounded-lg transition-colors"
+              title="Giỏ hàng"
+            >
+              <ShoppingCart className="w-5 h-5" />
+            </Link>
+
             {isAuthenticated ? (
               <div className="relative" ref={avatarRef}>
                 <button
@@ -104,6 +113,14 @@ const Header: React.FC = () => {
                     >
                       <CalendarDays className="mr-3 h-5 w-5" />
                       Lịch học
+                    </Link>
+
+                    <Link
+                      to={'/' + student_routes.checkout}
+                      className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
+                    >
+                      <ShoppingCart className="mr-3 h-5 w-5" />
+                      Giỏ hàng
                     </Link>
 
                     <div className="border-t border-slate-100 my-1"></div>
@@ -241,6 +258,14 @@ const Header: React.FC = () => {
                 >
                   <CalendarDays className="mr-3 h-5 w-5" />
                   Lịch học
+                </Link>
+
+                <Link
+                  to={'/' + student_routes.checkout}
+                  className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
+                >
+                  <ShoppingCart className="mr-3 h-5 w-5" />
+                  Giỏ hàng
                 </Link>
 
                 <div className="border-t border-slate-100 my-1"></div>

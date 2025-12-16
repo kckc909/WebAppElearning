@@ -1,17 +1,77 @@
-
-import React from 'react';
-import { IoHomeOutline } from 'react-icons/io5';
+import React, { useState } from 'react';
+import { IoHomeOutline, IoLogoFacebook, IoLogoGithub, IoLogoLinkedin } from 'react-icons/io5';
+import { SiZalo } from "react-icons/si";
 import { Link } from 'react-router-dom';
+import { Database, FileText } from 'lucide-react';
+import { ApiModeManager } from '../../utils/apiMode';
 
 const FooterLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
   <Link to={to} className="text-slate-400 hover:text-white transition-colors">{children}</Link>
 );
 
-const SocialIcon: React.FC<{ name: string }> = ({ name }) => (
-  <a href="#" className="text-slate-400 hover:text-white">
-    <IoHomeOutline name={name} className="text-2xl"></IoHomeOutline>
-  </a>
-)
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  home: IoHomeOutline,
+  facebook: IoLogoFacebook,
+  github: IoLogoGithub,
+  linkedin: IoLogoLinkedin,
+  zalo: SiZalo,
+};
+
+interface SocialIconProps {
+  name: keyof typeof iconMap;
+  href?: string;
+}
+
+const SocialIcon: React.FC<SocialIconProps> = ({ name, href = "#" }) => {
+  const Icon = iconMap[name];
+
+  if (!Icon) return null;
+
+  return (
+    <a href={href} className="text-slate-400 hover:text-white">
+      <Icon className="text-2xl" />
+    </a>
+  );
+};
+
+
+// API Mode Switch Component for Footer
+const ApiModeSwitchFooter: React.FC = () => {
+  const [useMockAPI, setUseMockAPI] = useState(() => ApiModeManager.isUsingMockAPI());
+
+  const toggleMode = () => {
+    const newMode = ApiModeManager.toggleMode();
+    setUseMockAPI(newMode === 'mock');
+    window.location.reload();
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-xs text-slate-500">Data Source:</span>
+      <button
+        onClick={toggleMode}
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${useMockAPI
+          ? 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30'
+          : 'bg-green-500/20 text-green-300 hover:bg-green-500/30'
+          }`}
+        title={`Click để chuyển sang ${useMockAPI ? 'Database' : 'Mock Data'}`}
+      >
+        {useMockAPI ? (
+          <>
+            <FileText className="w-3.5 h-3.5" />
+            Mock Data
+          </>
+        ) : (
+          <>
+            <Database className="w-3.5 h-3.5" />
+            Database
+          </>
+        )}
+        <div className={`w-2 h-2 rounded-full ${useMockAPI ? 'bg-blue-400' : 'bg-green-400'}`} />
+      </button>
+    </div>
+  );
+}
 
 const Footer: React.FC = () => {
   return (
@@ -24,10 +84,10 @@ const Footer: React.FC = () => {
               Nền tảng học trực tuyến chuyên sâu về Kỹ năng số và Ngoại ngữ ứng dụng, kết nối người dạy và người học.
             </p>
             <div className="flex space-x-4 mt-4">
-              <SocialIcon name="logo-facebook" />
-              <SocialIcon name="logo-youtube" />
-              <SocialIcon name="logo-linkedin" />
-              <SocialIcon name="logo-tiktok" />
+              <SocialIcon name="zalo" href="" />
+              <SocialIcon name="facebook" />
+              <SocialIcon name="github" />
+              <SocialIcon name="linkedin" />
             </div>
           </div>
           <div>
@@ -59,8 +119,13 @@ const Footer: React.FC = () => {
             </form>
           </div>
         </div>
-        <div className="mt-12 border-t border-slate-700 pt-8 text-center text-slate-500">
-          <p>&copy; {new Date().getFullYear()} MiLearn. All rights reserved.</p>
+        <div className="mt-12 border-t border-slate-700 pt-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-slate-500">&copy; {new Date().getFullYear()} MiLearn. All rights reserved.</p>
+
+            {/* API Mode Switch */}
+            <ApiModeSwitchFooter />
+          </div>
         </div>
       </div>
     </footer>

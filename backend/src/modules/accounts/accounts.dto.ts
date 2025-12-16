@@ -94,8 +94,7 @@ export class AccountUpdateForm {
 export class LoginForm {
 
     @IsNotEmpty()
-    // @IsEmail()
-    username: string
+    emailOrUsername: string
 
     @IsNotEmpty()
     password: string

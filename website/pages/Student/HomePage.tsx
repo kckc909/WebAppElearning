@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useFeaturedCourses } from '../../hooks/useApi';
 import CourseCard from '../../components/CourseCard';
+import { ErrorState } from '../../components/DataStates';
 import {
     BookOpen,
     Users,
@@ -15,7 +16,8 @@ import {
     ArrowRight,
     Play,
     Star,
-    Loader2
+    Loader2,
+    RefreshCw
 } from 'lucide-react';
 
 // Feature Card Component
@@ -53,11 +55,54 @@ const StatsCard: React.FC<{
 
 const HomePage: React.FC = () => {
     // Sử dụng API hook thay vì import trực tiếp
-    const { data: courses, loading } = useFeaturedCourses(15);
+    const { data: courses, loading, error, refetch } = useFeaturedCourses(15);
+
+    // Đảm bảo courses luôn là array
+    const courseList = Array.isArray(courses) ? courses : [];
 
     // Filter courses by category
-    const digitalCourses = courses?.filter((c: any) => c.category === 'Digital Skills') || [];
-    const languageCourses = courses?.filter((c: any) => c.category === 'Applied Language') || [];
+    const digitalCourses = courseList.filter((c: any) => c.category === 'Digital Skills');
+    const languageCourses = courseList.filter((c: any) => c.category === 'Applied Language');
+
+    // Course section loading/error component
+    const renderCourseSection = (title: string, subtitle: string, emoji: string, courses: any[]) => {
+        if (loading) {
+            return (
+                <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-6 h-6 animate-spin text-primary mr-2" />
+                    <span className="text-slate-500">Đang tải khóa học...</span>
+                </div>
+            );
+        }
+        if (error) {
+            return (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+                    <p className="text-red-600 mb-3">{error}</p>
+                    <button
+                        onClick={refetch}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors text-sm"
+                    >
+                        <RefreshCw className="w-4 h-4" />
+                        Thử lại
+                    </button>
+                </div>
+            );
+        }
+        if (courses.length === 0) {
+            return (
+                <div className="text-center py-12 text-slate-500">
+                    Chưa có khóa học nào trong danh mục này.
+                </div>
+            );
+        }
+        return (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {courses.slice(0, 4).map(course => (
+                    <CourseCard key={course.id} course={course} />
+                ))}
+            </div>
+        );
+    };
 
 
     return (
@@ -748,11 +793,7 @@ const HomePage: React.FC = () => {
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {digitalCourses.slice(0, 4).map(course => (
-                            <CourseCard key={course.id} course={course} />
-                        ))}
-                    </div>
+                    {renderCourseSection('Khóa học Kỹ năng số', 'Làm chủ công nghệ, dẫn đầu tương lai', '💻', digitalCourses)}
                 </div>
             </section>
 
@@ -773,11 +814,7 @@ const HomePage: React.FC = () => {
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {languageCourses.slice(0, 4).map(course => (
-                            <CourseCard key={course.id} course={course} />
-                        ))}
-                    </div>
+                    {renderCourseSection('Khóa học Ngoại ngữ', 'Mở rộng tầm nhìn, kết nối toàn cầu', '🌏', languageCourses)}
                 </div>
             </section>
 

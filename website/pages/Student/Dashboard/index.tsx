@@ -3,43 +3,82 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useMyClasses, useMyEnrollments } from '../../../hooks/useApi';
 import { classesApi } from '../../../API';
-import { IoDocumentTextOutline, IoPersonCircleOutline, IoPlayCircle, IoTimeOutline, IoRefreshOutline } from 'react-icons/io5';
+import { IoDocumentTextOutline, IoPersonCircleOutline, IoPlayCircle, IoTimeOutline } from 'react-icons/io5';
+import { Loader2 } from 'lucide-react';
 import { student_routes } from '../../page_routes';
+import { ErrorState, EmptyState } from '../../../components/DataStates';
 
 // Mock user ID - sẽ thay bằng user từ auth context
 const CURRENT_USER_ID = 7;
 
 const StudentDashboard: React.FC = () => {
     // Sử dụng API hooks
-    const { data: myClasses, loading: classesLoading } = useMyClasses(CURRENT_USER_ID);
-    const { data: myEnrollments, loading: enrollmentsLoading } = useMyEnrollments(CURRENT_USER_ID);
+    const { data: myClasses, loading: classesLoading, error: classesError, refetch: refetchClasses } = useMyClasses(CURRENT_USER_ID);
+    const { data: myEnrollments, loading: enrollmentsLoading, error: enrollmentsError, refetch: refetchEnrollments } = useMyEnrollments(CURRENT_USER_ID);
     const [pendingAssignments, setPendingAssignments] = useState<any[]>([]);
+
+    // Đảm bảo myClasses và myEnrollments luôn là array
+    const classesList = Array.isArray(myClasses) ? myClasses : [];
+    const enrollmentsList = Array.isArray(myEnrollments) ? myEnrollments : [];
 
     // Fetch pending assignments từ các classes
     useEffect(() => {
         const fetchAssignments = async () => {
-            if (myClasses && myClasses.length > 0) {
+            if (classesList.length > 0) {
                 const allAssignments: any[] = [];
-                for (const cls of myClasses) {
-                    const response = await classesApi.getAssignments(cls.id);
-                    if (response.success) {
-                        const pending = response.data.filter((a: any) => new Date(a.due_date) > new Date());
-                        allAssignments.push(...pending.map((a: any) => ({
-                            ...a,
-                            deadline: new Date(a.due_date).toLocaleDateString('vi-VN')
-                        })));
+                for (const cls of classesList) {
+                    try {
+                        const response = await classesApi.getAssignments(cls.id);
+                        if (response.success && Array.isArray(response.data)) {
+                            const pending = response.data.filter((a: any) => new Date(a.due_date) > new Date());
+                            allAssignments.push(...pending.map((a: any) => ({
+                                ...a,
+                                deadline: new Date(a.due_date).toLocaleDateString('vi-VN')
+                            })));
+                        }
+                    } catch {
+                        // Ignore individual assignment fetch errors
                     }
                 }
                 setPendingAssignments(allAssignments);
             }
         };
         fetchAssignments();
-    }, [myClasses]);
+    }, [classesList.length]);
 
     // Only show classes that have a next session defined
-    const activeClasses = myClasses?.filter((c: any) => c.nextSession) || [];
+    const activeClasses = classesList.filter((c: any) => c.nextSession);
     const hasActiveClasses = activeClasses.length > 0;
-    const studentCourses = myEnrollments || [];
+    const studentCourses = enrollmentsList;
+
+    // Loading state
+    const isLoading = classesLoading || enrollmentsLoading;
+    // Combined error
+    const hasError = classesError || enrollmentsError;
+    const errorMessage = classesError || enrollmentsError || '';
+
+    // Retry function
+    const handleRetry = () => {
+        if (classesError) refetchClasses();
+        if (enrollmentsError) refetchEnrollments();
+    };
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-primary mb-3" />
+                <p className="text-slate-500">Đang tải dữ liệu...</p>
+            </div>
+        );
+    }
+
+    if (hasError) {
+        return (
+            <div className="max-w-6xl mx-auto">
+                <ErrorState error={errorMessage} onRetry={handleRetry} />
+            </div>
+        );
+    }
 
 
     return (

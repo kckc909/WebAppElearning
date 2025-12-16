@@ -3,7 +3,7 @@
  * Khi chuyển sang Real API, chỉ cần set USE_MOCK_API = false
  */
 
-import { USE_MOCK_API, simulateDelay, successResponse, errorResponse, ApiResponse } from './config';
+import { USE_MOCK_API, simulateDelay, successResponse, errorResponse, ApiResponse, handleApiError } from './config';
 import axiosInstance from './api';
 import {
     COURSES,
@@ -74,9 +74,16 @@ class CoursesApiService {
 
         try {
             const response = await axiosInstance.get('/courses', { params });
-            return successResponse(response.data);
+            // Xử lý trường hợp DB trống
+            const data = response.data || [];
+            if (Array.isArray(data) && data.length === 0) {
+                return successResponse([], 'Chưa có khóa học nào');
+            }
+            return successResponse(data);
         } catch (error: any) {
-            return errorResponse(error.message || 'Failed to fetch courses');
+            const apiError = handleApiError(error);
+            console.error('[Courses API] getAll error:', apiError);
+            return errorResponse(apiError.message, []);
         }
     }
 
@@ -93,9 +100,14 @@ class CoursesApiService {
 
         try {
             const response = await axiosInstance.get(`/courses/${id}`);
+            if (!response.data) {
+                return errorResponse('Không tìm thấy khóa học', null);
+            }
             return successResponse(response.data);
         } catch (error: any) {
-            return errorResponse(error.message || 'Failed to fetch course');
+            const apiError = handleApiError(error);
+            console.error('[Courses API] getById error:', apiError);
+            return errorResponse(apiError.message, null);
         }
     }
 

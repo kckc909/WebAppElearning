@@ -3,16 +3,20 @@ import { Link } from "react-router-dom";
 import CourseProgressCard from "./CourseProgressCard";
 import { EnrolledCourse } from "../../../types/types";
 import { useMyEnrollments } from '../../../hooks/useApi';
-import { Book, BookOpen, Loader2 } from "lucide-react";
+import { BookOpen, Loader2 } from "lucide-react";
+import { ErrorState } from '../../../components/DataStates';
 
 // Mock user ID - sẽ thay bằng user từ auth context
 const CURRENT_USER_ID = 7;
 
 export default function Student_Courses() {
     const [filter, setFilter] = useState<'all' | 'learning' | 'completed'>('all');
-    const { data: enrollments, loading } = useMyEnrollments(CURRENT_USER_ID);
+    const { data: enrollments, loading, error, refetch } = useMyEnrollments(CURRENT_USER_ID);
 
-    const filteredCourses = (enrollments || []).filter((course: any) => {
+    // Đảm bảo enrollments luôn là array
+    const enrollmentList = Array.isArray(enrollments) ? enrollments : [];
+
+    const filteredCourses = enrollmentList.filter((course: any) => {
         if (filter === 'learning') return !course.completed;
         if (filter === 'completed') return course.completed;
         return true;
@@ -22,8 +26,13 @@ export default function Student_Courses() {
         return (
             <div className="flex items-center justify-center py-20">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <span className="ml-3 text-slate-500">Đang tải khóa học...</span>
             </div>
         );
+    }
+
+    if (error) {
+        return <ErrorState error={error} onRetry={refetch} />;
     }
 
 

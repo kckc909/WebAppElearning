@@ -24,6 +24,8 @@ import {
     ChevronsRight
 } from "lucide-react";
 
+import ApiModeSwitch from '../../components/ApiModeSwitch';
+
 import { NavLink, useLocation } from 'react-router-dom';
 import { instructor_routes } from '../page_routes';
 
@@ -512,22 +514,29 @@ const InstructorSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, isCollap
                 </nav>
 
                 {/* Settings toggle at bottom */}
-                {!isCollapsed && (
-                    <div className="p-3 border-t border-gray-200">
-                        <label className="flex items-center justify-between cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
-                            <span className="text-xs text-gray-600 flex items-center gap-2">
-                                <Pin className="w-4 h-4" />
-                                Giữ menu mở rộng
-                            </span>
-                            <input
-                                type="checkbox"
-                                checked={settings.keepMenuExpanded}
-                                onChange={(e) => updateSettings({ keepMenuExpanded: e.target.checked })}
-                                className="w-4 h-4 text-green-600 rounded"
-                            />
-                        </label>
-                    </div>
-                )}
+                <div className="p-3 border-t border-gray-200">
+                    {!isCollapsed ? (
+                        <div className="space-y-3">
+                            <label className="flex items-center justify-between cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
+                                <span className="text-xs text-gray-600 flex items-center gap-2">
+                                    <Pin className="w-4 h-4" />
+                                    Giữ menu mở rộng
+                                </span>
+                                <input
+                                    type="checkbox"
+                                    checked={settings.keepMenuExpanded}
+                                    onChange={(e) => updateSettings({ keepMenuExpanded: e.target.checked })}
+                                    className="w-4 h-4 text-green-600 rounded"
+                                />
+                            </label>
+                            <ApiModeSwitch />
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center gap-2">
+                            <ApiModeSwitch compact showLabel={false} />
+                        </div>
+                    )}
+                </div>
             </aside>
         </>
     );

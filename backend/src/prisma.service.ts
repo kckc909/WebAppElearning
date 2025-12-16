@@ -1,4 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from './generated/prisma/client.js';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 
@@ -6,9 +7,9 @@ import mariadb, { PoolConfig } from 'mariadb';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
-    constructor() {
+    constructor(private configService: ConfigService) {
 
-        const connectionString = process.env.DATABASE_URL_MARIADB;
+        const connectionString = configService.get<string>('DATABASE_URL_MARIADB');
         if (!connectionString) {
             throw new Error('DATABASE_URL_MARIADB environment variable is not set');
         }

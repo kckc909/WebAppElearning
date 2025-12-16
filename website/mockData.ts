@@ -32,19 +32,19 @@ export const COURSE_STATUS = {
 // ============================================
 export const ACCOUNTS = [
 	// Super Admin
-	{ id: 1, full_name: 'Super Admin', email: 'superadmin@milearn.com', password_hash: 'admin123', role: -1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SuperAdmin', username: 'superadmin', created_at: '2024-01-01', updated_at: '2024-01-01' },
+	{ id: 1, full_name: 'Super Admin', email: 'superadmin@milearn.com', password_hash: '000000', role: -1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SuperAdmin', username: 'superadmin', created_at: '2024-01-01T00:00:00.000Z', updated_at: '2024-01-01T00:00:00.000Z' },
 	// Admins
-	{ id: 2, full_name: 'Nguyễn Quản Trị', email: 'admin@milearn.com', password_hash: 'admin123', role: 0, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Admin', username: 'admin', created_at: '2024-01-05', updated_at: '2024-01-05' },
+	{ id: 2, full_name: 'Nguyễn Quản Trị', email: 'admin@milearn.com', password_hash: '000000', role: 0, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Admin', username: 'admin', created_at: '2024-01-05T00:00:00.000Z', updated_at: '2024-01-05T00:00:00.000Z' },
 	// Instructors
-	{ id: 3, full_name: 'Trần Văn Hùng', email: 'hung.tran@milearn.com', password_hash: 'instructor123', role: 1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Hung', username: 'hung.tran', created_at: '2024-01-10', updated_at: '2024-01-10' },
-	{ id: 4, full_name: 'Nguyễn Thị Lan', email: 'lan.nguyen@milearn.com', password_hash: 'instructor123', role: 1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lan', username: 'lan.nguyen', created_at: '2024-01-12', updated_at: '2024-01-12' },
-	{ id: 5, full_name: 'Lê Minh Đức', email: 'duc.le@milearn.com', password_hash: 'instructor123', role: 1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Duc', username: 'duc.le', created_at: '2024-01-15', updated_at: '2024-01-15' },
-	{ id: 6, full_name: 'Phạm Hoàng Nam', email: 'nam.pham@milearn.com', password_hash: 'instructor123', role: 1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nam', username: 'nam.pham', created_at: '2024-02-01', updated_at: '2024-02-01' },
+	{ id: 5, full_name: 'Nguyễn Giảng Viên', email: 'duc.le@milearn.com', password_hash: '000000', role: 1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Duc', username: 'instructor', created_at: '2024-01-15T00:00:00.000Z', updated_at: '2024-01-15T00:00:00.000Z' },
+	{ id: 3, full_name: 'Trần Quang Minh Đức', email: 'tqmd@milearn.com', password_hash: '000000', role: 1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Hung', username: 'tqmd', created_at: '2024-01-10T00:00:00.000Z', updated_at: '2024-01-10T00:00:00.000Z' },
+	{ id: 4, full_name: 'Nguyễn Thị Duyên', email: 'duyennguyen@milearn.com', password_hash: '000000', role: 1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lan', username: 'ntd', created_at: '2024-01-12T00:00:00.000Z', updated_at: '2024-01-12T00:00:00.000Z' },
+	{ id: 6, full_name: 'Phạm Hoàng Nam', email: 'nam.pham@milearn.com', password_hash: '000000', role: 1, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nam', username: 'nam.pham', created_at: '2024-02-01T00:00:00.000Z', updated_at: '2024-02-01T00:00:00.000Z' },
 	// Students
-	{ id: 7, full_name: 'Chu Đức Minh', email: 'student@milearn.com', password_hash: 'student123', role: 2, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Minh', username: 'minh.chu', created_at: '2024-02-10', updated_at: '2024-02-10' },
-	{ id: 8, full_name: 'Võ Thị Hương', email: 'huong.vo@gmail.com', password_hash: 'student123', role: 2, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Huong', username: 'huong.vo', created_at: '2024-02-15', updated_at: '2024-02-15' },
-	{ id: 9, full_name: 'Đặng Văn Tùng', email: 'tung.dang@gmail.com', password_hash: 'student123', role: 2, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tung', username: 'tung.dang', created_at: '2024-02-20', updated_at: '2024-02-20' },
-	{ id: 10, full_name: 'Bùi Thị Mai', email: 'mai.bui@gmail.com', password_hash: 'student123', role: 2, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mai', username: 'mai.bui', created_at: '2024-03-01', updated_at: '2024-03-01' },
+	{ id: 7, full_name: 'Chu Đức Minh', email: 'student@milearn.com', password_hash: '000000', role: 2, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Minh', username: 'student', created_at: '2024-02-10T00:00:00.000Z', updated_at: '2024-02-10T00:00:00.000Z' },
+	{ id: 8, full_name: 'Võ Thị Hương', email: 'huong.vo@gmail.com', password_hash: '000000', role: 2, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Huong', username: 'huong.vo', created_at: '2024-02-15T00:00:00.000Z', updated_at: '2024-02-15T00:00:00.000Z' },
+	{ id: 9, full_name: 'Đặng Văn Tùng', email: 'tung.dang@gmail.com', password_hash: '000000', role: 2, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tung', username: 'tung.dang', created_at: '2024-02-20T00:00:00.000Z', updated_at: '2024-02-20T00:00:00.000Z' },
+	{ id: 10, full_name: 'Bùi Thị Mai', email: 'mai.bui@gmail.com', password_hash: '000000', role: 2, status: 1, avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mai', username: 'mai.bui', created_at: '2024-03-01T00:00:00.000Z', updated_at: '2024-03-01T00:00:00.000Z' },
 ];
 
 // ============================================
@@ -441,17 +441,20 @@ export const TEAM_MEMBERS = [
 // DEMO USERS - Users để test đăng nhập
 // ============================================
 export const DEMO_USERS = {
-	superadmin: { ...ACCOUNTS[0], password: 'admin123' },
-	admin: { ...ACCOUNTS[1], password: 'admin123' },
-	instructor: { ...ACCOUNTS[2], password: 'instructor123' },
-	student: { ...ACCOUNTS[6], password: 'student123' },
+	superadmin: { ...ACCOUNTS[0], password: '000000' },
+	admin: { ...ACCOUNTS[1], password: '000000' },
+	instructor: { ...ACCOUNTS[2], password: '000000' },
+	student: { ...ACCOUNTS[6], password: '000000' },
 };
 
 // ============================================
 // HELPER FUNCTIONS
 // ============================================
-export const validateLogin = (email: string, password: string) => {
-	const user = ACCOUNTS.find(a => a.email === email && a.password_hash === password);
+export const validateLogin = (emailOrUsername: string, password: string) => {
+	const user = ACCOUNTS.find(a => 
+		(a.email === emailOrUsername || a.username === emailOrUsername) && 
+		a.password_hash === password
+	);
 	if (user) {
 		const { password_hash, ...userWithoutPassword } = user;
 		return userWithoutPassword;

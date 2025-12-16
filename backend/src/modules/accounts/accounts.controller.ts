@@ -96,7 +96,7 @@ export class Accounts_Controller {
     @Post('login')
     async login(@Body() body: LoginForm) {
 
-        const accFound = await this._service.getByLoginForm(body.username, body.password)
+        const accFound = await this._service.getByLoginForm(body.emailOrUsername, body.password)
 
         if (accFound) {
             return accFound;

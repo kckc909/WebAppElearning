@@ -45,8 +45,8 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         }).format(price);
     };
 
-    const formatDuration = (minutes: number) => {
-        const hours = Math.floor(minutes / 60);
+    const formatDuration = (minutes: number | undefined | null) => {
+        const hours = Math.floor((minutes ?? 0) / 60);
         return `${hours} giờ học`;
     };
 
@@ -73,16 +73,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                         <div className="flex flex-col">
                             <div className="flex items-baseline gap-2">
                                 <span className="text-[28px] font-bold leading-[30px]">
-                                    {formatPrice(course.discount_price!)}
+                                    {formatPrice(course.discount_price ?? course.price ?? 0)}
                                 </span>
                             </div>
                             <div className="flex items-center gap-1 text-base mt-1">
-                                <span className="line-through font-normal text-slate-300">{formatPrice(course.price!).replace('₫', '')}</span>
+                                <span className="line-through font-normal text-slate-300">{formatPrice(course.price ?? 0).replace('₫', '')}</span>
                                 <span>đ</span>
                             </div>
                         </div>
                         <div className="bg-[#FEEBEB] text-[#F56060] rounded px-2 py-1 text-xs font-semibold mt-1">
-                            -{Math.round((1 - course.discount_price! / course.price!) * 100)}%
+                            -{Math.round((1 - (course.discount_price ?? 0) / (course.price || 1)) * 100)}%
                         </div>
                     </div>
                 </div>
@@ -123,11 +123,11 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                                 </li>
                                 <li className="flex items-center gap-2.5">
                                     <BookOpen className="w-4 h-4 flex-shrink-0" />
-                                    <span>{course.sections.reduce((acc, s) => acc + s.lessons.length, 0)} bài học</span>
+                                    <span>{(course.sections ?? []).reduce((acc, s) => acc + (s.lessons?.length ?? 0), 0)} bài học</span>
                                 </li>
                                 <li className="flex items-center gap-2.5">
                                     <PlayCircle className="w-4 h-4 flex-shrink-0" />
-                                    <span>{course.sections.length} phần</span>
+                                    <span>{(course.sections ?? []).length} phần</span>
                                 </li>
                                 <li className="flex items-center gap-2.5">
                                     <FileText className="w-4 h-4 flex-shrink-0" />

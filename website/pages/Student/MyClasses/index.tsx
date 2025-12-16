@@ -1,28 +1,36 @@
 import React, { useState } from "react";
-import { Calendar, CalendarDays, Clock, Edit3, FolderOpen, List, Loader2, Presentation, User, Video, ToolCase } from 'lucide-react'
+import { Calendar, Edit3, FolderOpen, List, Loader2 } from 'lucide-react'
 import { useMyClasses } from '../../../hooks/useApi';
-import { StudentClass } from "../../../types/types";
 import Tab_List from './Tab_List'
 import Tab_Schedule from './Tab_Schedule'
 import Tab_Docs from './Tab_Docs'
 import Tab_Homework from './Tab_Homework'
+import { ErrorState } from '../../../components/DataStates';
 
 // Mock user ID - sẽ thay bằng user từ auth context
 const CURRENT_USER_ID = 7;
 
 export default function Student_Clases() {
     const [activeTab, setActiveTab] = useState<'list' | 'schedule' | 'docs' | 'homework'>('list');
-    const { data: myClasses, loading } = useMyClasses(CURRENT_USER_ID);
+    const { data: myClasses, loading, error, refetch } = useMyClasses(CURRENT_USER_ID);
+
+    // Đảm bảo myClasses luôn là array
+    const classList = Array.isArray(myClasses) ? myClasses : [];
 
     // Currently defaulting to the first class for detail view demonstration
-    const selectedClass = myClasses?.[0] || null;
+    const selectedClass = classList[0] || null;
 
     if (loading) {
         return (
             <div className="flex items-center justify-center py-20">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <span className="ml-3 text-slate-500">Đang tải lớp học...</span>
             </div>
         );
+    }
+
+    if (error) {
+        return <ErrorState error={error} onRetry={refetch} />;
     }
 
 
