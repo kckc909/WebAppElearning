@@ -2,8 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { MOCK_USER } from '../../mockData';
-import { BookOpen, CalendarDays, ChevronDown, ChevronDownIcon, LayoutDashboard, LogOut, Settings, User, Users, GraduationCap, Shield } from 'lucide-react';
-import { student_routes, instructor_routes, admin_routes } from '../page_routes'
+import { BookOpen, CalendarDays, ChevronDown, ChevronDownIcon, LayoutDashboard, LogOut, Settings, User, Users, GraduationCap, Shield, Crown } from 'lucide-react';
+import { student_routes, instructor_routes, admin_routes, superadmin_routes } from '../page_routes'
 import { useAuth } from '../../contexts/AuthContext';
 
 const NavItem: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
@@ -138,7 +138,7 @@ const Header: React.FC = () => {
                       </Link>
                     )}
 
-                    {user?.role === 2 && (
+                    {user?.role === 0 && (
                       <Link
                         to={'/admin/' + admin_routes.dashboard}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
@@ -148,7 +148,17 @@ const Header: React.FC = () => {
                       </Link>
                     )}
 
-                    {(user?.role === 1 || user?.role === 2) && <div className="border-t border-slate-100 my-1"></div>}
+                    {user?.role === -1 && (
+                      <Link
+                        to={'/superadmin/' + superadmin_routes.dashboard}
+                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
+                      >
+                        <Crown className="mr-3 h-5 w-5" />
+                        Trang SuperAdmin
+                      </Link>
+                    )}
+
+                    {(user?.role === 1 || user?.role === 0 || user?.role === -1) && <div className="border-t border-slate-100 my-1"></div>}
 
                     <button
                       onClick={handleLogout}
@@ -192,7 +202,7 @@ const Header: React.FC = () => {
                   <div>
                     <p className="font-bold text-secondary">{user?.full_name || 'User'}</p>
                     <p className="text-xs text-slate-500">
-                      {user?.role === 2 ? 'Quản trị viên' : user?.role === 1 ? 'Giảng viên' : 'Học viên'}
+                      {user?.role === -1 ? 'Super Admin' : user?.role === 0 ? 'Quản trị viên' : user?.role === 1 ? 'Giảng viên' : 'Học viên'}
                     </p>
                   </div>
                 </div>
@@ -275,7 +285,7 @@ const Header: React.FC = () => {
                   </Link>
                 )}
 
-                {user?.role === 2 && (
+                {user?.role === 0 && (
                   <Link
                     to={'/admin/' + admin_routes.dashboard}
                     className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
@@ -285,7 +295,17 @@ const Header: React.FC = () => {
                   </Link>
                 )}
 
-                {(user?.role === 1 || user?.role === 2) && <div className="border-t border-slate-100 my-1"></div>}
+                {user?.role === -1 && (
+                  <Link
+                    to={'/superadmin/' + superadmin_routes.dashboard}
+                    className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
+                  >
+                    <Crown className="mr-3 h-5 w-5" />
+                    Trang SuperAdmin
+                  </Link>
+                )}
+
+                {(user?.role === 1 || user?.role === 0 || user?.role === -1) && <div className="border-t border-slate-100 my-1"></div>}
 
                 <button onClick={handleLogout} className="text-left text-sm font-medium text-red-600 py-2">Đăng xuất</button>
               </>
