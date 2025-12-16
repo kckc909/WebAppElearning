@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Play,
@@ -17,11 +17,13 @@ import {
   PlayCircle,
   Lock,
   ShoppingCart,
-  X
+  X,
+  Loader2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CourseCard } from './CourseCard';
 import { student_routes } from '../../../page_routes';
+import { coursesApi } from '../../../../API';
 
 // Mock data
 const MOCK_COURSE = {
@@ -285,8 +287,38 @@ const CourseDetail: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const [expandedSections, setExpandedSections] = useState<number[]>([1]);
-  const [isEnrolled, setIsEnrolled] = useState(false); // TODO: Check from API
+  const [isEnrolled, setIsEnrolled] = useState(false);
   const [showEnrollmentDialog, setShowEnrollmentDialog] = useState(false);
+  const [course, setCourse] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch course data from API
+  useEffect(() => {
+    const fetchCourse = async () => {
+      if (!courseId) return;
+      setLoading(true);
+      try {
+        const response = await coursesApi.getById(parseInt(courseId));
+        if (response.success && response.data) {
+          // Merge API data với default structure
+          setCourse({
+            ...MOCK_COURSE, // Default structure làm fallback
+            ...response.data,
+            short_description: response.data.short_description || response.data.description?.substring(0, 150) + '...',
+            sections: response.data.sections || MOCK_COURSE.sections
+          });
+        } else {
+          // Fallback to mock data if API fails
+          setCourse(MOCK_COURSE);
+        }
+      } catch (error) {
+        console.error('Failed to fetch course:', error);
+        setCourse(MOCK_COURSE);
+      }
+      setLoading(false);
+    };
+    fetchCourse();
+  }, [courseId]);
 
   const toggleSection = (sectionId: number) => {
     setExpandedSections(prev =>
@@ -319,14 +351,15 @@ const CourseDetail: React.FC = () => {
   };
 
   const handleContinueLearning = () => {
+    if (!course) return;
     // Navigate to first lesson of the course
-    const firstLessonId = MOCK_COURSE.sections[0]?.lessons[0]?.id || '1';
+    const firstLessonId = course.sections?.[0]?.lessons?.[0]?.id || '1';
     navigate('/' + student_routes.lesson(courseId!, firstLessonId));
   };
 
   const handleCheckout = () => {
     setShowEnrollmentDialog(false);
-    navigate('/checkout', { state: { courses: [MOCK_COURSE] } });
+    navigate('/checkout', { state: { courses: [course] } });
   };
 
   const handleAddToCart = () => {
@@ -336,6 +369,27 @@ const CourseDetail: React.FC = () => {
       duration: 3000
     });
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // No course found
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-secondary">Không tìm thấy khóa học</h1>
+          <p className="text-slate-600 mt-2">Khóa học này không tồn tại hoặc đã bị xóa.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -348,26 +402,26 @@ const CourseDetail: React.FC = () => {
             <section className="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-8 my-8">
               <div className="mb-4">
                 <span className="inline-block bg-primary/20 text-primary-light px-3 py-1 rounded-full text-sm font-semibold">
-                  {getLevelLabel(MOCK_COURSE.level)}
+                  {getLevelLabel(course.level)}
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">{MOCK_COURSE.title}</h1>
-              <p className="text-xl text-slate-300 mb-6">{MOCK_COURSE.short_description}</p>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">{course.title}</h1>
+              <p className="text-xl text-slate-300 mb-6">{course.short_description}</p>
 
               {/* Meta Info */}
               <div className="flex flex-wrap items-center gap-6 mb-6">
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                  <span className="font-bold">{MOCK_COURSE.rating}</span>
-                  <span className="text-slate-400">({MOCK_COURSE.total_students.toLocaleString()} học viên)</span>
+                  <span className="font-bold">{course.rating}</span>
+                  <span className="text-slate-400">({course.total_students.toLocaleString()} học viên)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
-                  <span>{MOCK_COURSE.total_students.toLocaleString()} học viên</span>
+                  <span>{course.total_students.toLocaleString()} học viên</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5" />
-                  <span>{formatDuration(MOCK_COURSE.total_duration)}</span>
+                  <span>{formatDuration(course.total_duration)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Globe className="w-5 h-5" />
@@ -378,20 +432,20 @@ const CourseDetail: React.FC = () => {
               {/* Instructor */}
               <div className="flex items-center gap-4 mb-8">
                 <img
-                  src={MOCK_COURSE.instructor.avatar_url}
-                  alt={MOCK_COURSE.instructor.full_name}
+                  src={course.instructor.avatar_url}
+                  alt={course.instructor.full_name}
                   className="w-12 h-12 rounded-full border-2 border-white/20"
                 />
                 <div>
                   <p className="text-sm text-slate-400">Giảng viên</p>
-                  <p className="font-semibold">{MOCK_COURSE.instructor.full_name}</p>
+                  <p className="font-semibold">{course.instructor.full_name}</p>
                 </div>
               </div>
 
               {/* Mobile Card - Shows on small screens */}
               <div className="lg:hidden">
                 <CourseCard
-                  course={MOCK_COURSE}
+                  course={course}
                   isEnrolled={isEnrolled}
                   isMobile={true}
                   onEnroll={handleEnroll}
@@ -407,7 +461,7 @@ const CourseDetail: React.FC = () => {
               <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
                 <h2 className="text-2xl font-bold text-secondary mb-6">Bạn sẽ học được gì</h2>
                 <div className="grid md:grid-cols-2 gap-4">
-                  {MOCK_COURSE.what_you_will_learn.map((item, index) => (
+                  {course.what_you_will_learn?.map((item: string, index: number) => (
                     <div key={index} className="flex items-start gap-3">
                       <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                       <span className="text-slate-700">{item}</span>
@@ -421,12 +475,12 @@ const CourseDetail: React.FC = () => {
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-secondary">Nội dung khóa học</h2>
                   <span className="text-sm text-slate-600">
-                    {MOCK_COURSE.sections.length} phần • {MOCK_COURSE.total_lessons} bài học • {formatDuration(MOCK_COURSE.total_duration)}
+                    {course.sections.length} phần • {course.total_lessons} bài học • {formatDuration(course.total_duration)}
                   </span>
                 </div>
 
                 <div className="space-y-2">
-                  {MOCK_COURSE.sections.map((section) => (
+                  {course.sections?.map((section: any) => (
                     <div key={section.id} className="border border-slate-200 rounded-lg overflow-hidden">
                       <button
                         onClick={() => toggleSection(section.id)}
@@ -447,7 +501,7 @@ const CourseDetail: React.FC = () => {
 
                       {expandedSections.includes(section.id) && (
                         <div className="border-t border-slate-200 bg-slate-50">
-                          {section.lessons.map((lesson) => (
+                          {section.lessons.map((lesson: any) => (
                             <div
                               key={lesson.id}
                               className="flex items-center justify-between p-4 hover:bg-white transition-colors border-b border-slate-100 last:border-b-0"
@@ -482,7 +536,7 @@ const CourseDetail: React.FC = () => {
                 <h2 className="text-2xl font-bold text-secondary mb-6">Mô tả khóa học</h2>
                 <div
                   className="prose prose-slate max-w-none"
-                  dangerouslySetInnerHTML={{ __html: MOCK_COURSE.description }}
+                  dangerouslySetInnerHTML={{ __html: course.description }}
                 />
               </div>
 
@@ -490,7 +544,7 @@ const CourseDetail: React.FC = () => {
               <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
                 <h2 className="text-2xl font-bold text-secondary mb-6">Yêu cầu</h2>
                 <ul className="space-y-3">
-                  {MOCK_COURSE.requirements.map((req, index) => (
+                  {course.requirements?.map((req: string, index: number) => (
                     <li key={index} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                       <span className="text-slate-700">{req}</span>
@@ -505,12 +559,12 @@ const CourseDetail: React.FC = () => {
 
                 <div className="flex items-center gap-8 mb-8 pb-8 border-b border-slate-200">
                   <div className="text-center">
-                    <div className="text-5xl font-bold text-secondary mb-2">{MOCK_COURSE.rating}</div>
+                    <div className="text-5xl font-bold text-secondary mb-2">{course.rating}</div>
                     <div className="flex items-center gap-1 mb-2">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
-                          className={`w-5 h-5 ${star <= Math.round(MOCK_COURSE.rating)
+                          className={`w-5 h-5 ${star <= Math.round(course.rating)
                             ? 'text-yellow-400 fill-yellow-400'
                             : 'text-slate-300'
                             }`}
@@ -543,7 +597,7 @@ const CourseDetail: React.FC = () => {
                 </div>
 
                 <div className="space-y-6">
-                  {MOCK_COURSE.reviews.map((review) => (
+                  {course.reviews?.map((review: any) => (
                     <div key={review.id} className="flex gap-4">
                       <img
                         src={review.student.avatar}
@@ -574,32 +628,32 @@ const CourseDetail: React.FC = () => {
                 <h2 className="text-2xl font-bold text-secondary mb-6">Giảng viên</h2>
                 <div className="flex gap-6">
                   <img
-                    src={MOCK_COURSE.instructor.avatar_url}
-                    alt={MOCK_COURSE.instructor.full_name}
+                    src={course.instructor.avatar_url}
+                    alt={course.instructor.full_name}
                     className="w-24 h-24 rounded-full"
                   />
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-secondary mb-1">
-                      {MOCK_COURSE.instructor.full_name}
+                      {course.instructor.full_name}
                     </h3>
-                    <p className="text-slate-600 mb-4">{MOCK_COURSE.instructor.title}</p>
+                    <p className="text-slate-600 mb-4">{course.instructor.title}</p>
 
                     <div className="flex flex-wrap gap-6 mb-4 text-sm">
                       <div className="flex items-center gap-2">
                         <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                        <span>{MOCK_COURSE.instructor.rating} đánh giá</span>
+                        <span>{course.instructor.rating} đánh giá</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-primary" />
-                        <span>{MOCK_COURSE.instructor.total_students.toLocaleString()} học viên</span>
+                        <span>{course.instructor.total_students.toLocaleString()} học viên</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <BookOpen className="w-4 h-4 text-primary" />
-                        <span>{MOCK_COURSE.instructor.total_courses} khóa học</span>
+                        <span>{course.instructor.total_courses} khóa học</span>
                       </div>
                     </div>
 
-                    <p className="text-slate-700">{MOCK_COURSE.instructor.bio}</p>
+                    <p className="text-slate-700">{course.instructor.bio}</p>
                   </div>
                 </div>
               </div>
@@ -610,7 +664,7 @@ const CourseDetail: React.FC = () => {
           <div className="hidden lg:block">
             <div className="sticky top-24">
               <CourseCard
-                course={MOCK_COURSE}
+                course={course}
                 isEnrolled={isEnrolled}
                 isMobile={false}
                 onEnroll={handleEnroll}
@@ -624,7 +678,7 @@ const CourseDetail: React.FC = () => {
 
       {/* Enrollment Dialog */}
       <EnrollmentDialog
-        course={MOCK_COURSE}
+        course={course}
         isOpen={showEnrollmentDialog}
         onClose={() => setShowEnrollmentDialog(false)}
         onCheckout={handleCheckout}

@@ -1,27 +1,20 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./Footer";
 import Header from "./Header";
-import { useEffect, useState } from "react";
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
-import { MOCK_USER } from "../../mockData";
-import { Cus_User } from "../../types/types";
 
 export default function StudentLayout() {
-    // Protect Route - 2 
-    // Kiểm tra đăng nhập - quyền truy cập
     const location = useLocation();
     const isAuthPage = location.pathname === '/auth';
-    const isLessonPage = location.pathname.startsWith('/lesson');
-    const [user, setUser] = useState<null | Cus_User>(null);
-
+    const isLessonPage = location.pathname.startsWith('/lesson') || location.pathname.includes('/lesson/');
 
     return (
-        <main className="w-full h-screen">
-            {/* nếu đã đăng nhập thì ....  */}
+        <main className="w-full min-h-screen flex flex-col">
             {!isAuthPage && !isLessonPage && <Header />}
-            <div className="min-h-screen pt-1">
+
+            <div className="flex-1 min-h-screen">
                 <Outlet />
             </div>
+
             {!isAuthPage && !isLessonPage && <Footer />}
         </main>
     );

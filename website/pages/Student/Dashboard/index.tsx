@@ -1,21 +1,53 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { STUDENT_CLASSES, PENDING_ASSIGNMENTS, STUDENT_COURSES } from '../../../mockData';
-import { IoDocumentTextOutline, IoPersonCircleOutline, IoPlayCircle, IoTimeOutline } from 'react-icons/io5';
+import { useMyClasses, useMyEnrollments } from '../../../hooks/useApi';
+import { classesApi } from '../../../API';
+import { IoDocumentTextOutline, IoPersonCircleOutline, IoPlayCircle, IoTimeOutline, IoRefreshOutline } from 'react-icons/io5';
 import { student_routes } from '../../page_routes';
 
+// Mock user ID - sẽ thay bằng user từ auth context
+const CURRENT_USER_ID = 7;
+
 const StudentDashboard: React.FC = () => {
+    // Sử dụng API hooks
+    const { data: myClasses, loading: classesLoading } = useMyClasses(CURRENT_USER_ID);
+    const { data: myEnrollments, loading: enrollmentsLoading } = useMyEnrollments(CURRENT_USER_ID);
+    const [pendingAssignments, setPendingAssignments] = useState<any[]>([]);
+
+    // Fetch pending assignments từ các classes
+    useEffect(() => {
+        const fetchAssignments = async () => {
+            if (myClasses && myClasses.length > 0) {
+                const allAssignments: any[] = [];
+                for (const cls of myClasses) {
+                    const response = await classesApi.getAssignments(cls.id);
+                    if (response.success) {
+                        const pending = response.data.filter((a: any) => new Date(a.due_date) > new Date());
+                        allAssignments.push(...pending.map((a: any) => ({
+                            ...a,
+                            deadline: new Date(a.due_date).toLocaleDateString('vi-VN')
+                        })));
+                    }
+                }
+                setPendingAssignments(allAssignments);
+            }
+        };
+        fetchAssignments();
+    }, [myClasses]);
+
     // Only show classes that have a next session defined
-    const activeClasses = STUDENT_CLASSES.filter(c => c.nextSession);
+    const activeClasses = myClasses?.filter((c: any) => c.nextSession) || [];
     const hasActiveClasses = activeClasses.length > 0;
+    const studentCourses = myEnrollments || [];
+
 
     return (
         <div className="space-y-8 max-w-6xl mx-auto">
             {/* Header */}
             <div>
                 <h1 className="text-2xl font-bold text-secondary">Học tập cá nhân</h1>
-                <p className="text-slate-600">Chào mừng trở lại! Bạn có <span className="text-primary font-bold">{PENDING_ASSIGNMENTS.length} bài tập</span> cần hoàn thành.</p>
+                <p className="text-slate-600">Chào mừng trở lại! Bạn có <span className="text-primary font-bold">{pendingAssignments.length} bài tập</span> cần hoàn thành.</p>
             </div>
 
             {/* Active Class Monitor Section */}
@@ -84,7 +116,7 @@ const StudentDashboard: React.FC = () => {
                             <Link to={student_routes.my_classes} className="text-sm text-primary hover:underline">Xem tất cả</Link>
                         </div>
                         <div className="space-y-4">
-                            {PENDING_ASSIGNMENTS.map(assign => (
+                            {pendingAssignments.map((assign: any) => (
                                 <div key={assign.id} className="flex items-center p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors">
                                     <div className="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mr-4">
                                         <IoDocumentTextOutline className='text-xl' />
@@ -96,7 +128,7 @@ const StudentDashboard: React.FC = () => {
                                     <button className="text-sm font-medium text-primary border border-primary px-3 py-1 rounded hover:bg-blue-50">Làm bài</button>
                                 </div>
                             ))}
-                            {PENDING_ASSIGNMENTS.length === 0 && <p className="text-slate-500 text-center py-4">Không có bài tập nào.</p>}
+                            {pendingAssignments.length === 0 && <p className="text-slate-500 text-center py-4">Không có bài tập nào.</p>}
                         </div>
                     </section>
 
@@ -131,11 +163,11 @@ const StudentDashboard: React.FC = () => {
                         <h2 className="text-lg font-bold text-secondary mb-4">Tổng quan khóa học</h2>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="p-4 bg-blue-50 rounded-lg text-center">
-                                <p className="text-2xl font-bold text-primary">{STUDENT_COURSES.length}</p>
+                                <p className="text-2xl font-bold text-primary">{studentCourses.length}</p>
                                 <p className="text-xs text-slate-600">Khóa học</p>
                             </div>
                             <div className="p-4 bg-emerald-50 rounded-lg text-center">
-                                <p className="text-2xl font-bold text-emerald-600">{STUDENT_COURSES.filter(c => c.completed).length}</p>
+                                <p className="text-2xl font-bold text-emerald-600">{studentCourses.filter((c: any) => c.completed).length}</p>
                                 <p className="text-xs text-slate-600">Đã hoàn thành</p>
                             </div>
                             <div className="p-4 bg-purple-50 rounded-lg text-center">
@@ -155,12 +187,12 @@ const StudentDashboard: React.FC = () => {
                             <h2 className="text-lg font-bold text-secondary">Học gần đây</h2>
                         </div>
                         <div className="space-y-4">
-                            {STUDENT_COURSES.slice(0, 3).map(course => (
+                            {studentCourses.slice(0, 3).map((course: any) => (
                                 <Link to={`/lesson/1`} key={course.id} className="block group">
                                     <div className="flex items-center space-x-3">
-                                        <img src={course.thumbnail} alt={course.title} className="w-12 h-12 rounded object-cover" />
+                                        <img src={course.course?.thumbnail || course.thumbnail} alt={course.course?.title || course.title} className="w-12 h-12 rounded object-cover" />
                                         <div className="flex-1 min-w-0">
-                                            <h4 className="text-sm font-medium text-slate-800 truncate group-hover:text-primary">{course.title}</h4>
+                                            <h4 className="text-sm font-medium text-slate-800 truncate group-hover:text-primary">{course.course?.title || course.title}</h4>
                                             <div className="w-full bg-slate-100 rounded-full h-1.5 mt-2">
                                                 <div className="bg-primary h-1.5 rounded-full" style={{ width: `${course.progress}%` }}></div>
                                             </div>

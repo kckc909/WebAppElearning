@@ -2,17 +2,30 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import CourseProgressCard from "./CourseProgressCard";
 import { EnrolledCourse } from "../../../types/types";
-import { STUDENT_COURSES } from '../../../mockData'
-import { Book, BookOpen } from "lucide-react";
+import { useMyEnrollments } from '../../../hooks/useApi';
+import { Book, BookOpen, Loader2 } from "lucide-react";
+
+// Mock user ID - sẽ thay bằng user từ auth context
+const CURRENT_USER_ID = 7;
 
 export default function Student_Courses() {
     const [filter, setFilter] = useState<'all' | 'learning' | 'completed'>('all');
+    const { data: enrollments, loading } = useMyEnrollments(CURRENT_USER_ID);
 
-    const filteredCourses = STUDENT_COURSES.filter((course: { completed: any; }) => {
+    const filteredCourses = (enrollments || []).filter((course: any) => {
         if (filter === 'learning') return !course.completed;
         if (filter === 'completed') return course.completed;
         return true;
     });
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
+    }
+
 
     return (
         <div className="max-w-6xl mx-auto">

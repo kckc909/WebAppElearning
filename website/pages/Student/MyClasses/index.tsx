@@ -1,17 +1,30 @@
 import React, { useState } from "react";
-import { Calendar, CalendarDays, Clock, Edit3, FolderOpen, List, Presentation, User, Video, ToolCase } from 'lucide-react'
-import { STUDENT_CLASSES } from '../../../mockData'
+import { Calendar, CalendarDays, Clock, Edit3, FolderOpen, List, Loader2, Presentation, User, Video, ToolCase } from 'lucide-react'
+import { useMyClasses } from '../../../hooks/useApi';
 import { StudentClass } from "../../../types/types";
 import Tab_List from './Tab_List'
 import Tab_Schedule from './Tab_Schedule'
 import Tab_Docs from './Tab_Docs'
 import Tab_Homework from './Tab_Homework'
 
+// Mock user ID - sẽ thay bằng user từ auth context
+const CURRENT_USER_ID = 7;
+
 export default function Student_Clases() {
     const [activeTab, setActiveTab] = useState<'list' | 'schedule' | 'docs' | 'homework'>('list');
+    const { data: myClasses, loading } = useMyClasses(CURRENT_USER_ID);
 
     // Currently defaulting to the first class for detail view demonstration
-    const selectedClass = STUDENT_CLASSES[0];
+    const selectedClass = myClasses?.[0] || null;
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
+    }
+
 
     return (
         <div className="space-y-8 w-full mx-10 min-h-[calc(100vh-140px)] flex flex-col">
@@ -24,8 +37,8 @@ export default function Student_Clases() {
                     <button
                         onClick={() => setActiveTab('list')}
                         className={`px-6 py-4 text-sm font-medium whitespace-nowrap min-w-max border-b-2 transition-colors flex ${activeTab === 'list'
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-slate-500 hover:text-slate-700'
+                            ? 'border-primary text-primary'
+                            : 'border-transparent text-slate-500 hover:text-slate-700'
                             }`}
                     >
                         <List className="w-5 h-5 mr-2 align-middle mb-1" strokeWidth={1.5} /> Danh sách lớp
@@ -34,8 +47,8 @@ export default function Student_Clases() {
                     <button
                         onClick={() => setActiveTab('schedule')}
                         className={`px-6 py-4 text-sm font-medium whitespace-nowrap min-w-max border-b-2 transition-colors flex ${activeTab === 'schedule'
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-slate-500 hover:text-slate-700'
+                            ? 'border-primary text-primary'
+                            : 'border-transparent text-slate-500 hover:text-slate-700'
                             }`}
                     >
                         <Calendar className="w-5 h-5 mr-2 align-middle mb-1" strokeWidth={1.5} /> Lịch học
@@ -44,8 +57,8 @@ export default function Student_Clases() {
                     <button
                         onClick={() => setActiveTab('docs')}
                         className={`px-6 py-4 text-sm font-medium whitespace-nowrap min-w-max border-b-2 transition-colors flex ${activeTab === 'docs'
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-slate-500 hover:text-slate-700'
+                            ? 'border-primary text-primary'
+                            : 'border-transparent text-slate-500 hover:text-slate-700'
                             }`}
                     >
                         <FolderOpen className="w-5 h-5 mr-2 align-middle mb-1" strokeWidth={1.5} /> Tài liệu
@@ -54,8 +67,8 @@ export default function Student_Clases() {
                     <button
                         onClick={() => setActiveTab('homework')}
                         className={`px-6 py-4 text-sm font-medium whitespace-nowrap min-w-max border-b-2 transition-colors flex ${activeTab === 'homework'
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-slate-500 hover:text-slate-700'
+                            ? 'border-primary text-primary'
+                            : 'border-transparent text-slate-500 hover:text-slate-700'
                             }`}
                     >
                         <Edit3 className="w-5 h-5 mr-2 align-middle mb-1" strokeWidth={1.4} /> Bài tập

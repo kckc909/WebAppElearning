@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { student_routes } from '../page_routes';
 
 import StudentLayout from './StudentLayout'
@@ -28,34 +29,56 @@ import Student_LoggedInLayout from './StudentSideBar'
 
 export default function StudentRoutes() {
     return (
-        <Routes>
-            <Route element={<StudentLayout />}>
-                <Route path={student_routes.home} element={<HomePage />} />
+        <>
+            <Toaster
+                position="top-right"
+                toastOptions={{
+                    duration: 3000,
+                    style: {
+                        background: '#333',
+                        color: '#fff',
+                    },
+                    success: {
+                        style: {
+                            background: '#10b981',
+                        },
+                    },
+                    error: {
+                        style: {
+                            background: '#ef4444',
+                        },
+                    },
+                }}
+            />
+            <Routes>
+                <Route element={<StudentLayout />}>
+                    <Route path={student_routes.home} element={<HomePage />} />
 
-                <Route path={student_routes.courses} element={<CoursesPage />} />
-                <Route path={student_routes.course_detail(':courseId')} element={<CourseDetailPage />} />
-                <Route path={student_routes.lesson(':courseId', ':lessonId')} element={<LessonPage />} />
-                <Route path={student_routes.auth} element={<AuthPage />} />
-                <Route path={student_routes.about} element={<AboutPage />} />
-                <Route path={student_routes.become_instructor} element={<BecomeInstructorPage />} />
+                    <Route path={student_routes.courses} element={<CoursesPage />} />
+                    <Route path={student_routes.course_detail(':courseId')} element={<CourseDetailPage />} />
+                    <Route path={student_routes.lesson(':courseId', ':lessonId')} element={<LessonPage />} />
+                    <Route path={student_routes.auth} element={<AuthPage />} />
+                    <Route path={student_routes.about} element={<AboutPage />} />
+                    <Route path={student_routes.become_instructor} element={<BecomeInstructorPage />} />
 
-                <Route element={<Student_LoggedInLayout />}>
-                    <Route path={student_routes.dashboard} element={<StudentDashboard />} />
-                    <Route path={student_routes.my_classes} element={<MyClasses />} />
-                    <Route path={student_routes.schedule} element={<Schedule />} />
-                    <Route path={student_routes.class_detail(':classId')} element={<ClassDetail />} />
-                    <Route path={student_routes.my_courses} element={<MyCourses />} />
-                    <Route path={student_routes.checkout} element={<Student_Checkout />} />
-                    <Route path={student_routes.payment_history} element={<Student_PaymentHistory />} />
-                    <Route path={student_routes.certificates} element={<Student_Certificates />} />
-                    <Route path={student_routes.profile} element={<Student_Profile />} />
-                    <Route path={student_routes.settings} element={<Student_Settings />}></Route>
-                    <Route path={student_routes.stats} element={<StudentStats />}></Route>
+                    <Route element={<Student_LoggedInLayout />}>
+                        <Route path={student_routes.dashboard} element={<StudentDashboard />} />
+                        <Route path={student_routes.my_classes} element={<MyClasses />} />
+                        <Route path={student_routes.schedule} element={<Schedule />} />
+                        <Route path={student_routes.class_detail(':classId')} element={<ClassDetail />} />
+                        <Route path={student_routes.my_courses} element={<MyCourses />} />
+                        <Route path={student_routes.checkout} element={<Student_Checkout />} />
+                        <Route path={student_routes.payment_history} element={<Student_PaymentHistory />} />
+                        <Route path={student_routes.certificates} element={<Student_Certificates />} />
+                        <Route path={student_routes.profile} element={<Student_Profile />} />
+                        <Route path={student_routes.settings} element={<Student_Settings />}></Route>
+                        <Route path={student_routes.stats} element={<StudentStats />}></Route>
+                    </Route>
+
                 </Route>
-
-            </Route>
-            <Route path="*" element={<NotFoundPageAll />} />
-        </Routes>
+                <Route path="*" element={<NotFoundPageAll />} />
+            </Routes>
+        </>
     );
 }
 

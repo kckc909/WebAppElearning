@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Award, Download, Share2, Search, Filter, ExternalLink, CheckCircle } from 'lucide-react';
+import { Award, Download, Share2, Search, Filter, ExternalLink, CheckCircle, Eye } from 'lucide-react';
+import CertificateDialog from '../../../components/CertificateDialog';
 
 interface Certificate {
     id: number;
@@ -17,6 +18,8 @@ const StudentCertificates: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [categoryFilter, setCategoryFilter] = useState<string>('all');
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+    const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
+    const [showPreview, setShowPreview] = useState(false);
 
     const certificates: Certificate[] = [
         {
@@ -100,6 +103,11 @@ const StudentCertificates: React.FC = () => {
         }
     };
 
+    const handlePreview = (cert: Certificate) => {
+        setSelectedCertificate(cert);
+        setShowPreview(true);
+    };
+
     const CertificateCard: React.FC<{ certificate: Certificate }> = ({ certificate }) => (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group">
             {/* Certificate Preview */}
@@ -142,11 +150,17 @@ const StudentCertificates: React.FC = () => {
                 {/* Actions */}
                 <div className="flex gap-2">
                     <button
-                        onClick={() => handleDownload(certificate)}
+                        onClick={() => handlePreview(certificate)}
                         className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors flex items-center justify-center gap-2 text-sm font-medium"
                     >
+                        <Eye className="w-4 h-4" />
+                        Xem chi tiết
+                    </button>
+                    <button
+                        onClick={() => handleDownload(certificate)}
+                        className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center"
+                    >
                         <Download className="w-4 h-4" />
-                        Tải xuống
                     </button>
                     <button
                         onClick={() => handleShare(certificate)}
@@ -154,14 +168,6 @@ const StudentCertificates: React.FC = () => {
                     >
                         <Share2 className="w-4 h-4" />
                     </button>
-                    <a
-                        href={certificate.verificationUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center"
-                    >
-                        <ExternalLink className="w-4 h-4" />
-                    </a>
                 </div>
             </div>
         </div>
@@ -353,6 +359,25 @@ const StudentCertificates: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            {/* Certificate Preview Dialog */}
+            <CertificateDialog
+                isOpen={showPreview}
+                onClose={() => {
+                    setShowPreview(false);
+                    setSelectedCertificate(null);
+                }}
+                certificate={selectedCertificate ? {
+                    id: selectedCertificate.id,
+                    course_id: selectedCertificate.id,
+                    course_title: selectedCertificate.courseTitle,
+                    student_name: 'Học viên',
+                    instructor_name: selectedCertificate.instructor,
+                    certificate_url: selectedCertificate.certificateUrl,
+                    issued_at: selectedCertificate.issuedDate,
+                    certificate_code: selectedCertificate.certificateCode
+                } : null}
+            />
         </div>
     );
 };

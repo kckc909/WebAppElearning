@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { COURSES } from '../../mockData';
+import { useFeaturedCourses } from '../../hooks/useApi';
 import CourseCard from '../../components/CourseCard';
 import {
     BookOpen,
@@ -14,7 +14,8 @@ import {
     CheckCircle2,
     ArrowRight,
     Play,
-    Star
+    Star,
+    Loader2
 } from 'lucide-react';
 
 // Feature Card Component
@@ -51,8 +52,13 @@ const StatsCard: React.FC<{
 );
 
 const HomePage: React.FC = () => {
-    const digitalCourses = COURSES.filter(c => c.category === 'Digital Skills');
-    const languageCourses = COURSES.filter(c => c.category === 'Applied Language');
+    // Sử dụng API hook thay vì import trực tiếp
+    const { data: courses, loading } = useFeaturedCourses(15);
+
+    // Filter courses by category
+    const digitalCourses = courses?.filter((c: any) => c.category === 'Digital Skills') || [];
+    const languageCourses = courses?.filter((c: any) => c.category === 'Applied Language') || [];
+
 
     return (
         <div className="bg-gradient-to-b from-slate-50 to-white">

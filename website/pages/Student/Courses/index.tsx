@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { COURSES } from '../../../mockData';
+import { useCourses } from '../../../hooks/useApi';
 import CourseCard from '../../../components/CourseCard';
 import { IoHomeOutline } from 'react-icons/io5';
+import { Loader2 } from 'lucide-react';
 
 const FilterCheckbox: React.FC<{ label: string, id: string, checked?: boolean, onChange?: () => void }> = ({ label, id, checked, onChange }) => (
     <div className="flex items-center">
@@ -13,7 +14,8 @@ const FilterCheckbox: React.FC<{ label: string, id: string, checked?: boolean, o
 
 
 const CoursesPage: React.FC = () => {
-    const [courses, setCourses] = useState(COURSES);
+    const { data: courses, loading, error } = useCourses();
+
 
     return (
         <div className="container mx-auto px-4 py-12">
@@ -61,11 +63,17 @@ const CoursesPage: React.FC = () => {
 
                 {/* Course Grid */}
                 <main className="lg:w-3/4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                        {courses.map(course => (
-                            <CourseCard key={course.id} course={course} />
-                        ))}
-                    </div>
+                    {loading ? (
+                        <div className="flex items-center justify-center py-20">
+                            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                            {(courses || []).map((course: any) => (
+                                <CourseCard key={course.id} course={course} />
+                            ))}
+                        </div>
+                    )}
                     {/* Pagination */}
                     <nav className="mt-12 flex items-center justify-center space-x-2">
                         <a href="#" className="px-4 py-2 rounded-md text-slate-600 bg-white hover:bg-slate-100">&laquo;</a>

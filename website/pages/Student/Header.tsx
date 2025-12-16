@@ -1,9 +1,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { MOCK_USER } from '../../mockData';
-import { BookOpen, CalendarDays, ChevronDown, ChevronDownIcon, LayoutDashboard, LogOut, Settings, User, Users, GraduationCap, Shield, Crown } from 'lucide-react';
-import { student_routes, instructor_routes, admin_routes, superadmin_routes } from '../page_routes'
+import { BookOpen, CalendarDays, ChevronDown, ChevronDownIcon, LayoutDashboard, LogOut, Settings, User, Users, GraduationCap, Shield } from 'lucide-react';
+import { student_routes, instructor_routes, admin_routes } from '../page_routes'
 import { useAuth } from '../../contexts/AuthContext';
 
 const NavItem: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
@@ -68,7 +67,7 @@ const Header: React.FC = () => {
                 >
                   {/* User */}
                   <span className="text-sm font-medium text-slate-700 hidden lg:block">Hi, {user?.full_name || 'User'}</span>
-                  <img src={user?.avatar_url || MOCK_USER.avatar} alt="User Avatar" className="h-9 w-9 rounded-full border border-slate-200" />
+                  <img src={user?.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'} alt="User Avatar" className="h-9 w-9 rounded-full border border-slate-200" />
 
                   <ChevronDownIcon className='w-5 h-5 text-slate-500' />
                 </button>
@@ -148,17 +147,7 @@ const Header: React.FC = () => {
                       </Link>
                     )}
 
-                    {user?.role === -1 && (
-                      <Link
-                        to={'/superadmin/' + superadmin_routes.dashboard}
-                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
-                      >
-                        <Crown className="mr-3 h-5 w-5" />
-                        Trang SuperAdmin
-                      </Link>
-                    )}
-
-                    {(user?.role === 1 || user?.role === 0 || user?.role === -1) && <div className="border-t border-slate-100 my-1"></div>}
+                    {(user?.role === 1 || user?.role === 0) && <div className="border-t border-slate-100 my-1"></div>}
 
                     <button
                       onClick={handleLogout}
@@ -198,7 +187,7 @@ const Header: React.FC = () => {
             {isAuthenticated ? (
               <>
                 <div className="flex items-center space-x-3 mb-4 pb-4 border-b border-slate-100">
-                  <img src={user?.avatar_url || MOCK_USER.avatar} alt="Avatar" className="w-10 h-10 rounded-full" />
+                  <img src={user?.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'} alt="Avatar" className="w-10 h-10 rounded-full" />
                   <div>
                     <p className="font-bold text-secondary">{user?.full_name || 'User'}</p>
                     <p className="text-xs text-slate-500">
@@ -295,17 +284,7 @@ const Header: React.FC = () => {
                   </Link>
                 )}
 
-                {user?.role === -1 && (
-                  <Link
-                    to={'/superadmin/' + superadmin_routes.dashboard}
-                    className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
-                  >
-                    <Crown className="mr-3 h-5 w-5" />
-                    Trang SuperAdmin
-                  </Link>
-                )}
-
-                {(user?.role === 1 || user?.role === 0 || user?.role === -1) && <div className="border-t border-slate-100 my-1"></div>}
+                {(user?.role === 1 || user?.role === 0) && <div className="border-t border-slate-100 my-1"></div>}
 
                 <button onClick={handleLogout} className="text-left text-sm font-medium text-red-600 py-2">Đăng xuất</button>
               </>

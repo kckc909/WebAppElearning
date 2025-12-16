@@ -119,7 +119,7 @@ const AboutPage: React.FC = () => {
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <IoHomeOutline name="mail-outline" className="text-primary text-2xl"></IoHomeOutline >
-                                    <span className="text-slate-600">support@MiLearn.vn</span>
+                                    <span className="text-slate-600">kckc253261@gmail.com</span>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <IoHomeOutline name="call-outline" className="text-primary text-2xl"></IoHomeOutline >
