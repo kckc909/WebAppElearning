@@ -39,11 +39,13 @@ export default function AdminLayout() {
     // if (user && user.role == 1) 
     {
         return (
-            <main className="flex h-screen bg-gray-50 overflow-hidden">
+            <main className="flex h-screen bg-gray-100 overflow-hidden">
                 <AdminPageSidebar isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
                 <div className="flex-1 flex flex-col">
                     <AdminPageHeader toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} handleLogout={handleLogout}></AdminPageHeader>
-                    <Outlet />
+                    <div className="flex-1 overflow-auto bg-gray-50 rounded-tl-lg" style={{ marginTop: '5px', padding: '10px' }}>
+                        <Outlet />
+                    </div>
                 </div>
             </main>
         );
