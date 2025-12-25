@@ -1,0 +1,49 @@
+### Test Payment System - Refactored Structure
+
+# Step 1: Get checkout summary
+GET http://localhost:4000/checkout/summary?course_ids=1,2
+x-user-id: 1
+
+###
+
+# Step 2: Complete checkout (creates invoice + invoice_details)
+POST http://localhost:4000/checkout/complete
+Content-Type: application/json
+x-user-id: 1
+
+{
+  "course_ids": [1, 2],
+  "payment_method": "bank_transfer",
+  "transaction_code": "TEST-PAYMENT-001"
+}
+
+###
+
+# Step 3: Get all user invoices
+GET http://localhost:4000/checkout/invoices
+x-user-id: 1
+
+###
+
+# Step 4: Get specific invoice by ID
+GET http://localhost:4000/checkout/invoices/1?id=1
+x-user-id: 1
+
+###
+
+# Step 5: Check enrollments created
+GET http://localhost:4000/enrollments/my
+x-user-id: 1
+
+###
+
+# Test with different user
+POST http://localhost:4000/checkout/complete
+Content-Type: application/json
+x-user-id: 2
+
+{
+  "course_ids": [3],
+  "payment_method": "bank_transfer",
+  "transaction_code": "TEST-PAYMENT-002"
+}

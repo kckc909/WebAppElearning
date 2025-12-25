@@ -1,0 +1,30 @@
+### Test Invoice System
+
+# 1. Get user invoices
+GET http://localhost:3001/checkout/invoices
+x-user-id: 1
+
+###
+
+# 2. Get specific invoice by ID
+GET http://localhost:3001/checkout/invoices/1?id=1
+x-user-id: 1
+
+###
+
+# 3. Complete checkout (creates invoice automatically)
+POST http://localhost:3001/checkout/complete
+Content-Type: application/json
+x-user-id: 1
+
+{
+  "course_ids": [1, 2],
+  "payment_method": "bank_transfer",
+  "transaction_code": "TEST-INVOICE-001"
+}
+
+###
+
+# 4. Get checkout summary
+GET http://localhost:3001/checkout/summary?course_ids=1,2
+x-user-id: 1

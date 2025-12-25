@@ -1,0 +1,37 @@
+### Test Stats API
+### Thay YOUR_JWT_TOKEN bằng token thực tế của student
+
+@baseUrl = http://localhost:8000
+@token = YOUR_JWT_TOKEN
+
+### 1. Get Overview
+GET {{baseUrl}}/api/stats/overview
+Authorization: Bearer {{token}}
+
+### 2. Get Streak
+GET {{baseUrl}}/api/stats/streak
+Authorization: Bearer {{token}}
+
+### 3. Get Activity (Month)
+GET {{baseUrl}}/api/stats/activity?period=month
+Authorization: Bearer {{token}}
+
+### 4. Get Activity (Week)
+GET {{baseUrl}}/api/stats/activity?period=week
+Authorization: Bearer {{token}}
+
+### 5. Get Activity (Year)
+GET {{baseUrl}}/api/stats/activity?period=year
+Authorization: Bearer {{token}}
+
+### 6. Get Category Distribution
+GET {{baseUrl}}/api/stats/category-distribution
+Authorization: Bearer {{token}}
+
+### 7. Get Weekly Activity
+GET {{baseUrl}}/api/stats/weekly-activity
+Authorization: Bearer {{token}}
+
+### 8. Get Course Progress
+GET {{baseUrl}}/api/stats/course-progress
+Authorization: Bearer {{token}}

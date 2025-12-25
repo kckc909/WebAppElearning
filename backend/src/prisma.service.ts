@@ -1,34 +1,11 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClient, UserRole } from './generated/prisma/client.js';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
-
-import mariadb, { PoolConfig } from 'mariadb';
+import { PrismaClient, accounts_role } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
     constructor(private configService: ConfigService) {
-
-        const connectionString = configService.get<string>('DATABASE_URL_MARIADB');
-        if (!connectionString) {
-            throw new Error('DATABASE_URL_MARIADB environment variable is not set');
-        }
-        const adapter = new PrismaMariaDb(connectionString);
-        super({
-            adapter: adapter,
-        });
-
-        // const pool = mariadb.createPool({
-        //     host: process.env.DB_HOST ?? 'localhost',
-        //     user: process.env.DB_USER ?? 'root',
-        //     password: process.env.DB_PASS ?? 'root',
-        //     database: process.env.DB_NAME ?? 'website_milearn',
-        //     port: Number(process.env.DB_PORT ?? 3306),
-        //     connectionLimit: 10,
-        // })
-        // const adapter = new PrismaMariaDb(pool as PoolConfig);
-        // super({ adapter });
-
+        super();
         this.ensureSuperAdmin()
     }
 
@@ -43,21 +20,36 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     }
 
     private async ensureSuperAdmin() {
-        const admin = await this.accounts.findUnique({
-            where: { username: 'superadmin' }
-        });
-
-        if (!admin) {
-            await this.accounts.create({
-                data: {
-                    username: 'superadmin',
-                    full_name: 'Super Administrator',
-                    email: 'kckc253261@gmail.com',
-                    password_hash: '000000', // password đã mã hoá
-                    role: UserRole.SUPER_ADMIN,
-                },
+        try {
+            // Check by username first
+            let admin = await this.accounts.findUnique({
+                where: { username: 'superadmin' }
             });
-            console.log('⚠️ SuperAdmin bị xóa - đã tự động khôi phục!');
+
+            // If not found by username, check by email
+            if (!admin) {
+                admin = await this.accounts.findUnique({
+                    where: { email: 'kckc253261@gmail.com' }
+                });
+            }
+
+            // Only create if truly doesn't exist
+            if (!admin) {
+                await this.accounts.create({
+                    data: {
+                        username: 'superadmin',
+                        full_name: 'Super Administrator',
+                        email: 'kckc253261@gmail.com',
+                        password_hash: '000000', // password đã mã hoá
+                        role: accounts_role.SUPER_ADMIN,
+                    },
+                });
+                console.log('✅ SuperAdmin account created successfully');
+            } else {
+                console.log('✅ SuperAdmin account already exists');
+            }
+        } catch (error) {
+            console.error('❌ Error ensuring SuperAdmin:', error.message);
         }
     }
 }
