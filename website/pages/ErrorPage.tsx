@@ -1,4 +1,4 @@
-export default function GlobalErrorPage({ status = 500, message = "Có lỗi xảy ra!" }) {
+﻿export default function GlobalErrorPage({ status = 500, message = "Có lỗi xảy ra!" }) {
     return (
         <div className="flex flex-col items-center justify-center h-screen text-center p-4">
             <h1 className="text-5xl font-bold mb-4">{status}</h1>

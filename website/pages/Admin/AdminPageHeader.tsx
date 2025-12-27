@@ -1,10 +1,12 @@
-import React, { useRef, useState, useEffect } from 'react';
+﻿import React, { useRef, useState, useEffect } from 'react';
 import { MenuIcon, SearchIcon } from '../../components/icons/icons'
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { ChevronDown, User, Settings, LogOut, LayoutDashboard, GraduationCap } from 'lucide-react';
 import { instructor_routes, admin_routes, student_routes } from '../page_routes';
-import { MOCK_USER } from '../../mockData';
+
+// Default avatar fallback
+const DEFAULT_AVATAR = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Admin';
 
 interface HeaderProps {
     toggleSidebar: () => void;
@@ -61,7 +63,7 @@ const AdminPageHeader: React.FC<HeaderProps> = ({ toggleSidebar, handleLogout })
                             {user?.full_name || 'Admin'}
                         </span>
                         <img
-                            src={user?.avatar_url || MOCK_USER.avatar}
+                            src={user?.avatar_url || DEFAULT_AVATAR}
                             alt="Avatar"
                             className="w-10 h-10 rounded-full border-2 border-gray-200"
                         />
@@ -71,7 +73,7 @@ const AdminPageHeader: React.FC<HeaderProps> = ({ toggleSidebar, handleLogout })
                     {isAvatarOpen && (
                         <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-1 border border-gray-100 animate-fade-in-down transform origin-top-right z-50">
                             <Link
-                                to={'/' + student_routes.home}
+                                to={'/' + student_routes.dashboard}
                                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary"
                             >
                                 <LayoutDashboard className="mr-3 h-5 w-5" />

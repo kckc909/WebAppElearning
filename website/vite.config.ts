@@ -8,9 +8,7 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       host: '0.0.0.0',
-      // CRITICAL: Enable historyApiFallback for BrowserRouter
-      // This ensures all routes are handled by React app (no 404 on refresh)
-      historyApiFallback: true,
+      // Note: Vite automatically handles SPA routing - no historyApiFallback needed
     },
     plugins: [react()],
     define: {

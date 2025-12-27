@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoLogoGoogle, IoLogoFacebook } from 'react-icons/io';
 import { Eye, EyeOff, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import { accService } from '../../API/accounts.api';
+import { accService } from '../../API';
 import SocialButton from '../../components/SocialButton';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -50,24 +50,34 @@ const LoginForm: React.FC = () => {
         e.preventDefault();
         setError('');
 
+        // Trim values
+        const trimmedUsername = username.trim();
+        const trimmedPassword = password.trim();
+
         // Validation
-        if (!username.trim()) {
+        if (!trimmedUsername) {
             setError("Tài khoản không thể để trống!");
             return;
         }
 
-        if (!password.trim()) {
+        if (!trimmedPassword) {
             setError("Mật khẩu không thể để trống!");
+            return;
+        }
+
+        // Validate không có space trong password
+        if (trimmedPassword.includes(' ')) {
+            setError("Mật khẩu không được chứa khoảng trắng!");
             return;
         }
 
         setIsLoading(true);
 
         try {
-            const response = await accService.login(username, password);
+            const response = await accService.login(trimmedUsername, trimmedPassword);
 
             if (!response.success || !response.data) {
-                setError("Sai tài khoản hoặc mật khẩu!");
+                setError(response.message || "Đã xảy ra lỗi. Vui lòng thử lại!");
                 setIsLoading(false);
                 return;
             }
@@ -76,10 +86,10 @@ const LoginForm: React.FC = () => {
             const userData = loginData.user || loginData; // Support cả 2 format
 
             // Use AuthContext login to update state AND localStorage
-            login(userData);
-            
+            login(userData as any);
+
             if (loginData.token) {
-                localStorage.setItem("Token", loginData.token);
+                sessionStorage.setItem("Token", loginData.token);
             }
 
             // Show success toast
@@ -179,9 +189,9 @@ const LoginForm: React.FC = () => {
     );
 };
 
-
 const RegisterForm: React.FC = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [step, setStep] = useState<'form' | 'otp'>('form');
 
     const [name, setName] = useState('');
@@ -234,17 +244,24 @@ const RegisterForm: React.FC = () => {
         e.preventDefault();
         setError('');
 
+        // Trim values
+        const trimmedName = name.trim();
+        const trimmedEmail = email.trim();
+        const trimmedUsername = username.trim();
+        const trimmedPassword = password.trim();
+
         // Validation
-        if (!name.trim()) return setError("Họ tên không được để trống.");
-        if (!emailRegex.test(email)) return setError("Email không hợp lệ.");
-        if (username.length < 4) return setError("Tài khoản phải ít nhất 4 ký tự.");
-        if (/\s/.test(username)) return setError("Tài khoản không được có dấu cách.");
-        if (password.length < 6) return setError("Mật khẩu phải ít nhất 6 ký tự.");
+        if (!trimmedName) return setError("Họ tên không được để trống.");
+        if (!emailRegex.test(trimmedEmail)) return setError("Email không hợp lệ.");
+        if (trimmedUsername.length < 4) return setError("Tài khoản phải ít nhất 4 ký tự.");
+        if (/\s/.test(trimmedUsername)) return setError("Tài khoản không được có dấu cách.");
+        if (trimmedPassword.length < 6) return setError("Mật khẩu phải ít nhất 6 ký tự.");
+        if (trimmedPassword.includes(' ')) return setError("Mật khẩu không được chứa khoảng trắng.");
 
         setIsLoading(true);
 
         try {
-            const emailExists = await accService.isExists(email, username);
+            const emailExists = await accService.isExists(trimmedEmail, trimmedUsername);
             if (emailExists && emailExists.data?.error) {
                 setError(emailExists.data.error);
                 setIsLoading(false);
@@ -252,7 +269,7 @@ const RegisterForm: React.FC = () => {
             }
 
             // Send OTP
-            await accService.sendEmailVerifyCode(email);
+            await accService.sendEmailVerifyCode(trimmedEmail);
             setToast({ message: 'Mã OTP đã được gửi đến email của bạn!', type: 'info' });
             setStep('otp');
             setResendTimer(60); // 60 seconds countdown
@@ -275,6 +292,12 @@ const RegisterForm: React.FC = () => {
         }
 
         setIsLoading(true);
+
+        // Use trimmed values
+        const trimmedName = name.trim();
+        const trimmedEmail = email.trim();
+        const trimmedUsername = username.trim();
+        const trimmedPassword = password.trim();
 
         try {
             const ok = await verifyOtp(otp);
@@ -299,8 +322,40 @@ const RegisterForm: React.FC = () => {
                 return;
             }
 
-            const res = await accService.register({ name, username, email, password });
-            setToast({ message: 'Đăng ký thành công!', type: 'success' });
+            const res = await accService.register({
+                name: trimmedName,
+                username: trimmedUsername,
+                email: trimmedEmail,
+                password: trimmedPassword
+            });
+
+            // Auto-login after successful registration
+            if (res.success && res.data) {
+                const userData = res.data.user || res.data;
+
+                // Login the user using AuthContext
+                login(userData);
+
+                // Save token if available
+                if (res.data.token) {
+                    sessionStorage.setItem("Token", res.data.token);
+                }
+
+                setToast({ message: `Chào mừng ${userData.full_name || trimmedName}! Đăng ký thành công.`, type: 'success' });
+            } else {
+                setToast({ message: 'Đăng ký thành công! Đang đăng nhập...', type: 'success' });
+
+                // If no user data returned, create basic user data for login
+                const basicUserData = {
+                    id: Date.now(), // Temporary ID
+                    username: trimmedUsername,
+                    email: trimmedEmail,
+                    full_name: trimmedName,
+                    role: 'student',
+                    avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${trimmedUsername}`,
+                };
+                login(basicUserData as any);
+            }
 
             setTimeout(() => {
                 navigate('/');

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
 import {
     ChevronDown,
@@ -35,9 +35,9 @@ import {
     Wallet
 } from "lucide-react";
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { admin_routes } from '../page_routes';
-import ApiModeSwitch from '../../components/ApiModeSwitch';
+
 
 interface SidebarProps {
     isOpen: boolean;
@@ -45,67 +45,82 @@ interface SidebarProps {
 }
 
 const menuItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' + admin_routes.base + admin_routes.dashboard },
+    { name: 'Tổng quan', icon: <LayoutDashboard />, path: '/' + admin_routes.base + admin_routes.dashboard },
     {
-        name: 'Classes Management',
+        name: 'Quản lý lớp học',
         icon: <BookOpen />,
         subItems: [
-            { name: 'Classes Overview', icon: <FileChartPie />, path: '/' + admin_routes.base + admin_routes.classes_overview },
-            { name: 'All Classes', icon: <BookOpenText />, path: '/' + admin_routes.base + admin_routes.all_classes },
-            { name: 'Schedule', icon: <Calendar />, path: '/' + admin_routes.base + admin_routes.schedule },
-            { name: 'Class Grades', icon: <BadgeCheck />, path: '/' + admin_routes.base + admin_routes.class_grades },
-            { name: `Documents`, icon: <Files />, path: '/' + admin_routes.base + admin_routes.documents },
+            { name: 'Tổng quan lớp học', icon: <FileChartPie />, path: '/' + admin_routes.base + admin_routes.classes_overview },
+            { name: 'Tất cả lớp học', icon: <BookOpenText />, path: '/' + admin_routes.base + admin_routes.all_classes },
+            { name: 'Lịch học', icon: <Calendar />, path: '/' + admin_routes.base + admin_routes.schedule },
+            { name: 'Điểm lớp học', icon: <BadgeCheck />, path: '/' + admin_routes.base + admin_routes.class_grades },
+            { name: `Tài liệu`, icon: <Files />, path: '/' + admin_routes.base + admin_routes.documents },
         ]
     },
     {
-        name: 'Course Management', icon: <Book />,
+        name: 'Quản lý khóa học', icon: <Book />,
         subItems: [
-            { name: 'Courses Overview', icon: <FileChartPie />, path: '/' + admin_routes.base + admin_routes.courses_overview },
-            { name: 'All Courses', icon: <BookText />, path: '/' + admin_routes.base + admin_routes.all_courses },
-            { name: 'Approval', icon: <ClipboardClock />, path: '/' + admin_routes.base + admin_routes.approval },
-            { name: 'Course Grades', icon: <BadgeCheck />, path: '/' + admin_routes.base + admin_routes.course_grades },
-            { name: 'Certificates', icon: <Award />, path: '/' + admin_routes.base + admin_routes.certificates },
+            { name: 'Tổng quan khóa học', icon: <FileChartPie />, path: '/' + admin_routes.base + admin_routes.courses_overview },
+            { name: 'Tất cả khóa học', icon: <BookText />, path: '/' + admin_routes.base + admin_routes.all_courses },
+            { name: 'Phê duyệt', icon: <ClipboardClock />, path: '/' + admin_routes.base + admin_routes.approval },
+            { name: 'Điểm khóa học', icon: <BadgeCheck />, path: '/' + admin_routes.base + admin_routes.course_grades },
+            { name: 'Chứng chỉ', icon: <Award />, path: '/' + admin_routes.base + admin_routes.certificates },
         ]
     },
     { name: 'CMS', icon: <FolderKanban />, path: '/' + admin_routes.base + admin_routes.cms },
 
-    { name: 'Students Management', icon: <Users />, path: '/' + admin_routes.base + admin_routes.student_management },
+    { name: 'Quản lý học viên', icon: <Users />, path: '/' + admin_routes.base + admin_routes.student_management },
 
-    { name: 'Instructors Management', icon: <GraduationCap />, path: '/' + admin_routes.base + admin_routes.instructor_management },
-    { name: 'Instructors Vertification', icon: <UserRoundCheck />, path: '/' + admin_routes.base + admin_routes.instructor_verification },
+    { name: 'Quản lý giảng viên', icon: <GraduationCap />, path: '/' + admin_routes.base + admin_routes.instructor_management },
+    { name: 'Xác thực giảng viên', icon: <UserRoundCheck />, path: '/' + admin_routes.base + admin_routes.instructor_verification },
 
     {
-        name: 'Finance', icon: <DollarSign />,
+        name: 'Tài chính', icon: <DollarSign />,
         subItems: [
-            { name: 'Transactions', icon: <Repeat2 />, path: '/' + admin_routes.base + admin_routes.transactions },
-            { name: 'Revenue', icon: <TrendingUp />, path: '/' + admin_routes.base + admin_routes.revenue },
-            { name: 'Payouts', icon: <Wallet />, path: '/' + admin_routes.base + admin_routes.payouts },
+            { name: 'Giao dịch', icon: <Repeat2 />, path: '/' + admin_routes.base + admin_routes.transactions },
+            { name: 'Doanh thu', icon: <TrendingUp />, path: '/' + admin_routes.base + admin_routes.revenue },
+            { name: 'Chi trả', icon: <Wallet />, path: '/' + admin_routes.base + admin_routes.payouts },
         ]
     },
 
-    { name: 'Document Library', icon: <FileText />, path: '/' + admin_routes.base + admin_routes.document_library },
-    { name: 'Notifications', icon: <Bell />, path: '/' + admin_routes.base + admin_routes.notification },
-    { name: 'Analytics & Reports', icon: <LineChart />, path: '/' + admin_routes.base + admin_routes.analytics_reports },
-    { name: 'Settings', icon: <Settings />, path: '/' + admin_routes.base + admin_routes.settings },
+    { name: 'Thư viện tài liệu', icon: <FileText />, path: '/' + admin_routes.base + admin_routes.document_library },
+    { name: 'Thông báo', icon: <Bell />, path: '/' + admin_routes.base + admin_routes.notification },
+    { name: 'Phân tích & Báo cáo', icon: <LineChart />, path: '/' + admin_routes.base + admin_routes.analytics_reports },
+    { name: 'Cài đặt', icon: <Settings />, path: '/' + admin_routes.base + admin_routes.settings },
 
     // { name: 'Users & Roles', icon: <ShieldCheck />, path: temp }, => superadmin
 ];
 
 const AdminPageSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
-    const [openDropdown, setOpenDropdown] = useState<string | null>();
-    const [activeItem, setActiveItem] = useState<string>('Dashboard');
+    const location = useLocation();
+    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+    // Auto-open dropdown if current path matches a subitem
+    useEffect(() => {
+        for (const item of menuItems) {
+            if (item.subItems) {
+                const matchingSubItem = item.subItems.find(sub => location.pathname === sub.path);
+                if (matchingSubItem) {
+                    setOpenDropdown(item.name);
+                    break;
+                }
+            }
+        }
+    }, [location.pathname]);
 
     const handleDropdownClick = (name: string) => {
         setOpenDropdown(openDropdown === name ? null : name);
     };
 
-    const handleItemClick = (name: string) => {
-        setActiveItem(name);
+    const handleItemClick = () => {
         // On smaller screens, close sidebar after selection
         if (window.innerWidth < 1024) {
             setIsOpen(false);
         }
     };
+
+    // Check if a path is active
+    const isPathActive = (path: string) => location.pathname === path;
 
     const sidebarClasses = `
         fixed lg:relative inset-y-0 left-0 z-30
@@ -147,39 +162,35 @@ const AdminPageSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                                 {openDropdown === item.name && (
                                     <div className="pl-4 mt-1 border-l-2 border-gray-200 ml-5">
                                         {item.subItems.map(subItem => (
-                                            <a
+                                            <NavLink
                                                 key={subItem.name}
-                                                href={subItem.path}
-                                                onClick={() => handleItemClick(subItem.name)}
+                                                to={subItem.path}
+                                                onClick={handleItemClick}
                                                 className={`flex items-center p-2 my-1 rounded-md text-sm transition-colors
-                                                    ${activeItem === subItem.name ? 'bg-green-100 text-green-800 font-semibold border-l-4 border-green-500 -ml-[18px] pl-[14px]' : 'hover:bg-gray-100 text-gray-600'}`}
+                                                    ${isPathActive(subItem.path) ? 'bg-green-100 text-green-800 font-semibold border-l-4 border-green-500 -ml-[18px] pl-[14px]' : 'hover:bg-gray-100 text-gray-600'}`}
                                             >
                                                 <span className="w-5 h-5 mr-3">{subItem.icon}</span>
                                                 {subItem.name}
-                                            </a>
+                                            </NavLink>
                                         ))}
                                     </div>
                                 )}
                             </div>
                         ) : (
-                            <a
+                            <NavLink
                                 key={item.name}
-                                href={item.path}
-                                onClick={() => handleItemClick(item.name)}
+                                to={item.path!}
+                                onClick={handleItemClick}
                                 className={`flex items-center p-2 rounded-lg text-sm font-medium
-                                    ${activeItem === item.name ? 'bg-green-100 text-green-800' : 'hover:bg-gray-100'}`}
+                                    ${isPathActive(item.path!) ? 'bg-green-100 text-green-800' : 'hover:bg-gray-100'}`}
                             >
                                 <span className="w-6 h-6 mr-3">{item.icon}</span>
                                 {item.name}
-                            </a>
+                            </NavLink>
                         )
                     ))}
                 </nav>
 
-                {/* Footer with API Mode Switch */}
-                <div className="p-3 border-t border-gray-200">
-                    <ApiModeSwitch />
-                </div>
             </aside>
         </>
     );

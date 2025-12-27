@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
 import {
     ChevronDown,
@@ -24,7 +24,7 @@ import {
     ChevronsRight
 } from "lucide-react";
 
-import ApiModeSwitch from '../../components/ApiModeSwitch';
+
 
 import { NavLink, useLocation } from 'react-router-dom';
 import { instructor_routes } from '../page_routes';
@@ -62,28 +62,28 @@ interface PinnedMenus {
 ================================ */
 const defaultMenuItems = [
     {
-        name: 'Dashboard',
+        name: 'Tổng quan',
         icon: <LayoutDashboard />,
         path: '/' + instructor_routes.base + instructor_routes.dashboard,
     },
 
     {
-        name: 'Courses Management',
+        name: 'Quản lý khóa học',
         icon: <Book />,
         subItems: [
             {
-                name: 'Courses Overview',
+                name: 'Tổng quan khóa học',
                 icon: <FileChartPie />,
                 path: '/' + instructor_routes.base + instructor_routes.courses_overview
             },
             {
-                name: 'My Courses',
+                name: 'Khóa học của tôi',
                 icon: <BookText />,
                 path: '/' + instructor_routes.base + instructor_routes.courses_list,
                 dynamicKey: 'courses' // Key để map với dynamic menu
             },
             {
-                name: 'Create Course',
+                name: 'Tạo khóa học',
                 icon: <SquarePlus />,
                 path: '/' + instructor_routes.base + instructor_routes.courses_create
             }
@@ -91,22 +91,22 @@ const defaultMenuItems = [
     },
 
     {
-        name: 'Classes Management',
+        name: 'Quản lý lớp học',
         icon: <Users />,
         subItems: [
             {
-                name: 'Classes Overview',
+                name: 'Tổng quan lớp học',
                 icon: <FileChartPie />,
                 path: '/' + instructor_routes.base + instructor_routes.classes_overview
             },
             {
-                name: 'My Classes',
+                name: 'Lớp học của tôi',
                 icon: <BookText />,
                 path: '/' + instructor_routes.base + instructor_routes.class_list,
                 dynamicKey: 'classes' // Key để map với dynamic menu
             },
             {
-                name: 'Schedule',
+                name: 'Lịch dạy',
                 icon: <Calendar />,
                 path: '/' + instructor_routes.base + instructor_routes.schedule
             }
@@ -114,17 +114,17 @@ const defaultMenuItems = [
     },
 
     {
-        name: 'Document Library',
+        name: 'Thư viện tài liệu',
         icon: <FileText />,
         path: '/' + instructor_routes.base + instructor_routes.document_library
     },
     {
-        name: 'Notifications',
+        name: 'Thông báo',
         icon: <Bell />,
         path: '/' + instructor_routes.base + instructor_routes.notification
     },
     {
-        name: 'Settings',
+        name: 'Cài đặt',
         icon: <Settings />,
         path: '/' + instructor_routes.base + instructor_routes.settings
     },
@@ -176,47 +176,47 @@ const dynamicMenuConfig: DynamicMenuConfig = {
         urlPattern: /\/instructor\/classes\/(\d+)/,
         getMenuItems: (classId: string) => [
             {
-                name: 'Overview',
+                name: 'Tổng quan',
                 icon: <FileChartPie />,
                 path: '/' + instructor_routes.base + instructor_routes.class_detail(classId)
             },
             {
-                name: 'Live Session',
+                name: 'Phiên trực tiếp',
                 icon: <Video />,
                 path: '/' + instructor_routes.base + instructor_routes.class_live(classId)
             },
             {
-                name: 'Activity',
+                name: 'Hoạt động',
                 icon: <Activity />,
                 path: '/' + instructor_routes.base + instructor_routes.class_activity(classId)
             },
             {
-                name: 'Attendance',
+                name: 'Điểm danh',
                 icon: <Calendar />,
                 path: '/' + instructor_routes.base + instructor_routes.class_attendance(classId)
             },
             {
-                name: 'Assignments',
+                name: 'Bài tập',
                 icon: <ClipboardList />,
                 path: '/' + instructor_routes.base + instructor_routes.class_assignments(classId)
             },
             {
-                name: 'Materials',
+                name: 'Tài liệu',
                 icon: <FolderOpen />,
                 path: '/' + instructor_routes.base + instructor_routes.class_materials(classId)
             },
             {
-                name: 'Grades',
+                name: 'Điểm số',
                 icon: <BadgeCheck />,
                 path: '/' + instructor_routes.base + instructor_routes.class_grades(classId)
             },
             {
-                name: 'Members',
+                name: 'Thành viên',
                 icon: <Users />,
                 path: '/' + instructor_routes.base + instructor_routes.class_members(classId)
             },
             {
-                name: 'Settings',
+                name: 'Cài đặt',
                 icon: <Settings />,
                 path: '/' + instructor_routes.base + instructor_routes.class_settings(classId)
             }
@@ -297,9 +297,9 @@ const InstructorSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, isCollap
         const currentUrlActive = getActiveDynamicMenus();
 
         if (currentUrlActive.courses) {
-            setOpenDropdown('Courses Management');
+            setOpenDropdown('Quản lý khóa học');
         } else if (currentUrlActive.classes) {
-            setOpenDropdown('Classes Management');
+            setOpenDropdown('Quản lý lớp học');
         }
         // Don't force open when navigating to other pages - let user control dropdown
     }, [location.pathname]);
@@ -515,26 +515,19 @@ const InstructorSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, isCollap
 
                 {/* Settings toggle at bottom */}
                 <div className="p-3 border-t border-gray-200">
-                    {!isCollapsed ? (
-                        <div className="space-y-3">
-                            <label className="flex items-center justify-between cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
-                                <span className="text-xs text-gray-600 flex items-center gap-2">
-                                    <Pin className="w-4 h-4" />
-                                    Giữ menu mở rộng
-                                </span>
-                                <input
-                                    type="checkbox"
-                                    checked={settings.keepMenuExpanded}
-                                    onChange={(e) => updateSettings({ keepMenuExpanded: e.target.checked })}
-                                    className="w-4 h-4 text-green-600 rounded"
-                                />
-                            </label>
-                            <ApiModeSwitch />
-                        </div>
-                    ) : (
-                        <div className="flex flex-col items-center gap-2">
-                            <ApiModeSwitch compact showLabel={false} />
-                        </div>
+                    {!isCollapsed && (
+                        <label className="flex items-center justify-between cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
+                            <span className="text-xs text-gray-600 flex items-center gap-2">
+                                <Pin className="w-4 h-4" />
+                                Giữ menu mở rộng
+                            </span>
+                            <input
+                                type="checkbox"
+                                checked={settings.keepMenuExpanded}
+                                onChange={(e) => updateSettings({ keepMenuExpanded: e.target.checked })}
+                                className="w-4 h-4 text-green-600 rounded"
+                            />
+                        </label>
                     )}
                 </div>
             </aside>

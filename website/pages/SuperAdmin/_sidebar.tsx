@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import {
     ChevronDown, FileText, LayoutDashboard, Settings, Users, X, Menu, ChevronLeft, ChevronRight
 } from "lucide-react";
@@ -13,10 +13,10 @@ interface SidebarProps {
 }
 
 const menuItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' + superadmin_routes.base + superadmin_routes.dashboard },
-    { name: 'Users Management', icon: <Users />, path: '/' + superadmin_routes.base + superadmin_routes.users_management },
-    { name: 'Audit logs', icon: <FileText />, path: '/' + superadmin_routes.base + superadmin_routes.audit_logs },
-    { name: 'Settings', icon: <Settings />, path: '/' + superadmin_routes.base + superadmin_routes.system_settings },
+    { name: 'Tổng quan', icon: <LayoutDashboard />, path: '/' + superadmin_routes.base + superadmin_routes.dashboard },
+    { name: 'Quản lý người dùng', icon: <Users />, path: '/' + superadmin_routes.base + superadmin_routes.users_management },
+    { name: 'Nhật ký hoạt động', icon: <FileText />, path: '/' + superadmin_routes.base + superadmin_routes.audit_logs },
+    { name: 'Cài đặt', icon: <Settings />, path: '/' + superadmin_routes.base + superadmin_routes.system_settings },
 ]
 
 const SuperAdminSidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {

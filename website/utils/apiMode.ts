@@ -17,10 +17,11 @@ export class ApiModeManager {
      * Lấy chế độ API hiện tại
      */
     static getCurrentMode(): ApiMode {
-        if (typeof window === 'undefined') return API_MODES.MOCK;
+        if (typeof window === 'undefined') return API_MODES.DATABASE;
 
         const stored = localStorage.getItem(this.STORAGE_KEY);
-        const useMock = stored === null ? true : stored === 'true';
+        // Default to DATABASE (Real API) if not set
+        const useMock = stored === null ? false : stored === 'true';
         return useMock ? API_MODES.MOCK : API_MODES.DATABASE;
     }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Video, Play } from 'lucide-react';
 
 const InstructorLiveSession: React.FC = () => {

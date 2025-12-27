@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { FileText, Download } from 'lucide-react';
 
 const AdminClassDocuments: React.FC = () => {

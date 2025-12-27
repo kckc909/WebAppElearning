@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { IoHomeOutline, IoLogoFacebook, IoLogoGithub, IoLogoLinkedin } from 'react-icons/io5';
 import { SiZalo } from "react-icons/si";
 import { Link } from 'react-router-dom';
@@ -47,7 +47,7 @@ const ApiModeSwitchFooter: React.FC = () => {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-xs text-slate-500">Data Source:</span>
+      <span className="text-xs text-slate-500">Nguồn dữ liệu:</span>
       <button
         onClick={toggleMode}
         className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${useMockAPI
@@ -121,7 +121,7 @@ const Footer: React.FC = () => {
         </div>
         <div className="mt-12 border-t border-slate-700 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-slate-500">&copy; {new Date().getFullYear()} MiLearn. All rights reserved.</p>
+            <p className="text-slate-500">&copy; {new Date().getFullYear()} MiLearn. Tất cả quyền được bảo lưu.</p>
 
             {/* API Mode Switch */}
             <ApiModeSwitchFooter />

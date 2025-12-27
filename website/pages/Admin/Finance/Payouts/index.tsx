@@ -1,56 +1,20 @@
-import React, { useState } from 'react';
-import { Search, DollarSign, CheckCircle, Clock, XCircle, Send } from 'lucide-react';
+﻿import React, { useState, useEffect } from 'react';
+import { Search, DollarSign, CheckCircle, Clock, Send } from 'lucide-react';
+import { usePayouts } from '../../../../hooks/usePayouts';
 
 const AdminPayouts: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
 
-    const payouts = [
-        {
-            id: 'PO001234',
-            date: '2024-12-14',
-            instructor: 'Dr. Angela Yu',
-            amount: 15000000,
-            courses: 5,
-            students: 450,
-            status: 'pending',
-            bankAccount: '**** **** **** 1234',
-        },
-        {
-            id: 'PO001235',
-            date: '2024-12-13',
-            instructor: 'Nguyễn Văn A',
-            amount: 8500000,
-            courses: 3,
-            students: 280,
-            status: 'completed',
-            bankAccount: '**** **** **** 5678',
-        },
-        {
-            id: 'PO001236',
-            date: '2024-12-12',
-            instructor: 'Trần Thị B',
-            amount: 12000000,
-            courses: 4,
-            students: 380,
-            status: 'completed',
-            bankAccount: '**** **** **** 9012',
-        },
-        {
-            id: 'PO001237',
-            date: '2024-12-11',
-            instructor: 'Lê Văn C',
-            amount: 6500000,
-            courses: 2,
-            students: 150,
-            status: 'processing',
-            bankAccount: '**** **** **** 3456',
-        },
-    ];
+    const { data: payouts, loading, error, refetch } = usePayouts();
 
-    const filteredPayouts = payouts.filter((payout) => {
-        const matchesSearch = payout.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            payout.instructor.toLowerCase().includes(searchTerm.toLowerCase());
+    useEffect(() => {
+        refetch();
+    }, []);
+
+    const filteredPayouts = payouts.filter((payout: any) => {
+        const matchesSearch = (payout.id?.toString() || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (payout.instructor_name || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = statusFilter === 'all' || payout.status === statusFilter;
         return matchesSearch && matchesStatus;
     });
@@ -84,12 +48,20 @@ const AdminPayouts: React.FC = () => {
     };
 
     const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(Math.abs(amount));
     };
 
-    const totalPending = payouts.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
-    const totalCompleted = payouts.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0);
-    const pendingCount = payouts.filter(p => p.status === 'pending').length;
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
+
+    const totalPending = payouts.filter((p: any) => p.status === 'pending').reduce((sum: number, p: any) => sum + Math.abs(p.amount || 0), 0);
+    const totalCompleted = payouts.filter((p: any) => p.status === 'completed').reduce((sum: number, p: any) => sum + Math.abs(p.amount || 0), 0);
+    const pendingCount = payouts.filter((p: any) => p.status === 'pending').length;
 
     return (
         <div className="space-y-6">
@@ -188,23 +160,19 @@ const AdminPayouts: React.FC = () => {
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Ngày</th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Giảng viên</th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Số tiền</th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Khóa học</th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Học viên</th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Tài khoản</th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Trạng thái</th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Hành động</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {filteredPayouts.map((payout) => (
+                            {filteredPayouts.map((payout: any) => (
                                 <tr key={payout.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 font-mono text-sm text-gray-900">{payout.id}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-600">{payout.date}</td>
-                                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{payout.instructor}</td>
-                                    <td className="px-6 py-4 text-sm font-bold text-green-600">{formatCurrency(payout.amount)}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-600">{payout.courses}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-600">{payout.students}</td>
-                                    <td className="px-6 py-4 text-sm font-mono text-gray-600">{payout.bankAccount}</td>
+                                    <td className="px-6 py-4 font-mono text-sm text-gray-900">PO{String(payout.id).padStart(6, '0')}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-600">
+                                        {payout.created_at ? new Date(payout.created_at).toLocaleDateString('vi-VN') : '-'}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{payout.instructor_name || payout.user_name || 'N/A'}</td>
+                                    <td className="px-6 py-4 text-sm font-bold text-green-600">{formatCurrency(payout.amount || 0)}</td>
                                     <td className="px-6 py-4">{getStatusBadge(payout.status)}</td>
                                     <td className="px-6 py-4">
                                         {payout.status === 'pending' && (
@@ -223,6 +191,12 @@ const AdminPayouts: React.FC = () => {
                         </tbody>
                     </table>
                 </div>
+
+                {filteredPayouts.length === 0 && (
+                    <div className="text-center py-12">
+                        <p className="text-gray-500">Không có dữ liệu chi trả</p>
+                    </div>
+                )}
             </div>
 
             {/* Payout Schedule Info */}

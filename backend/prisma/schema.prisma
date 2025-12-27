@@ -37,6 +37,7 @@ model accounts {
   notifications                           notifications[]
   payouts                                 payouts[]
   invoice_details                         invoice_details[]
+  user_profiles                           user_profiles?
 
   @@index([email])
   @@index([role])
@@ -222,6 +223,7 @@ model classes {
   name              String              @db.VarChar(255)
   updated_at        DateTime            @default(now()) @db.DateTime(0)
   class_assignments class_assignments[]
+  class_attendance  class_attendance[]
   class_calendar    class_calendar[]
   class_exams       class_exams[]
   class_materials   class_materials[]
@@ -252,12 +254,34 @@ model content_ides {
 }
 
 model content_ides_starter {
-  id         Int     @id @default(autoincrement())
-  content_id Int
-  language   String  @db.VarChar(50)
-  content    String? @db.Text
+  id          Int                       @id @default(autoincrement())
+  content_id  Int
+  language    String                    @db.VarChar(50)
+  content     String?                   @db.Text
+  description String?                   @db.Text
+  created_at  DateTime                  @default(now()) @db.DateTime(0)
+  updated_at  DateTime                  @default(now()) @db.DateTime(0)
+  test_cases  content_ides_test_cases[]
 
+  @@unique([content_id, language])
   @@index([content_id])
+}
+
+model content_ides_test_cases {
+  id                   Int                  @id @default(autoincrement())
+  starter_id           Int
+  test_name            String               @db.VarChar(255)
+  input                String               @db.Text
+  expected_output      String               @db.Text
+  is_hidden            Boolean              @default(false)
+  points               Int                  @default(1)
+  timeout_ms           Int                  @default(5000)
+  order_index          Int                  @default(0)
+  created_at           DateTime             @default(now()) @db.DateTime(0)
+  content_ides_starter content_ides_starter @relation(fields: [starter_id], references: [id], onDelete: Cascade)
+
+  @@index([starter_id])
+  @@index([order_index])
 }
 
 model course_categories {
@@ -373,6 +397,7 @@ model courses {
   average_rating        Decimal              @default(0.00) @db.Decimal(3, 2)
   deleted_at            DateTime?            @db.DateTime(0)
   is_featured           Boolean              @default(false)
+  allow_preview         Boolean              @default(false)
   preview_video_url     String?              @db.Text
   published_at          DateTime?            @db.DateTime(0)
   slug                  String               @unique @db.VarChar(500)
@@ -691,6 +716,26 @@ model user_profiles {
   timezone      String    @default("Asia/Ho_Chi_Minh") @db.VarChar(50)
   updated_at    DateTime  @default(now()) @db.DateTime(0)
   website       String?   @db.VarChar(255)
+  accounts      accounts  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+}
+
+model class_attendance {
+  id           Int      @id @default(autoincrement())
+  class_id     Int
+  student_id   Int
+  session_date DateTime @db.Date
+  status       String   @default("absent") @db.VarChar(20)
+  notes        String?  @db.Text
+  marked_at    DateTime @default(now()) @db.DateTime(0)
+  marked_by    Int?
+  classes      classes  @relation(fields: [class_id], references: [id], onDelete: Cascade)
+
+  @@unique([class_id, student_id, session_date])
+  @@index([class_id])
+  @@index([student_id])
+  @@index([session_date])
 }
 
 enum accounts_role {

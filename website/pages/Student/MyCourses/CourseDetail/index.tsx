@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Play, CheckCircle, Lock, Clock, Award } from 'lucide-react';
 

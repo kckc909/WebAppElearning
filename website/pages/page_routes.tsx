@@ -1,4 +1,4 @@
-// ------------------- Super Admin -------------------
+﻿// ------------------- Super Admin -------------------
 const superadmin_routes = {
     base: 'superadmin/',
     dashboard: 'dashboard',
@@ -26,6 +26,7 @@ const admin_routes = {
     courses_overview: 'courses-overview',
     course_grades: 'courses-management/grades',
     course_detail: (courseId: string | number) => `courses/${courseId}`,
+    lesson_preview: (courseId: string | number, lessonId: string | number) => `courses/${courseId}/lesson/${lessonId}`,
 
     // CMS
     cms: 'cms',
@@ -68,7 +69,30 @@ const instructor_routes = {
     courses_draft: `courses/draft`,
 
     course_detail: (courseId: string | number) => `courses/${courseId}`,
-    course_lesson: (courseId: string | number, lessonId: string | number) => `courses/${courseId}/lessons/${lessonId}`,
+
+    // LESSON BUILDER - URL pattern: /courses/:courseId/lesson-builder/:lessonId?action=edit-lesson
+    lesson_builder: (courseId: string | number, lessonId?: string | number, params?: {
+        action?: 'add-section' | 'add-lesson' | 'edit-lesson',
+        sectionId?: string | number,
+        focusSection?: string | number,
+        focusLesson?: string | number
+    }) => {
+        // If lessonId provided, include in path
+        const baseUrl = lessonId
+            ? `courses/${courseId}/lesson-builder/${lessonId}`
+            : `courses/${courseId}/lesson-builder`;
+
+        if (!params) return baseUrl;
+
+        const searchParams = new URLSearchParams();
+        if (params.action) searchParams.set('action', params.action);
+        if (params.sectionId) searchParams.set('sectionId', String(params.sectionId));
+        if (params.focusSection) searchParams.set('focusSection', String(params.focusSection));
+        if (params.focusLesson) searchParams.set('focusLesson', String(params.focusLesson));
+
+        const query = searchParams.toString();
+        return query ? `${baseUrl}?${query}` : baseUrl;
+    },
 
     course_curriculum: (courseId: string | number) => `courses/${courseId}/curriculum`,
     course_reviews: (courseId: string | number) => `courses/${courseId}/reviews`,
@@ -97,6 +121,10 @@ const instructor_routes = {
     document_library: `document-library`,
     notification: `notification`,
     settings: `settings`,
+
+    // Revenue & Analytics
+    revenue: `revenue`,
+    analytics: `analytics`,
 };
 
 

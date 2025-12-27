@@ -1,24 +1,35 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Calendar, Edit3, FolderOpen, List, Loader2 } from 'lucide-react'
 import { useMyClasses } from '../../../hooks/useApi';
+import { useAuth } from '../../../contexts/AuthContext';
 import Tab_List from './Tab_List'
 import Tab_Schedule from './Tab_Schedule'
 import Tab_Docs from './Tab_Docs'
 import Tab_Homework from './Tab_Homework'
 import { ErrorState } from '../../../components/DataStates';
 
-// Mock user ID - sẽ thay bằng user từ auth context
-const CURRENT_USER_ID = 7;
-
 export default function Student_Clases() {
     const [activeTab, setActiveTab] = useState<'list' | 'schedule' | 'docs' | 'homework'>('list');
-    const { data: myClasses, loading, error, refetch } = useMyClasses(CURRENT_USER_ID);
+    const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+
+    // Use AuthContext instead of hardcoded ID
+    const { user } = useAuth();
+    const userId = user?.id || 7; // Fallback to 7 for backward compatibility
+
+    const { data: myClasses, loading, error, refetch } = useMyClasses(userId);
 
     // Đảm bảo myClasses luôn là array
     const classList = Array.isArray(myClasses) ? myClasses : [];
 
-    // Currently defaulting to the first class for detail view demonstration
-    const selectedClass = classList[0] || null;
+    // Auto-select first class if none selected and classes exist
+    React.useEffect(() => {
+        if (classList.length > 0 && selectedClassId === null) {
+            setSelectedClassId(classList[0].id);
+        }
+    }, [classList, selectedClassId]);
+
+    // Find selected class by ID (not index)
+    const selectedClass = classList.find(c => c.id === selectedClassId) || null;
 
     if (loading) {
         return (
@@ -85,7 +96,7 @@ export default function Student_Clases() {
 
                 {/* Content */}
                 <div className="p-6 flex-1 overflow-y-auto bg-slate-50">
-                    {activeTab === 'list' && <Tab_List />}
+                    {activeTab === 'list' && <Tab_List classes={classList} selectedClassId={selectedClassId} onSelectClass={setSelectedClassId} />}
                     {activeTab === 'schedule' && <Tab_Schedule selectedClass={selectedClass} />}
                     {activeTab === 'docs' && <Tab_Docs selectedClass={selectedClass} />}
                     {activeTab === 'homework' && <Tab_Homework selectedClass={selectedClass} />}

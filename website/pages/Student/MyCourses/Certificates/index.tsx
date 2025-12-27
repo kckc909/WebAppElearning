@@ -1,16 +1,29 @@
-import React from 'react';
+﻿import React from 'react';
 import { Award, Download, Share2 } from 'lucide-react';
+import { useMyCertificates } from '../../../../hooks/useApi';
 
 const StudentCourseCertificates: React.FC = () => {
-    const certificates = [
-        {
-            id: 1,
-            courseName: 'Complete Web Development Bootcamp 2024',
-            completedDate: '2024-12-10',
-            certificateId: 'CERT-2024-001234',
-            grade: 'A',
-        },
-    ];
+    // TODO: Get current user ID from auth context
+    const currentUserId = 7;
+
+    // Get certificates from API hook
+    const { data: certificatesData, loading, error } = useMyCertificates(currentUserId);
+
+    const certificates = (certificatesData || []).map((cert: any) => ({
+        id: cert.id,
+        courseName: cert.courseTitle || cert.course_title,
+        completedDate: cert.issuedDate || cert.completedAt || cert.issued_at,
+        certificateId: cert.certificateCode || cert.certificate_code,
+        grade: cert.grade || 'A',
+    }));
+
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">Đang tải...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">Lỗi: {error}</div>;
+    }
 
     return (
         <div className="max-w-7xl mx-auto space-y-6">

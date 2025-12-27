@@ -1,10 +1,12 @@
-import React, { useRef, useState, useEffect } from 'react';
+﻿import React, { useRef, useState, useEffect } from 'react';
 import { MenuIcon, SearchIcon } from '../../components/icons/icons'
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { ChevronDown, User, Settings, LogOut, LayoutDashboard, Shield } from 'lucide-react';
 import { instructor_routes, admin_routes, student_routes } from '../page_routes';
-import { MOCK_USER } from '../../mockData';
+
+// Default avatar fallback
+const DEFAULT_AVATAR = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Instructor';
 
 interface HeaderProps {
     toggleSidebar: () => void;
@@ -61,7 +63,7 @@ const InstructorPageHeader: React.FC<HeaderProps> = ({ toggleSidebar, handleLogo
                             {user?.full_name || 'Instructor'}
                         </span>
                         <img
-                            src={user?.avatar_url || MOCK_USER.avatar}
+                            src={user?.avatar_url || DEFAULT_AVATAR}
                             alt="Avatar"
                             className="w-10 h-10 rounded-full border-2 border-gray-200"
                         />

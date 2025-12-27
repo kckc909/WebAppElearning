@@ -1,10 +1,13 @@
-import { Navigate, Outlet } from "react-router-dom";
+﻿import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import InstructorSidebar from "./InstructorSidebar";
 import InstructorPageHeader from './IntructorHeader'
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function InstructorLayout() {
+    const navigate = useNavigate();
+    const { logout } = useAuth();
     // Protect Route - 1
     // Kiểm tra đăng nhập - quyền truy cập
     const [user, setUser] = useState<any>();
@@ -22,7 +25,8 @@ export default function InstructorLayout() {
     });
 
     function handleLogout(): void {
-        throw new Error("Function not implemented.");
+        logout();
+        navigate('/');
     }
 
     // useEffect(() => {

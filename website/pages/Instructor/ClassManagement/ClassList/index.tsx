@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Plus,
@@ -7,77 +7,10 @@ import {
     Calendar,
     Clock,
     Video,
-    MoreVertical,
-    Edit,
     Eye,
-    Trash2,
-    Play,
-    MapPin
+    Play
 } from 'lucide-react';
-
-// Mock classes
-const MOCK_CLASSES = [
-    {
-        id: 1,
-        name: 'Web Development - Lớp A1',
-        course: 'Complete Web Development Bootcamp',
-        thumbnail: 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400',
-        status: 'active',
-        students: 25,
-        maxStudents: 30,
-        schedule: 'T2, T4, T6',
-        time: '19:00 - 21:00',
-        nextSession: '2024-12-16 19:00',
-        totalSessions: 24,
-        completedSessions: 12,
-        instructor: 'Nguyễn Văn A'
-    },
-    {
-        id: 2,
-        name: 'React Advanced - Lớp B2',
-        course: 'React & TypeScript Mastery',
-        thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400',
-        status: 'active',
-        students: 20,
-        maxStudents: 25,
-        schedule: 'T3, T5, T7',
-        time: '18:00 - 20:00',
-        nextSession: '2024-12-17 18:00',
-        totalSessions: 20,
-        completedSessions: 8,
-        instructor: 'Nguyễn Văn A'
-    },
-    {
-        id: 3,
-        name: 'Python Basics - Lớp C1',
-        course: 'Python for Beginners',
-        thumbnail: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400',
-        status: 'upcoming',
-        students: 15,
-        maxStudents: 30,
-        schedule: 'T2, T4',
-        time: '20:00 - 22:00',
-        nextSession: '2024-12-20 20:00',
-        totalSessions: 16,
-        completedSessions: 0,
-        instructor: 'Nguyễn Văn A'
-    },
-    {
-        id: 4,
-        name: 'Node.js Backend - Lớp D1',
-        course: 'Node.js Backend Masterclass',
-        thumbnail: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400',
-        status: 'completed',
-        students: 22,
-        maxStudents: 25,
-        schedule: 'T3, T5',
-        time: '19:00 - 21:00',
-        nextSession: null,
-        totalSessions: 18,
-        completedSessions: 18,
-        instructor: 'Nguyễn Văn A'
-    }
-];
+import { useClasses } from '../../../../hooks/useClasses';
 
 type StatusFilter = 'all' | 'active' | 'upcoming' | 'completed';
 
@@ -85,6 +18,14 @@ const ClassListPage: React.FC = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+
+    const { data: classes, loading, error, refetch } = useClasses();
+
+    useEffect(() => {
+        refetch();
+    }, []);
+
+    const classList = classes || [];
 
     const getStatusStyle = (status: string) => {
         switch (status) {
@@ -118,11 +59,32 @@ const ClassListPage: React.FC = () => {
         return date.toLocaleDateString('vi-VN', { weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
     };
 
-    const filteredClasses = MOCK_CLASSES.filter(cls => {
+    // Format schedule - handle both string and object {days, time}
+    const formatSchedule = (schedule: any): string => {
+        if (!schedule) return 'TBD';
+        if (typeof schedule === 'string') return schedule;
+        if (typeof schedule === 'object') {
+            const days = schedule.days || '';
+            const time = schedule.time || '';
+            if (days && time) return `${days} - ${time}`;
+            return days || time || 'TBD';
+        }
+        return 'TBD';
+    };
+
+    const filteredClasses = classList.filter((cls: any) => {
         if (statusFilter !== 'all' && cls.status !== statusFilter) return false;
-        if (searchQuery && !cls.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+        if (searchQuery && !(cls.name || '').toLowerCase().includes(searchQuery.toLowerCase())) return false;
         return true;
     });
+
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
 
     return (
         <div className="p-8">
@@ -130,7 +92,7 @@ const ClassListPage: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
                     <h1 className="text-3xl font-bold text-secondary mb-2">Danh sách lớp học</h1>
-                    <p className="text-slate-600">Quản lý {MOCK_CLASSES.length} lớp học của bạn</p>
+                    <p className="text-slate-600">Quản lý {classList.length} lớp học của bạn</p>
                 </div>
                 <button
                     onClick={() => navigate('/instructor/classes/create')}
@@ -160,8 +122,8 @@ const ClassListPage: React.FC = () => {
                                 key={status}
                                 onClick={() => setStatusFilter(status)}
                                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${statusFilter === status
-                                        ? 'bg-primary text-white'
-                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    ? 'bg-primary text-white'
+                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                     }`}
                             >
                                 {status === 'all' ? 'Tất cả' : getStatusLabel(status)}
@@ -173,7 +135,7 @@ const ClassListPage: React.FC = () => {
 
             {/* Classes Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredClasses.map((cls) => (
+                {filteredClasses.map((cls: any) => (
                     <div
                         key={cls.id}
                         onClick={() => navigate(`/instructor/classes/${cls.id}`)}
@@ -182,7 +144,7 @@ const ClassListPage: React.FC = () => {
                         {/* Thumbnail */}
                         <div className="relative">
                             <img
-                                src={cls.thumbnail}
+                                src={cls.thumbnail || `https://picsum.photos/seed/class${cls.id}/400/225`}
                                 alt={cls.name}
                                 className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
                             />
@@ -206,7 +168,7 @@ const ClassListPage: React.FC = () => {
                                 </div>
                             )}
                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                                <p className="text-white text-xs opacity-80">{cls.course}</p>
+                                <p className="text-white text-xs opacity-80">{cls.course_name || 'Course'}</p>
                             </div>
                         </div>
 
@@ -221,22 +183,22 @@ const ClassListPage: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <Users className="w-4 h-4" />
-                                        <span>{cls.students}/{cls.maxStudents} học viên</span>
+                                        <span>{cls.students_count || cls.students || 0}/{cls.max_students || 30} học viên</span>
                                     </div>
                                     <div className="w-20 h-2 bg-slate-100 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-primary rounded-full"
-                                            style={{ width: `${(cls.students / cls.maxStudents) * 100}%` }}
+                                            style={{ width: `${((cls.students_count || cls.students || 0) / (cls.max_students || 30)) * 100}%` }}
                                         />
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Calendar className="w-4 h-4" />
-                                    <span>{cls.schedule} • {cls.time}</span>
+                                    <span>{formatSchedule(cls.schedule)}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Clock className="w-4 h-4" />
-                                    <span>{cls.completedSessions}/{cls.totalSessions} buổi</span>
+                                    <span>{cls.completed_sessions || 0}/{cls.total_sessions || 0} buổi</span>
                                 </div>
                             </div>
 
@@ -244,7 +206,7 @@ const ClassListPage: React.FC = () => {
                             {cls.status !== 'completed' && (
                                 <div className="p-3 bg-blue-50 rounded-lg mb-4">
                                     <p className="text-xs text-blue-600 font-medium mb-1">Buổi học tiếp theo</p>
-                                    <p className="text-sm text-blue-800 font-semibold">{formatNextSession(cls.nextSession)}</p>
+                                    <p className="text-sm text-blue-800 font-semibold">{formatNextSession(cls.next_session)}</p>
                                 </div>
                             )}
 

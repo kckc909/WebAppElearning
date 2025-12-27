@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import { useFeaturedCourses } from '../../hooks/useApi';
 import CourseCard from '../../components/CourseCard';
@@ -19,6 +19,19 @@ import {
     Loader2,
     RefreshCw
 } from 'lucide-react';
+
+// Get current user helper
+const getCurrentUser = (): { id: number } | null => {
+    try {
+        const accountData = sessionStorage.getItem('Account');
+        if (accountData) {
+            return JSON.parse(accountData);
+        }
+    } catch {
+        return null;
+    }
+    return null;
+};
 
 // Feature Card Component
 const FeatureCard: React.FC<{
@@ -60,9 +73,23 @@ const HomePage: React.FC = () => {
     // Đảm bảo courses luôn là array
     const courseList = Array.isArray(courses) ? courses : [];
 
-    // Filter courses by category
-    const digitalCourses = courseList.filter((c: any) => c.category === 'Digital Skills');
-    const languageCourses = courseList.filter((c: any) => c.category === 'Applied Language');
+    // Filter courses by category name
+    // Categories in DB: "Lập trình Web", "Lập trình Mobile", "Khoa học Dữ liệu", "Thiết kế"
+    const digitalCourses = courseList.filter((c: any) => 
+        c.course_categories?.name === 'Lập trình Web' || 
+        c.course_categories?.name === 'Lập trình Mobile' ||
+        c.course_categories?.name === 'Data Science' ||
+        c.course_categories?.name === 'Mobile Development' ||
+        c.course_categories?.name === 'Web Development' ||
+        c.course_categories?.name === 'AI & Machine Learning' ||
+        c.course_categories?.name === 'Thiết kế' ||
+        c.course_categories?.name === 'Khoa học Dữ liệu'
+    );
+    const languageCourses = courseList.filter((c: any) => 
+        c.course_categories?.name === 'Ngoại ngữ' ||
+        c.course_categories?.name === 'Tiếng Anh' ||
+        c.course_categories?.slug?.includes('language')
+    );
 
     // Course section loading/error component
     const renderCourseSection = (title: string, subtitle: string, emoji: string, courses: any[]) => {
@@ -98,7 +125,11 @@ const HomePage: React.FC = () => {
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {courses.slice(0, 4).map(course => (
-                    <CourseCard key={course.id} course={course} />
+                    <CourseCard
+                        key={course.id}
+                        course={course}
+                        currentUserId={getCurrentUser()?.id}
+                    />
                 ))}
             </div>
         );

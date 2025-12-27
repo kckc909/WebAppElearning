@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Upload, File, Folder, Search, Grid, List, Download, Trash2, Share2, MoreVertical, Plus, FolderPlus } from 'lucide-react';
 
 interface FileItem {

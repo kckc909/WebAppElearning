@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Settings as SettingsIcon } from 'lucide-react';
 
 const InstructorClassSettings: React.FC = () => {

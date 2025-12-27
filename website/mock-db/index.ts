@@ -14,12 +14,34 @@ export * from './course-categories.mock';
 export * from './courses.mock';
 export * from './course-sections.mock';
 export * from './course-lessons.mock';
+// Lesson Builder tables (normalized schema)
+export * from './lesson-versions.mock';
+export * from './lesson-layouts.mock';
+export * from './lesson-blocks.mock';
+export * from './lesson-assets.mock';
 export * from './course-enrollments.mock';
 export * from './course-reviews.mock';
 export * from './classes.mock';
 export * from './class-students.mock';
 export * from './class-calendar.mock';
 export * from './notifications.mock';
+export * from './admin-activities.mock';
+export * from './system-logs.mock';
+export * from './system-backups.mock';
+export * from './audit-logs.mock';
+export * from './student-transactions.mock';
+export * from './student-stats.mock';
+export * from './student-certificates.mock';
+export * from './student-lesson-progress.mock';
+export * from './lesson-discussions.mock';
+export * from './cart-items.mock';
+export * from './course-questions.mock';
+export * from './student-homework.mock';
+export * from './class-documents.mock';
+export * from './class-announcements.mock';
+
+// System tables (NEW)
+export * from './system.mock';
 
 // New tables (Phase 1 requirement)
 export interface AdminLog {

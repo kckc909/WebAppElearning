@@ -1,27 +1,29 @@
-import React from 'react';
+﻿import React, { useEffect } from 'react';
 import { CheckCircle, XCircle, Clock, FileText } from 'lucide-react';
+import { useInstructorApplications, useApproveInstructor } from '../../../hooks/useInstructorApplications';
 
 const AdminInstructorVerification: React.FC = () => {
-    const applications = [
-        {
-            id: 1,
-            name: 'Lê Văn C',
-            email: 'levanc@email.com',
-            expertise: 'Web Development',
-            experience: '5 years',
-            submittedDate: '2024-12-14',
-            status: 'pending',
-        },
-        {
-            id: 2,
-            name: 'Phạm Thị D',
-            email: 'phamthid@email.com',
-            expertise: 'Data Science',
-            experience: '3 years',
-            submittedDate: '2024-12-13',
-            status: 'pending',
-        },
-    ];
+    const { data: applications, loading, error, refetch } = useInstructorApplications('pending');
+    const { approveInstructor, loading: approving } = useApproveInstructor();
+
+    useEffect(() => {
+        refetch();
+    }, []);
+
+    const handleApprove = async (userId: number) => {
+        const result = await approveInstructor(userId);
+        if (result.success) {
+            refetch();
+        }
+    };
+
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
 
     return (
         <div className="space-y-6">
@@ -37,29 +39,29 @@ const AdminInstructorVerification: React.FC = () => {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <CheckCircle className="w-8 h-8 text-green-600 mb-2" />
                     <p className="text-sm text-gray-600">Đã duyệt</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">45</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">-</p>
                 </div>
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <XCircle className="w-8 h-8 text-red-600 mb-2" />
                     <p className="text-sm text-gray-600">Từ chối</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">8</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">-</p>
                 </div>
             </div>
 
             {/* Applications */}
             <div className="space-y-4">
-                {applications.map((app) => (
+                {applications.map((app: any) => (
                     <div key={app.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900">{app.name}</h3>
+                                <h3 className="text-lg font-bold text-gray-900">{app.full_name}</h3>
                                 <p className="text-sm text-gray-600">{app.email}</p>
                                 <div className="flex gap-4 mt-2 text-sm text-gray-600">
-                                    <span>Chuyên môn: {app.expertise}</span>
-                                    <span>•</span>
-                                    <span>Kinh nghiệm: {app.experience}</span>
+                                    <span>Username: {app.username}</span>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-2">Gửi ngày: {new Date(app.submittedDate).toLocaleDateString('vi-VN')}</p>
+                                <p className="text-xs text-gray-500 mt-2">
+                                    Gửi ngày: {app.created_at ? new Date(app.created_at).toLocaleDateString('vi-VN') : '-'}
+                                </p>
                             </div>
                             <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
                                 Chờ xác minh
@@ -70,7 +72,11 @@ const AdminInstructorVerification: React.FC = () => {
                                 <FileText className="w-4 h-4" />
                                 Xem hồ sơ
                             </button>
-                            <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2">
+                            <button
+                                onClick={() => handleApprove(app.id)}
+                                disabled={approving}
+                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2 disabled:opacity-50"
+                            >
                                 <CheckCircle className="w-4 h-4" />
                                 Duyệt
                             </button>
@@ -81,6 +87,12 @@ const AdminInstructorVerification: React.FC = () => {
                         </div>
                     </div>
                 ))}
+
+                {applications.length === 0 && (
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                        <p className="text-gray-500">Không có đơn đăng ký nào đang chờ xác minh</p>
+                    </div>
+                )}
             </div>
         </div>
     );

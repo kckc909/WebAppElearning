@@ -1,0 +1,20 @@
+#!/bin/bash
+# Pre-commit hook - DISABLED until Phase 9
+# Uncomment lines below to activate enforcement
+
+# echo "Checking repository sizes..."
+# for file in website/data/repositories/*.ts; do
+#   lines=$(wc -l < "$file")
+#   if [ $lines -gt 300 ]; then
+#     echo "ERROR: $file exceeds 300 lines ($lines)"
+#     exit 1
+#   fi
+# done
+
+# echo "Checking for deprecated imports..."
+# if grep -r "from.*mockData\|from.*DEPRECATED_mock_temp" website/; then
+#   echo "ERROR: Deprecated imports found"
+#   exit 1
+# fi
+
+# echo "✅ Pre-commit checks passed (when enabled)"

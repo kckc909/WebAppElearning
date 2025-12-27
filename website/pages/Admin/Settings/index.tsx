@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Settings as SettingsIcon, Globe, Mail, DollarSign, Shield, Database, Bell, Lock, Eye, EyeOff } from 'lucide-react';
+import ApiModeSwitch from '../../../components/ApiModeSwitch';
 
 const AdminSettings: React.FC = () => {
     const [showSmtpPassword, setShowSmtpPassword] = useState(false);
@@ -371,6 +372,21 @@ const AdminSettings: React.FC = () => {
                             <strong>Lưu ý:</strong> Bản sao lưu gần nhất: 2024-12-14 10:30 AM
                         </p>
                     </div>
+                </div>
+            </div>
+
+            {/* API Mode Settings */}
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center mb-6">
+                    <Globe className="w-6 h-6 text-blue-600 mr-3" />
+                    <h2 className="text-xl font-bold">Chế độ API</h2>
+                </div>
+
+                <div className="space-y-4">
+                    <p className="text-gray-600">
+                        Chuyển đổi giữa chế độ Mock Data và Database thực tế
+                    </p>
+                    <ApiModeSwitch />
                 </div>
             </div>
         </div>

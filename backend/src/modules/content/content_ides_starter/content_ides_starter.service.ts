@@ -10,7 +10,14 @@ export class ContentIdesStarter_Service {
     async getAll()
         : Promise<any> {
 
-        const startersFound = await this.prisma.content_ides_starter.findMany();
+        const startersFound = await this.prisma.content_ides_starter.findMany({
+            include: {
+                test_cases: {
+                    where: { is_hidden: false },
+                    orderBy: { order_index: 'asc' }
+                }
+            }
+        });
 
         return startersFound;
     }
@@ -19,7 +26,13 @@ export class ContentIdesStarter_Service {
         : Promise<any> {
 
         const starterFound = await this.prisma.content_ides_starter.findFirst({
-            where: { id: id }
+            where: { id: id },
+            include: {
+                test_cases: {
+                    where: { is_hidden: false },
+                    orderBy: { order_index: 'asc' }
+                }
+            }
         })
 
         return starterFound;
@@ -29,7 +42,13 @@ export class ContentIdesStarter_Service {
         : Promise<any> {
 
         const startersFound = await this.prisma.content_ides_starter.findMany({
-            where: { content_id: contentId }
+            where: { content_id: contentId },
+            include: {
+                test_cases: {
+                    where: { is_hidden: false },
+                    orderBy: { order_index: 'asc' }
+                }
+            }
         })
 
         return startersFound;
@@ -42,6 +61,12 @@ export class ContentIdesStarter_Service {
             where: {
                 content_id: contentId,
                 language: language
+            },
+            include: {
+                test_cases: {
+                    where: { is_hidden: false },
+                    orderBy: { order_index: 'asc' }
+                }
             }
         })
 

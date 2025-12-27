@@ -1,11 +1,17 @@
-import React from 'react';
-import { Shield, Users, Settings } from 'lucide-react';
+﻿import React from 'react';
+import { useAccounts } from '../../../hooks/useAccounts';
 
 const SuperAdminManagement: React.FC = () => {
-    const admins = [
-        { id: 1, name: 'Admin 1', email: 'admin1@milearn.com', role: 'Admin', status: 'active' },
-        { id: 2, name: 'Admin 2', email: 'admin2@milearn.com', role: 'Admin', status: 'active' },
-    ];
+    // Use accounts hook with role filter (2 = Admin)
+    const { accounts: admins, loading, error } = useAccounts({ role: 2 });
+
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
 
     return (
         <div className="space-y-6">
@@ -24,12 +30,15 @@ const SuperAdminManagement: React.FC = () => {
                     <tbody className="divide-y">
                         {admins.map((admin) => (
                             <tr key={admin.id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 text-sm font-medium">{admin.name}</td>
+                                <td className="px-6 py-4 text-sm font-medium">{admin.full_name}</td>
                                 <td className="px-6 py-4 text-sm">{admin.email}</td>
-                                <td className="px-6 py-4 text-sm">{admin.role}</td>
+                                <td className="px-6 py-4 text-sm">Admin</td>
                                 <td className="px-6 py-4">
-                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                                        Hoạt động
+                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${admin.status === 1
+                                        ? 'bg-green-100 text-green-700'
+                                        : 'bg-red-100 text-red-700'
+                                        }`}>
+                                        {admin.status === 1 ? 'Hoạt động' : 'Tạm khóa'}
                                     </span>
                                 </td>
                             </tr>

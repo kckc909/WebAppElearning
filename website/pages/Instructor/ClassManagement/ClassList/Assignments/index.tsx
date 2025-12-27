@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { FileText, CheckCircle } from 'lucide-react';
 
 const InstructorClassAssignments: React.FC = () => {

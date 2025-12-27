@@ -4,13 +4,7 @@
  * Seedable directly to database
  */
 
-// Enum mapping (must match Prisma)
-export enum UserRole {
-    SUPER_ADMIN = 'SUPER_ADMIN',  // -1 in old system
-    ADMIN = 'ADMIN',               // 0
-    INSTRUCTOR = 'INSTRUCTOR',     // 1
-    STUDENT = 'STUDENT'            // 2
-}
+import { UserRole } from './enums.mock';
 
 export interface Account {
     id: number;
@@ -152,6 +146,252 @@ export const ACCOUNTS: Account[] = [
         username: 'mai.bui',
         created_at: '2024-03-01T00:00:00.000Z',
         updated_at: '2024-03-01T00:00:00.000Z'
+    },
+
+    // === MORE INSTRUCTORS (Programming) ===
+    {
+        id: 11,
+        full_name: 'Lê Văn Hùng',
+        email: 'hung.le@milearn.com',
+        password_hash: '000000',
+        role: UserRole.INSTRUCTOR,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HungLe',
+        username: 'hung.le',
+        created_at: '2024-03-05T00:00:00.000Z',
+        updated_at: '2024-03-05T00:00:00.000Z'
+    },
+    {
+        id: 12,
+        full_name: 'Trần Thị Hoa',
+        email: 'hoa.tran@milearn.com',
+        password_hash: '000000',
+        role: UserRole.INSTRUCTOR,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HoaTran',
+        username: 'hoa.tran',
+        created_at: '2024-03-10T00:00:00.000Z',
+        updated_at: '2024-03-10T00:00:00.000Z'
+    },
+    {
+        id: 13,
+        full_name: 'Nguyễn Đức Anh',
+        email: 'anh.nguyen@milearn.com',
+        password_hash: '000000',
+        role: UserRole.INSTRUCTOR,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=AnhNguyen',
+        username: 'anh.nguyen',
+        created_at: '2024-03-15T00:00:00.000Z',
+        updated_at: '2024-03-15T00:00:00.000Z'
+    },
+
+    // === MORE INSTRUCTORS (Language) ===
+    {
+        id: 14,
+        full_name: 'Phạm Thị Lan Anh',
+        email: 'lananh.pham@milearn.com',
+        password_hash: '000000',
+        role: UserRole.INSTRUCTOR,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=LanAnh',
+        username: 'lananh.pham',
+        created_at: '2024-03-20T00:00:00.000Z',
+        updated_at: '2024-03-20T00:00:00.000Z'
+    },
+    {
+        id: 15,
+        full_name: 'Võ Minh Tuấn',
+        email: 'tuan.vo@milearn.com',
+        password_hash: '000000',
+        role: UserRole.INSTRUCTOR,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=TuanVo',
+        username: 'tuan.vo',
+        created_at: '2024-03-25T00:00:00.000Z',
+        updated_at: '2024-03-25T00:00:00.000Z'
+    },
+
+    // === MORE STUDENTS (20 more) ===
+    {
+        id: 16,
+        full_name: 'Lê Thị Thu',
+        email: 'thu.le@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ThuLe',
+        username: 'thu.le',
+        created_at: '2024-04-01T00:00:00.000Z',
+        updated_at: '2024-04-01T00:00:00.000Z'
+    },
+    {
+        id: 17,
+        full_name: 'Trần Văn Nam',
+        email: 'nam.tran@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=NamTran',
+        username: 'nam.tran',
+        created_at: '2024-04-05T00:00:00.000Z',
+        updated_at: '2024-04-05T00:00:00.000Z'
+    },
+    {
+        id: 18,
+        full_name: 'Nguyễn Thị Hằng',
+        email: 'hang.nguyen@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HangNguyen',
+        username: 'hang.nguyen',
+        created_at: '2024-04-10T00:00:00.000Z',
+        updated_at: '2024-04-10T00:00:00.000Z'
+    },
+    {
+        id: 19,
+        full_name: 'Phạm Văn Đức',
+        email: 'duc.pham@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=DucPham',
+        username: 'duc.pham',
+        created_at: '2024-04-15T00:00:00.000Z',
+        updated_at: '2024-04-15T00:00:00.000Z'
+    },
+    {
+        id: 20,
+        full_name: 'Võ Thị Linh',
+        email: 'linh.vo@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=LinhVo',
+        username: 'linh.vo',
+        created_at: '2024-04-20T00:00:00.000Z',
+        updated_at: '2024-04-20T00:00:00.000Z'
+    },
+    {
+        id: 21,
+        full_name: 'Đặng Văn Hải',
+        email: 'hai.dang@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HaiDang',
+        username: 'hai.dang',
+        created_at: '2024-04-25T00:00:00.000Z',
+        updated_at: '2024-04-25T00:00:00.000Z'
+    },
+    {
+        id: 22,
+        full_name: 'Bùi Thị Nga',
+        email: 'nga.bui@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=NgaBui',
+        username: 'nga.bui',
+        created_at: '2024-05-01T00:00:00.000Z',
+        updated_at: '2024-05-01T00:00:00.000Z'
+    },
+    {
+        id: 23,
+        full_name: 'Lê Văn Tú',
+        email: 'tu.le@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=TuLe',
+        username: 'tu.le',
+        created_at: '2024-05-05T00:00:00.000Z',
+        updated_at: '2024-05-05T00:00:00.000Z'
+    },
+    {
+        id: 24,
+        full_name: 'Trần Thị Phương',
+        email: 'phuong.tran@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=PhuongTran',
+        username: 'phuong.tran',
+        created_at: '2024-05-10T00:00:00.000Z',
+        updated_at: '2024-05-10T00:00:00.000Z'
+    },
+    {
+        id: 25,
+        full_name: 'Nguyễn Văn Quân',
+        email: 'quan.nguyen@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=QuanNguyen',
+        username: 'quan.nguyen',
+        created_at: '2024-05-15T00:00:00.000Z',
+        updated_at: '2024-05-15T00:00:00.000Z'
+    },
+    {
+        id: 26,
+        full_name: 'Phạm Thị Hồng',
+        email: 'hong.pham@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HongPham',
+        username: 'hong.pham',
+        created_at: '2024-05-20T00:00:00.000Z',
+        updated_at: '2024-05-20T00:00:00.000Z'
+    },
+    {
+        id: 27,
+        full_name: 'Võ Văn Thắng',
+        email: 'thang.vo@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ThangVo',
+        username: 'thang.vo',
+        created_at: '2024-05-25T00:00:00.000Z',
+        updated_at: '2024-05-25T00:00:00.000Z'
+    },
+    {
+        id: 28,
+        full_name: 'Đặng Thị Lan',
+        email: 'lan.dang@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=LanDang',
+        username: 'lan.dang',
+        created_at: '2024-06-01T00:00:00.000Z',
+        updated_at: '2024-06-01T00:00:00.000Z'
+    },
+    {
+        id: 29,
+        full_name: 'Bùi Văn Hùng',
+        email: 'hung.bui@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HungBui',
+        username: 'hung.bui',
+        created_at: '2024-06-05T00:00:00.000Z',
+        updated_at: '2024-06-05T00:00:00.000Z'
+    },
+    {
+        id: 30,
+        full_name: 'Lê Thị Tâm',
+        email: 'tam.le@gmail.com',
+        password_hash: '000000',
+        role: UserRole.STUDENT,
+        status: 1,
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=TamLe',
+        username: 'tam.le',
+        created_at: '2024-06-10T00:00:00.000Z',
+        updated_at: '2024-06-10T00:00:00.000Z'
     }
 ];
 

@@ -1,4 +1,4 @@
-import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
+﻿import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 import GlobalErrorPage from "./ErrorPage";
 
 export default function ErrorBoundary({ children }: any) {

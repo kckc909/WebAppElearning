@@ -47,6 +47,7 @@ import { Certificates_Module } from './modules/certificates/certificates/certifi
 import { MediaModule } from './modules/content/media/media.module.js';
 import { ContentIdes_Module } from './modules/content/content_ides/content_ides.module.js';
 import { ContentIdesStarter_Module } from './modules/content/content_ides_starter/content_ides_starter.module.js';
+import { ContentIdesTestCasesModule } from './modules/content/content_ides_test_cases/content_ides_test_cases.module.js';
 
 // === Communication ===
 import { Messages_Module } from './modules/communication/messages/messages.module.js';
@@ -59,6 +60,11 @@ import { AdminLogs_Module } from './modules/admin/admin_logs/admin_logs.module.j
 import { Stats_Module } from './modules/admin/stats/stats.module.js';
 import { InstructorVerifications_Module } from './modules/admin/instructor_verifications/instructor_verifications.module.js';
 import { HelperModule } from './modules/admin/helper/helper.module.js';
+import { SystemLogsModule } from './modules/admin/system_logs/system_logs.module.js';
+import { SystemSettingsModule } from './modules/admin/system_settings/system_settings.module.js';
+
+// === Classes - Additional ===
+import { AttendanceModule } from './modules/classes/attendance/attendance.module.js';
 
 
 @Module({
@@ -94,6 +100,7 @@ import { HelperModule } from './modules/admin/helper/helper.module.js';
         ClassSubmissions_Module,
         ClassExams_Module,
         ClassExamResults_Module,
+        AttendanceModule,
 
         // === Payments ===
         CheckoutModule,
@@ -109,6 +116,7 @@ import { HelperModule } from './modules/admin/helper/helper.module.js';
         MediaModule,
         ContentIdes_Module,
         ContentIdesStarter_Module,
+        ContentIdesTestCasesModule,
 
         // === Communication ===
         Messages_Module,
@@ -120,6 +128,8 @@ import { HelperModule } from './modules/admin/helper/helper.module.js';
         Stats_Module,
         InstructorVerifications_Module,
         HelperModule,
+        SystemLogsModule,
+        SystemSettingsModule,
     ],
     controllers: [Accounts_Controller],
     providers: [PrismaService, Accounts_Service, EmailService],

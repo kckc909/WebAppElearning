@@ -1,20 +1,43 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link } from "react-router-dom";
 import CourseProgressCard from "./CourseProgressCard";
 import { EnrolledCourse } from "../../../types/types";
 import { useMyEnrollments } from '../../../hooks/useApi';
+import { useAuth } from '../../../contexts/AuthContext';
 import { BookOpen, Loader2 } from "lucide-react";
 import { ErrorState } from '../../../components/DataStates';
 
-// Mock user ID - sẽ thay bằng user từ auth context
-const CURRENT_USER_ID = 7;
-
 export default function Student_Courses() {
     const [filter, setFilter] = useState<'all' | 'learning' | 'completed'>('all');
-    const { data: enrollments, loading, error, refetch } = useMyEnrollments(CURRENT_USER_ID);
+
+    const { user } = useAuth();
+    const userId = user?.id || 7;
+
+    // 🐛 DEBUG: Log user info
+    console.log('=== MY COURSES DEBUG ===');
+    console.log('User from AuthContext:', user);
+    console.log('User ID:', userId);
+    console.log('sessionStorage Account:', sessionStorage.getItem('Account'));
+
+    const { data: enrollments, loading, error, refetch } = useMyEnrollments(userId);
+
+    // 🐛 DEBUG: Log API response
+    console.log('Enrollments data:', enrollments);
+    console.log('Enrollments type:', typeof enrollments);
+    console.log('Enrollments is array?:', Array.isArray(enrollments));
+    console.log('Enrollments keys:', enrollments ? Object.keys(enrollments) : 'null');
+    console.log('Enrollments.data:', enrollments?.data);
+    console.log('Enrollments count:', Array.isArray(enrollments) ? enrollments.length : 0);
+    console.log('Loading:', loading);
+    console.log('Error:', error);
 
     // Đảm bảo enrollments luôn là array
-    const enrollmentList = Array.isArray(enrollments) ? enrollments : [];
+    // Fix: Backend trả về { success: true, data: [...] } nên cần lấy .data
+    const enrollmentList = Array.isArray(enrollments) 
+        ? enrollments 
+        : (enrollments?.data && Array.isArray(enrollments.data)) 
+            ? enrollments.data 
+            : [];
 
     const filteredCourses = enrollmentList.filter((course: any) => {
         if (filter === 'learning') return !course.completed;
@@ -67,6 +90,40 @@ export default function Student_Courses() {
                     {filteredCourses.map((course: EnrolledCourse) => (
                         <CourseProgressCard key={course.id} course={course} />
                     ))}
+                    
+                    {/* Explore Courses Card */}
+                    <Link 
+                        to="/courses"
+                        className="group relative bg-white rounded-xl border-2 border-dashed border-slate-300 hover:border-primary transition-all duration-300 overflow-hidden flex flex-col items-center justify-center p-8 min-h-[320px] hover:shadow-lg"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        <div className="relative z-10 flex flex-col items-center text-center">
+                            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <BookOpen className="w-8 h-8 text-primary" />
+                            </div>
+                            
+                            <h3 className="text-lg font-bold text-slate-700 group-hover:text-primary transition-colors mb-2">
+                                Khám phá khóa học
+                            </h3>
+                            
+                            <p className="text-sm text-slate-500 mb-4">
+                                Tìm kiếm và đăng ký khóa học mới
+                            </p>
+                            
+                            <div className="flex items-center gap-2 text-primary font-medium text-sm group-hover:gap-3 transition-all">
+                                <span>Xem tất cả</span>
+                                <svg 
+                                    className="w-4 h-4 group-hover:translate-x-1 transition-transform" 
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </Link>
                 </div>
             ) : (
                 <div className="text-center py-20 bg-white rounded-lg border border-slate-200 border-dashed">

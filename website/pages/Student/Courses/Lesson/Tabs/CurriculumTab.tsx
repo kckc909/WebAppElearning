@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import React, { useState } from 'react';
 import { CheckCircle, Lock, Play, Clock, ChevronDown, ChevronUp } from 'lucide-react';
-import { student_routes } from '../../../../page_routes';
 
 interface Lesson {
     id: number;
@@ -21,10 +19,11 @@ interface Section {
 interface CurriculumTabProps {
     sections: Section[];
     courseId: string;
+    currentLessonId?: number;
+    onLessonClick?: (lessonId: number) => void;
 }
 
-const CurriculumTab: React.FC<CurriculumTabProps> = ({ sections, courseId }) => {
-    const navigate = useNavigate();
+const CurriculumTab: React.FC<CurriculumTabProps> = ({ sections, courseId, currentLessonId, onLessonClick }) => {
     const [expandedSections, setExpandedSections] = useState<number[]>([1]);
 
     const toggleSection = (sectionId: number) => {
@@ -90,54 +89,56 @@ const CurriculumTab: React.FC<CurriculumTabProps> = ({ sections, courseId }) => 
                                 {/* Lessons List */}
                                 {isExpanded && (
                                     <div className="p-2 space-y-1">
-                                        {section.lessons.map((lesson) => (
-                                            <button
-                                                key={lesson.id}
-                                                onClick={() => !lesson.isLocked && navigate('/' + student_routes.lesson(courseId, lesson.id))}
-                                                disabled={lesson.isLocked}
-                                                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all ${lesson.isCurrent
+                                        {section.lessons.map((lesson) => {
+                                            const isCurrent = currentLessonId === lesson.id;
+                                            return (
+                                                <button
+                                                    key={lesson.id}
+                                                    onClick={() => onLessonClick?.(lesson.id)}
+                                                    className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all ${isCurrent
                                                         ? 'bg-primary/10 border border-primary'
                                                         : lesson.isCompleted
                                                             ? 'bg-green-50 hover:bg-green-100'
                                                             : lesson.isLocked
                                                                 ? 'bg-slate-50 opacity-60 cursor-not-allowed'
                                                                 : 'bg-white hover:bg-slate-50'
-                                                    }`}
-                                            >
-                                                <div
-                                                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${lesson.isCurrent
+                                                        }`}
+                                                >
+                                                    <div
+                                                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isCurrent
                                                             ? 'bg-primary text-white'
                                                             : lesson.isCompleted
                                                                 ? 'bg-green-600 text-white'
                                                                 : lesson.isLocked
                                                                     ? 'bg-slate-300 text-slate-500'
                                                                     : 'bg-slate-200 text-slate-600'
-                                                        }`}
-                                                >
-                                                    {lesson.isCompleted ? (
-                                                        <CheckCircle className="w-4 h-4" />
-                                                    ) : lesson.isCurrent ? (
-                                                        <Play className="w-4 h-4" />
-                                                    ) : lesson.isLocked ? (
-                                                        <Lock className="w-4 h-4" />
-                                                    ) : (
-                                                        <Play className="w-4 h-4" />
-                                                    )}
-                                                </div>
-                                                <div className="flex-1 text-left">
-                                                    <h4
-                                                        className={`font-medium text-sm ${lesson.isCurrent ? 'text-primary' : 'text-secondary'
                                                             }`}
                                                     >
-                                                        {lesson.title}
-                                                    </h4>
-                                                    <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                                                        <Clock className="w-3 h-3" />
-                                                        <span>{lesson.duration} phút</span>
+                                                        {lesson.isCompleted ? (
+                                                            <CheckCircle className="w-4 h-4" />
+                                                        ) : isCurrent ? (
+                                                            <Play className="w-4 h-4" />
+                                                        ) : lesson.isLocked ? (
+                                                            <Lock className="w-4 h-4" />
+                                                        ) : (
+                                                            <Play className="w-4 h-4" />
+                                                        )}
                                                     </div>
-                                                </div>
-                                            </button>
-                                        ))}
+                                                    <div className="flex-1 text-left">
+                                                        <h4
+                                                            className={`font-medium text-sm ${isCurrent ? 'text-primary' : 'text-secondary'
+                                                                }`}
+                                                        >
+                                                            {lesson.title}
+                                                        </h4>
+                                                        <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                                                            <Clock className="w-3 h-3" />
+                                                            <span>{lesson.duration} phút</span>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </div>

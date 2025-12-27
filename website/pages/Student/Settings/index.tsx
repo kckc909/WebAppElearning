@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Lock, Mail, Bell, Globe, Eye, EyeOff, Trash2, Shield, Moon, Sun, Type, AlertTriangle } from 'lucide-react';
+import { accService } from '../../../API';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const StudentSettings: React.FC = () => {
+    const { user } = useAuth();
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordSuccess, setPasswordSuccess] = useState('');
 
     const [settings, setSettings] = useState({
         // Email Preferences
@@ -35,7 +40,7 @@ const StudentSettings: React.FC = () => {
 
         // Language & Region
         language: 'vi',
-        timezone: 'Asia/Ho_Chi_Minh',
+        timezone: 'Asia/Ha_Noi',
     });
 
     const handleToggle = (key: string) => {
@@ -52,16 +57,59 @@ const StudentSettings: React.FC = () => {
         }));
     };
 
-    const handlePasswordChange = () => {
-        if (newPassword !== confirmPassword) {
-            alert('Mật khẩu mới không khớp!');
+    const handlePasswordChange = async () => {
+        setPasswordError('');
+        setPasswordSuccess('');
+
+        // Trim passwords
+        const trimmedCurrentPassword = currentPassword.trim();
+        const trimmedNewPassword = newPassword.trim();
+        const trimmedConfirmPassword = confirmPassword.trim();
+
+        if (!trimmedCurrentPassword || !trimmedNewPassword || !trimmedConfirmPassword) {
+            setPasswordError('Vui lòng điền đầy đủ thông tin');
             return;
         }
-        // TODO: Call API to change password
-        console.log('Changing password...');
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
+
+        // Validate không có space trong password
+        if (trimmedNewPassword.includes(' ')) {
+            setPasswordError('Mật khẩu không được chứa khoảng trắng');
+            return;
+        }
+
+        if (trimmedNewPassword.length < 6) {
+            setPasswordError('Mật khẩu mới phải có ít nhất 6 ký tự');
+            return;
+        }
+
+        if (trimmedNewPassword !== trimmedConfirmPassword) {
+            setPasswordError('Mật khẩu xác nhận không khớp!');
+            return;
+        }
+
+        if (!user?.id) {
+            setPasswordError('Không tìm thấy thông tin người dùng');
+            return;
+        }
+
+        try {
+            // Call API to change password
+            const response = await accService.changePassword(user.id, {
+                old_password: trimmedCurrentPassword,
+                new_password: trimmedNewPassword,
+            });
+
+            if (response.success) {
+                setPasswordSuccess('Đổi mật khẩu thành công!');
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+            } else {
+                setPasswordError(response.error || 'Không thể đổi mật khẩu. Vui lòng kiểm tra lại mật khẩu hiện tại.');
+            }
+        } catch (error: any) {
+            setPasswordError(error.response?.data?.message || error.message || 'Không thể đổi mật khẩu. Vui lòng kiểm tra lại mật khẩu hiện tại.');
+        }
     };
 
     const handleDeleteAccount = () => {
@@ -156,7 +204,7 @@ const StudentSettings: React.FC = () => {
                                 {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                             </button>
                         </div>
-                        <p className="text-xs text-slate-500 mt-1">Mật khẩu phải có ít nhất 8 ký tự</p>
+                        <p className="text-xs text-slate-500 mt-1">Mật khẩu phải có ít nhất 6 ký tự</p>
                     </div>
 
                     <div>
@@ -181,9 +229,22 @@ const StudentSettings: React.FC = () => {
                         </div>
                     </div>
 
+                    {passwordError && (
+                        <div className="px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                            {passwordError}
+                        </div>
+                    )}
+
+                    {passwordSuccess && (
+                        <div className="px-4 py-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+                            {passwordSuccess}
+                        </div>
+                    )}
+
                     <button
                         onClick={handlePasswordChange}
-                        className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
+                        className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={!currentPassword || !newPassword || !confirmPassword}
                     >
                         Cập nhật mật khẩu
                     </button>
@@ -324,8 +385,8 @@ const StudentSettings: React.FC = () => {
                                     key={theme}
                                     onClick={() => handleSelectChange('theme', theme)}
                                     className={`px-4 py-3 rounded-lg border-2 transition-colors ${settings.theme === theme
-                                            ? 'border-primary bg-blue-50'
-                                            : 'border-slate-200 hover:border-slate-300'
+                                        ? 'border-primary bg-blue-50'
+                                        : 'border-slate-200 hover:border-slate-300'
                                         }`}
                                 >
                                     <div className="flex flex-col items-center">
@@ -396,7 +457,8 @@ const StudentSettings: React.FC = () => {
                             onChange={(e) => handleSelectChange('timezone', e.target.value)}
                             className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                         >
-                            <option value="Asia/Ho_Chi_Minh">Ho Chi Minh (GMT+7)</option>
+                            <option value="Asia/Ha_Noi">Hà Nội (GMT+7)</option>
+                            <option value="Asia/Ho_Chi_Minh">Hồ Chí Minh (GMT+7)</option>
                             <option value="Asia/Bangkok">Bangkok (GMT+7)</option>
                             <option value="Asia/Singapore">Singapore (GMT+8)</option>
                             <option value="Asia/Tokyo">Tokyo (GMT+9)</option>

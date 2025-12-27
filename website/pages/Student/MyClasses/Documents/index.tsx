@@ -1,11 +1,35 @@
-import React from 'react';
+﻿import React, { useEffect } from 'react';
 import { FileText, Download } from 'lucide-react';
+import { useClassDocuments } from '../../../../hooks/useClassDocuments';
 
 const StudentDocuments: React.FC = () => {
-    const documents = [
-        { id: 1, name: 'Lecture Notes - Week 6.pdf', className: 'Web Dev A1', size: '2.5 MB', date: '2024-12-01' },
-        { id: 2, name: 'React Hooks Cheatsheet.pdf', className: 'Web Dev A1', size: '1.2 MB', date: '2024-12-05' },
-    ];
+    // TODO: Get class ID from params/context
+    const classId = 1;
+
+    // Get documents from API hook
+    const { data: documentsData, isLoading, error, refetch } = useClassDocuments(classId);
+
+    useEffect(() => {
+        if (classId) {
+            refetch();
+        }
+    }, [classId]);
+
+    const documents = (documentsData || []).map((doc: any) => ({
+        id: doc.id,
+        name: doc.name || doc.title,
+        className: doc.class_name,
+        size: doc.size || 'N/A',
+        date: doc.uploaded_at || doc.created_at,
+    }));
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {(error as Error).message}</div>;
+    }
 
     return (
         <div className="max-w-7xl mx-auto space-y-6">
@@ -27,6 +51,14 @@ const StudentDocuments: React.FC = () => {
                     </div>
                 ))}
             </div>
+
+            {documents.length === 0 && (
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+                    <FileText className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-slate-900 mb-2">Chưa có tài liệu</h3>
+                    <p className="text-slate-600">Tài liệu học tập sẽ hiển thị ở đây</p>
+                </div>
+            )}
         </div>
     );
 };

@@ -14,7 +14,7 @@ export interface Account {
     email: string;
     password_hash: string;
     avatar_url?: string | null;
-    role?: number | null;
+    role?: number | null | string ;
     status?: number | null;
     created_at?: DateTimeString | null;
     updated_at?: DateTimeString | null;

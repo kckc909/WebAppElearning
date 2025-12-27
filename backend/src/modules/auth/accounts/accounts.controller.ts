@@ -1,9 +1,10 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UnauthorizedException, UsePipes, ValidationPipe } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UnauthorizedException, UsePipes, ValidationPipe, Req } from "@nestjs/common";
 import { Accounts_Service } from "./accounts.service.js";
-import { AccountCreateForm, AccountUpdateForm, CheckExistsForm, LoginForm } from "./accounts.dto.js";
+import { AccountCreateForm, AccountUpdateForm, CheckExistsForm, LoginForm, RegisterForm } from "./accounts.dto.js";
 import { IdParam } from "../../../../types/types.pipe.js";
 import { HelperService } from "../../admin/helper/helper.service.js";
 import { EmailService } from "../../communication/emailService/email.service.js";
+import type { Request } from 'express';
 
 @Controller('accounts')
 
@@ -42,10 +43,17 @@ export class Accounts_Controller {
             // tạo mk random
             const new_password = this._helper.generateRandomPassword()
             body.password_hash = new_password
-            this._email.sendPasswordEmail(body.email, body.password_hash);
-
+            
             // tạo trong db
             const created = await this._service.create(body)
+
+            // Gửi email với thông tin tài khoản
+            await this._email.sendPasswordEmail(
+                body.email, 
+                new_password,
+                body.username,
+                body.full_name
+            );
 
             return created
 
@@ -91,7 +99,7 @@ export class Accounts_Controller {
     }
 
     @Post('login')
-    async login(@Body() body: LoginForm) {
+    async login(@Body() body: LoginForm, @Req() req: Request) {
         // Trim username và password
         const username = body.username?.trim();
         const password = body.password?.trim();
@@ -104,8 +112,40 @@ export class Accounts_Controller {
         const accFound = await this._service.getByLoginForm(username, password)
 
         if (accFound) {
+            // Log successful login to audit_logs
+            await this._service.logAuditAction({
+                user_id: accFound.id,
+                action: 'LOGIN',
+                resource_type: 'accounts',
+                resource_id: BigInt(accFound.id),
+                new_values: {
+                    username: accFound.username,
+                    role: accFound.role,
+                    login_time: new Date().toISOString()
+                },
+                ip_address: req.ip || req.socket.remoteAddress,
+                user_agent: req.headers['user-agent']
+            });
+
+            // Update last_login_at
+            await this._service.updateLastLogin(accFound.id);
+
             return accFound;
         } else {
+            // Log failed login attempt
+            await this._service.logAuditAction({
+                user_id: null,
+                action: 'LOGIN_FAILED',
+                resource_type: 'accounts',
+                resource_id: null,
+                new_values: {
+                    username: username,
+                    reason: 'Invalid credentials'
+                },
+                ip_address: req.ip || req.socket.remoteAddress,
+                user_agent: req.headers['user-agent']
+            });
+
             throw new UnauthorizedException('Tên đăng nhập hoặc mật khẩu không đúng');
         }
     }
@@ -123,6 +163,52 @@ export class Accounts_Controller {
         const usernameFound = await this._service.getByUsername(username)
         if (usernameFound) {
             return { error: "Username đã được sử dụng trong hệ thống! " }
+        }
+    }
+
+    @Post('register')
+    async register(@Body() body: RegisterForm) {
+        try {
+            // Validate email và username chưa tồn tại
+            const emailFound = await this._service.getByEmail(body.email);
+            if (emailFound) {
+                throw new BadRequestException('Email đã được sử dụng trong hệ thống!');
+            }
+
+            const usernameFound = await this._service.getByUsername(body.username);
+            if (usernameFound) {
+                throw new BadRequestException('Username đã được sử dụng trong hệ thống!');
+            }
+
+            // Lưu password gốc để gửi email
+            const plainPassword = body.password_hash;
+
+            // Tạo data cho account
+            const accountData: AccountCreateForm = {
+                ...body,
+                role: 'STUDENT',
+                status: 1,
+            };
+
+            // Tạo tài khoản (service sẽ tự hash password)
+            const created = await this._service.create(accountData);
+
+            // Gửi email thông báo đăng ký thành công với thông tin tài khoản
+            await this._email.sendPasswordEmail(
+                body.email,
+                plainPassword, // Gửi password gốc (chưa hash)
+                body.username,
+                body.full_name
+            );
+
+            return {
+                success: true,
+                message: 'Đăng ký thành công! Thông tin tài khoản đã được gửi đến email của bạn.',
+                data: created
+            };
+
+        } catch (e) {
+            throw new BadRequestException(e.message || 'Đăng ký thất bại');
         }
     }
 

@@ -1,25 +1,44 @@
-import React, { useState } from 'react';
-import { Star } from 'lucide-react';
+﻿import React, { useState } from 'react';
+import { Star, MessageSquare } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { useMyCourseReviews } from '../../../../hooks/useMyCourseReviews';
 
 const StudentCourseReviews: React.FC = () => {
     const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState('');
 
-    const reviews = [
-        {
-            id: 1,
-            studentName: 'Nguyễn Văn A',
-            rating: 5,
-            comment: 'Khóa học rất tuyệt vời! Giảng viên dạy rất dễ hiểu.',
-            date: '2024-12-10',
-        },
-        {
-            id: 2,
-            studentName: 'Trần Thị B',
-            rating: 4,
-            comment: 'Nội dung hay, nhưng cần thêm bài tập thực hành.',
-            date: '2024-12-08',
-        },
-    ];
+    // Get course ID from params
+    const { courseId } = useParams<{ courseId: string }>();
+    const numericCourseId = parseInt(courseId || '1');
+
+    // Get reviews from API hook
+    const { data: reviewsData, isLoading, error, refetch } = useMyCourseReviews(numericCourseId);
+
+    const reviews = (reviewsData || []).map((review: any) => ({
+        id: review.id,
+        studentName: review.student_name || review.studentName || 'Anonymous',
+        rating: review.rating,
+        comment: review.comment || '',
+        date: review.created_at ? new Date(review.created_at).toLocaleDateString('vi-VN') : 'N/A',
+    }));
+
+    const handleSubmitReview = () => {
+        if (rating > 0) {
+            // TODO: Submit review via API
+            console.log('Submit review:', { rating, comment });
+            setRating(0);
+            setComment('');
+            refetch();
+        }
+    };
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {(error as Error).message}</div>;
+    }
 
     return (
         <div className="max-w-7xl mx-auto space-y-6">
@@ -40,8 +59,8 @@ const StudentCourseReviews: React.FC = () => {
                                 >
                                     <Star
                                         className={`w-8 h-8 ${star <= rating
-                                                ? 'text-yellow-500 fill-yellow-500'
-                                                : 'text-slate-300'
+                                            ? 'text-yellow-500 fill-yellow-500'
+                                            : 'text-slate-300'
                                             }`}
                                     />
                                 </button>
@@ -54,9 +73,14 @@ const StudentCourseReviews: React.FC = () => {
                             className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                             rows={4}
                             placeholder="Chia sẻ trải nghiệm của bạn về khóa học..."
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
                         ></textarea>
                     </div>
-                    <button className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+                    <button
+                        onClick={handleSubmitReview}
+                        className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
+                    >
                         Gửi đánh giá
                     </button>
                 </div>
@@ -64,7 +88,7 @@ const StudentCourseReviews: React.FC = () => {
 
             {/* Reviews List */}
             <div className="space-y-4">
-                <h2 className="text-xl font-bold text-slate-900">Đánh giá từ học viên</h2>
+                <h2 className="text-xl font-bold text-slate-900">Đánh giá từ học viên ({reviews.length})</h2>
                 {reviews.map((review) => (
                     <div key={review.id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                         <div className="flex items-start justify-between mb-2">
@@ -82,6 +106,14 @@ const StudentCourseReviews: React.FC = () => {
                     </div>
                 ))}
             </div>
+
+            {reviews.length === 0 && (
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+                    <MessageSquare className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-slate-900 mb-2">Chưa có đánh giá</h3>
+                    <p className="text-slate-600">Hãy là người đầu tiên đánh giá khóa học này!</p>
+                </div>
+            )}
         </div>
     );
 };

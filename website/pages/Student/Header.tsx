@@ -1,9 +1,11 @@
-
+﻿
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { BookOpen, CalendarDays, ChevronDown, ChevronDownIcon, LayoutDashboard, LogOut, Settings, User, Users, GraduationCap, Shield, ShoppingCart } from 'lucide-react';
 import { student_routes, instructor_routes, admin_routes } from '../page_routes'
 import { useAuth } from '../../contexts/AuthContext';
+import { useCart } from '../../contexts/CartContext';
+import { UserRole } from '../../mock-db/enums.mock';
 
 const NavItem: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
   <NavLink
@@ -22,6 +24,7 @@ const Header: React.FC = () => {
   const avatarRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const { itemCount } = useCart();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -46,12 +49,12 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-8">
-            <NavLink to={isAuthenticated ? '/' + student_routes.dashboard : '/' + student_routes.home} className="flex items-center space-x-2">
+            <NavLink to={isAuthenticated ? '/' + student_routes.dashboard : student_routes.home} className="flex items-center space-x-2">
               <img src="/MiLearnLogo.png" alt="MiLearn Logo" className="h-10 w-10" />
               <span className="text-xl font-bold text-secondary">MiLearn</span>
             </NavLink>
             <nav className="hidden items-center space-x-6 md:flex">
-              <NavItem to={isAuthenticated ? '/' + student_routes.dashboard : '/' + student_routes.home}>Trang chủ</NavItem>
+              <NavItem to={isAuthenticated ? '/' + student_routes.dashboard : student_routes.home}>Trang chủ</NavItem>
               <NavItem to={'/' + student_routes.courses}>Khóa học</NavItem>
               <NavItem to={'/' + student_routes.become_instructor}>Trở thành giảng viên</NavItem>
               <NavItem to={'/' + student_routes.about}>Giới thiệu</NavItem>
@@ -61,11 +64,16 @@ const Header: React.FC = () => {
           <div className="hidden items-center space-x-4 md:flex">
             {/* Cart Icon */}
             <Link
-              to={'/' + student_routes.checkout}
+              to="/cart"
               className="relative p-2 text-slate-600 hover:text-primary hover:bg-slate-100 rounded-lg transition-colors"
               title="Giỏ hàng"
             >
               <ShoppingCart className="w-5 h-5" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                  {itemCount > 9 ? '9+' : itemCount}
+                </span>
+              )}
             </Link>
 
             {isAuthenticated ? (
@@ -92,7 +100,7 @@ const Header: React.FC = () => {
                     </Link>
 
                     <Link
-                      to={'/' + student_routes.courses}
+                      to={'/' + student_routes.my_courses}
                       className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
                     >
                       <BookOpen className="mr-3 h-5 w-5" />
@@ -116,7 +124,7 @@ const Header: React.FC = () => {
                     </Link>
 
                     <Link
-                      to={'/' + student_routes.checkout}
+                      to="/cart"
                       className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
                     >
                       <ShoppingCart className="mr-3 h-5 w-5" />
@@ -144,7 +152,7 @@ const Header: React.FC = () => {
                     <div className="border-t border-slate-100 my-1"></div>
 
                     {/* Role-based navigation */}
-                    {user?.role === 1 && (
+                    {(user?.role == UserRole.INSTRUCTOR || user?.role == 1) && (
                       <Link
                         to={'/instructor/' + instructor_routes.dashboard}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
@@ -154,7 +162,7 @@ const Header: React.FC = () => {
                       </Link>
                     )}
 
-                    {user?.role === 0 && (
+                    {(user?.role == UserRole.ADMIN || user?.role == 0) && (
                       <Link
                         to={'/admin/' + admin_routes.dashboard}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
@@ -164,7 +172,7 @@ const Header: React.FC = () => {
                       </Link>
                     )}
 
-                    {(user?.role === 1 || user?.role === 0) && <div className="border-t border-slate-100 my-1"></div>}
+                    {(user?.role == UserRole.INSTRUCTOR || user?.role == UserRole.ADMIN || user?.role == 1 || user?.role == 0) && <div className="border-t border-slate-100 my-1"></div>}
 
                     <button
                       onClick={handleLogout}
@@ -208,7 +216,7 @@ const Header: React.FC = () => {
                   <div>
                     <p className="font-bold text-secondary">{user?.full_name || 'User'}</p>
                     <p className="text-xs text-slate-500">
-                      {user?.role === -1 ? 'Super Admin' : user?.role === 0 ? 'Quản trị viên' : user?.role === 1 ? 'Giảng viên' : 'Học viên'}
+                      {user?.role == UserRole.SUPER_ADMIN ? 'Super Admin' : user?.role == UserRole.ADMIN ? 'Quản trị viên' : user?.role == UserRole.INSTRUCTOR ? 'Giảng viên' : 'Học viên'}
                     </p>
                   </div>
                 </div>
@@ -237,7 +245,7 @@ const Header: React.FC = () => {
                 </Link>
 
                 <Link
-                  to={'/' + student_routes.courses}
+                  to={'/' + student_routes.my_courses}
                   className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
                 >
                   <BookOpen className="mr-3 h-5 w-5" />
@@ -261,7 +269,7 @@ const Header: React.FC = () => {
                 </Link>
 
                 <Link
-                  to={'/' + student_routes.checkout}
+                  to="/cart"
                   className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
                 >
                   <ShoppingCart className="mr-3 h-5 w-5" />
@@ -289,7 +297,7 @@ const Header: React.FC = () => {
                 <div className="border-t border-slate-100 my-1"></div>
 
                 {/* Role-based navigation for mobile */}
-                {user?.role === 1 && (
+                {(user?.role == UserRole.INSTRUCTOR || user?.role === 1) && (
                   <Link
                     to={'/instructor/' + instructor_routes.dashboard}
                     className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
@@ -299,7 +307,7 @@ const Header: React.FC = () => {
                   </Link>
                 )}
 
-                {user?.role === 0 && (
+                {(user?.role == UserRole.ADMIN || user?.role === 0) && (
                   <Link
                     to={'/admin/' + admin_routes.dashboard}
                     className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary"
@@ -309,7 +317,7 @@ const Header: React.FC = () => {
                   </Link>
                 )}
 
-                {(user?.role === 1 || user?.role === 0) && <div className="border-t border-slate-100 my-1"></div>}
+                {(user?.role == UserRole.INSTRUCTOR || user?.role == UserRole.ADMIN || user?.role === 1 || user?.role === 0) && <div className="border-t border-slate-100 my-1"></div>}
 
                 <button onClick={handleLogout} className="text-left text-sm font-medium text-red-600 py-2">Đăng xuất</button>
               </>

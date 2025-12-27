@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Lock, Mail, Bell, DollarSign, Eye, EyeOff, Shield, Building, CreditCard, FileText, Globe } from 'lucide-react';
+import { accService } from '../../../API';
+import { useAuth } from '../../../contexts/AuthContext';
+import ApiModeSwitch from '../../../components/ApiModeSwitch';
 
 const InstructorSettings: React.FC = () => {
+    const { user } = useAuth();
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false });
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordSuccess, setPasswordSuccess] = useState('');
 
     const [profileSettings, setProfileSettings] = useState({
         displayName: 'John Doe',
@@ -45,6 +51,60 @@ const InstructorSettings: React.FC = () => {
             setNotificationSettings(prev => ({ ...prev, [key]: !prev[key as keyof typeof prev] }));
         } else if (category === 'privacy') {
             setPrivacySettings(prev => ({ ...prev, [key]: !prev[key as keyof typeof prev] }));
+        }
+    };
+
+    const handlePasswordChange = async () => {
+        setPasswordError('');
+        setPasswordSuccess('');
+
+        // Trim passwords
+        const trimmedCurrentPassword = currentPassword.trim();
+        const trimmedNewPassword = newPassword.trim();
+        const trimmedConfirmPassword = confirmPassword.trim();
+
+        if (!trimmedCurrentPassword || !trimmedNewPassword || !trimmedConfirmPassword) {
+            setPasswordError('Vui lòng điền đầy đủ thông tin');
+            return;
+        }
+
+        // Validate không có space trong password
+        if (trimmedNewPassword.includes(' ')) {
+            setPasswordError('Mật khẩu không được chứa khoảng trắng');
+            return;
+        }
+
+        if (trimmedNewPassword.length < 6) {
+            setPasswordError('Mật khẩu mới phải có ít nhất 6 ký tự');
+            return;
+        }
+
+        if (trimmedNewPassword !== trimmedConfirmPassword) {
+            setPasswordError('Mật khẩu xác nhận không khớp!');
+            return;
+        }
+
+        if (!user?.id) {
+            setPasswordError('Không tìm thấy thông tin người dùng');
+            return;
+        }
+
+        try {
+            const response = await accService.changePassword(user.id, {
+                old_password: trimmedCurrentPassword,
+                new_password: trimmedNewPassword,
+            });
+
+            if (response.success) {
+                setPasswordSuccess('Đổi mật khẩu thành công!');
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+            } else {
+                setPasswordError(response.error || 'Không thể đổi mật khẩu. Vui lòng kiểm tra lại mật khẩu hiện tại.');
+            }
+        } catch (error: any) {
+            setPasswordError(error.response?.data?.message || error.message || 'Không thể đổi mật khẩu. Vui lòng kiểm tra lại mật khẩu hiện tại.');
         }
     };
 
@@ -220,7 +280,23 @@ const InstructorSettings: React.FC = () => {
                             </div>
                         </div>
 
-                        <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        {passwordError && (
+                            <div className="px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                                {passwordError}
+                            </div>
+                        )}
+
+                        {passwordSuccess && (
+                            <div className="px-4 py-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+                                {passwordSuccess}
+                            </div>
+                        )}
+
+                        <button
+                            onClick={handlePasswordChange}
+                            disabled={!currentPassword || !newPassword || !confirmPassword}
+                            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
                             Cập nhật mật khẩu
                         </button>
                     </div>
@@ -371,6 +447,21 @@ const InstructorSettings: React.FC = () => {
                             label="Cho phép nhận tin nhắn"
                             description="Học viên có thể gửi tin nhắn trực tiếp cho bạn"
                         />
+                    </div>
+                </div>
+
+                {/* API Mode Settings */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center mb-6">
+                        <Globe className="w-6 h-6 text-green-600 mr-3" />
+                        <h2 className="text-xl font-bold text-gray-900">Chế độ API</h2>
+                    </div>
+
+                    <div className="space-y-4">
+                        <p className="text-sm text-slate-600">
+                            Chuyển đổi giữa chế độ Mock Data và Database thực tế
+                        </p>
+                        <ApiModeSwitch />
                     </div>
                 </div>
             </div>

@@ -1,25 +1,36 @@
-import React from 'react';
+﻿import React, { useEffect } from 'react';
 import { Bell, Pin } from 'lucide-react';
+import { useClassAnnouncements } from '../../../../hooks/useClassAnnouncements';
 
 const StudentClassAnnouncements: React.FC = () => {
-    const announcements = [
-        {
-            id: 1,
-            title: 'Thông báo: Lịch học tuần tới',
-            content: 'Lịch học tuần tới sẽ được điều chỉnh do lễ. Vui lòng kiểm tra lịch mới.',
-            date: '2024-12-14',
-            pinned: true,
-            author: 'Nguyễn Văn A (Giảng viên)',
-        },
-        {
-            id: 2,
-            title: 'Bài tập tuần 6 đã được giao',
-            content: 'Bài tập tuần 6 về React Hooks đã được giao. Hạn nộp: 20/12/2024.',
-            date: '2024-12-13',
-            pinned: false,
-            author: 'Nguyễn Văn A (Giảng viên)',
-        },
-    ];
+    // TODO: Get class ID from params/context
+    const classId = 1;
+
+    // Get announcements from API hook
+    const { data: announcementsData, isLoading, error, refetch } = useClassAnnouncements(classId);
+
+    useEffect(() => {
+        if (classId) {
+            refetch();
+        }
+    }, [classId]);
+
+    const announcements = (announcementsData || []).map((announcement: any) => ({
+        id: announcement.id,
+        title: announcement.title,
+        content: announcement.content,
+        date: announcement.created_at,
+        pinned: announcement.is_pinned || announcement.pinned,
+        author: announcement.author,
+    }));
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {(error as Error).message}</div>;
+    }
 
     return (
         <div className="max-w-7xl mx-auto space-y-6">

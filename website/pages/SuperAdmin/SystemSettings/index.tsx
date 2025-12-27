@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Settings as SettingsIcon, Database, Mail, Shield } from 'lucide-react';
 
 const SuperAdminSettings: React.FC = () => {

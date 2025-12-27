@@ -1,16 +1,31 @@
-import React from 'react';
-import { AuditLog } from '../../../types/types';
+﻿import React from 'react';
+import { useAuditLogs } from '../../../hooks/useAuditLogs';
 import { Search, AlertCircle, CheckCircle, Info, Calendar } from 'lucide-react';
 
-const MOCK_LOGS: AuditLog[] = [
-    { id: 1, admin_id: 1, action: 'User Created', target_table: 'accounts', target_id: 10, created_at: '2023-10-25 10:30:45', user: 'admin@system.com', target: 'new_user@test.com', timestamp: '2023-10-25 10:30:45', details: 'Account created with standard permissions.' },
-    { id: 2, admin_id: 1, action: 'Login Failed', target_table: 'accounts', target_id: null, created_at: '2023-10-25 09:12:11', user: 'unknown', target: 'System', timestamp: '2023-10-25 09:12:11', details: 'Invalid password attempt from IP 192.168.1.1' },
-    { id: 3, admin_id: 1, action: 'Settings Updated', target_table: 'settings', target_id: null, created_at: '2023-10-24 16:45:00', user: 'admin@system.com', target: 'Global Config', timestamp: '2023-10-24 16:45:00', details: 'Security policy updated: Password strength increased.' },
-    { id: 4, admin_id: 2, action: 'Data Export', target_table: 'accounts', target_id: null, created_at: '2023-10-24 14:20:33', user: 'manager@system.com', target: 'User Table', timestamp: '2023-10-24 14:20:33', details: 'Exported 500 records to CSV.' },
-    { id: 5, admin_id: 0, action: 'API Key Revoked', target_table: 'api_keys', target_id: 5, created_at: '2023-10-23 11:05:22', user: 'superadmin@system.com', target: 'Service A', timestamp: '2023-10-23 11:05:22', details: 'Key ID: sk_live_... revoked manually.' },
-];
-
 const AuditLogs: React.FC = () => {
+    const { data: logs, loading, error } = useAuditLogs();
+
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
+
+    const getStatusIcon = (status: string) => {
+        switch (status) {
+            case 'success':
+                return <CheckCircle className="h-6 w-6 text-green-500" />;
+            case 'failed':
+                return <AlertCircle className="h-6 w-6 text-red-500" />;
+            case 'pending':
+                return <Info className="h-6 w-6 text-yellow-500" />;
+            default:
+                return <Info className="h-6 w-6 text-gray-500" />;
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div>
@@ -41,32 +56,27 @@ const AuditLogs: React.FC = () => {
 
             <div className="bg-white shadow-sm rounded-lg border border-gray-200">
                 <ul role="list" className="divide-y divide-gray-100">
-                    {MOCK_LOGS.map((log) => (
+                    {logs.map((log) => (
                         <li key={log.id} className="relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6 transition-colors">
                             <div className="flex min-w-0 gap-x-4">
                                 <div className="mt-1 flex-none">
-                                    {log.status === 'Success' && <CheckCircle className="h-6 w-6 text-green-500" />}
-                                    {log.status === 'Failure' && <AlertCircle className="h-6 w-6 text-red-500" />}
-                                    {log.status === 'Warning' && <Info className="h-6 w-6 text-yellow-500" />}
+                                    {getStatusIcon(log.status)}
                                 </div>
                                 <div className="min-w-0 flex-auto">
                                     <p className="text-sm font-semibold leading-6 text-gray-900">
                                         {log.action}
                                     </p>
                                     <div className="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
-                                        <p className="truncate">By: <span className="font-medium text-gray-700">{log.user}</span></p>
+                                        <p className="truncate">By: <span className="font-medium text-gray-700">{log.user_name}</span></p>
                                         <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current"><circle cx="1" cy="1" r="1" /></svg>
-                                        <p className="truncate">Target: {log.target}</p>
+                                        <p className="truncate">Target: {log.resource_type} #{log.resource_id}</p>
                                     </div>
-                                    <p className="mt-1 text-xs leading-5 text-gray-500">
-                                        {log.details}
-                                    </p>
                                 </div>
                             </div>
                             <div className="flex shrink-0 items-center gap-x-4">
                                 <div className="hidden sm:flex sm:flex-col sm:items-end">
-                                    <p className="text-sm leading-6 text-gray-900">{log.timestamp.split(' ')[0]}</p>
-                                    <p className="text-xs leading-5 text-gray-500">{log.timestamp.split(' ')[1]}</p>
+                                    <p className="text-sm leading-6 text-gray-900">{log.timestamp.split('T')[0]}</p>
+                                    <p className="text-xs leading-5 text-gray-500">{log.timestamp.split('T')[1]?.slice(0, 5)}</p>
                                 </div>
                                 <button className="text-gray-400 hover:text-gray-600">
                                     <span className="sr-only">View Details</span>

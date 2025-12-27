@@ -151,4 +151,43 @@ export class Accounts_Service {
 
         return deleted
     }
+
+    async logAuditAction(data: {
+        user_id: number | null;
+        action: string;
+        resource_type: string;
+        resource_id: bigint | null;
+        old_values?: any;
+        new_values?: any;
+        ip_address?: string;
+        user_agent?: string;
+    }) {
+        try {
+            await this.prisma.audit_logs.create({
+                data: {
+                    user_id: data.user_id,
+                    action: data.action,
+                    resource_type: data.resource_type,
+                    resource_id: data.resource_id,
+                    old_values: data.old_values || null,
+                    new_values: data.new_values || null,
+                    ip_address: data.ip_address,
+                    user_agent: data.user_agent,
+                }
+            });
+        } catch (error) {
+            console.error('Failed to log audit action:', error);
+        }
+    }
+
+    async updateLastLogin(userId: number) {
+        try {
+            await this.prisma.accounts.update({
+                where: { id: userId },
+                data: { last_login_at: new Date() }
+            });
+        } catch (error) {
+            console.error('Failed to update last login:', error);
+        }
+    }
 }

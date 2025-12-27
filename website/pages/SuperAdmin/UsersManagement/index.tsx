@@ -1,33 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { Account } from '../../../types/types';
+﻿import React, { useEffect, useState } from 'react';
+import { Account } from '../../../API/interfaces/IAccountsApi';
 import { Edit2, Trash2, Download, Plus } from 'lucide-react';
 import AccountModal from './AccountModal';
 import DataTable from '../../../components/DataTable'
-import { useAccounts } from '../../../hooks/accounts'
+import { useAccounts } from '../../../hooks/useAccounts'
 
 // Helper for Role Mapping
-export const getRoleName = (role?: number | null) => {
+// Database trả về enum string: SUPER_ADMIN, ADMIN, INSTRUCTOR, STUDENT
+export const getRoleName = (role?: string | number | null) => {
+    if (typeof role === 'string') {
+        switch (role.toUpperCase()) {
+            case 'SUPER_ADMIN': return 'Quản trị viên cao cấp';
+            case 'ADMIN': return 'Quản trị viên';
+            case 'INSTRUCTOR': return 'Giảng viên';
+            case 'STUDENT': return 'Học viên';
+            default: return 'Không rõ';
+        }
+    }
     switch (role) {
-        case -1: return 'Superadmin';
-        case 0: return 'Admin';
-        case 1: return 'Instrustor';
-        case 2: return 'Student';
-        default: return 'Unknown';
+        case -1: return 'Quản trị viên cao cấp';
+        case 0: return 'Quản trị viên';
+        case 1: return 'Giảng viên';
+        case 2: return 'Học viên';
+        default: return 'Không rõ';
     }
 };
 
 // Helper for Status Mapping
 export const getStatusLabel = (status?: number | null) => {
     switch (status) {
-        case 1: return 'Inactive';
-        case 2: return 'Pending';
-        case 0: return 'Active';
-        default: return 'Unknown';
+        case 1: return 'Hoạt động';
+        case 2: return 'Đang chờ';
+        case 0: return 'Không hoạt động';
+        default: return 'Không rõ';
     }
 };
 
 const UserManagement: React.FC = () => {
-    // hook
     const {
         accounts,
         loading,
@@ -72,7 +81,7 @@ const UserManagement: React.FC = () => {
         if (selectedAccounts.size === paginatedAccounts.length && paginatedAccounts.length > 0) {
             setSelectedAccounts(new Set());
         } else {
-            setSelectedAccounts(new Set(paginatedAccounts.map(u => u.id)));
+            setSelectedAccounts(new Set(paginatedAccounts.map(u => u.id).filter((id): id is number => id !== undefined)));
         }
     };
 
@@ -94,7 +103,7 @@ const UserManagement: React.FC = () => {
     };
 
     const handleDelete = async (id: number) => {
-        if (!window.confirm("Are you sure you want to delete this user?")) return;  
+        if (!window.confirm("Bạn có chắc muốn xóa người dùng này?")) return;
 
         await deleteAccount(id);
         await fetchAccounts(); // refresh UI
@@ -108,7 +117,7 @@ const UserManagement: React.FC = () => {
     const handleModalSubmit = async (data: Account) => {
         if (editingUser) {
             // UPDATE mode
-            await updateAccount(editingUser.id, data);
+            await updateAccount(editingUser.id!, data);
         } else {
             // CREATE mode
             await createAccount(data);
@@ -124,9 +133,9 @@ const UserManagement: React.FC = () => {
             {/* Header */}
             <div className="sm:flex sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">Quản lý người dùng</h1>
                     <p className="mt-1 text-sm text-gray-500">
-                        A list of all the users (Accounts) in your system.
+                        Danh sách tất cả người dùng (Tài khoản) trong hệ thống.
                     </p>
                 </div>
                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex gap-2">
@@ -135,7 +144,7 @@ const UserManagement: React.FC = () => {
                         className="inline-flex items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                     >
                         <Download className="-ml-0.5 h-4 w-4 text-gray-400" />
-                        Export
+                        Xuất file
                     </button>
 
                     <button
@@ -143,24 +152,24 @@ const UserManagement: React.FC = () => {
                         className="inline-flex items-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-600"
                     >
                         <Plus className="-ml-0.5 h-4 w-4" />
-                        Add User
+                        Thêm người dùng
                     </button>
                 </div>
             </div>
 
             {/* Loading */}
-            {loading && <p className="text-gray-500">Loading...</p>}
+            {loading && <p className="text-gray-500">�ang t?i...</p>}
             {error && <p className="text-red-500">{error}</p>}
 
             {/* Table */}
             {!loading && (
-                <DataTable
+                <DataTable<Account>
                     columns={[
-                        { key: 'full_name', label: 'Name' },
+                        { key: 'full_name', label: 'Họ tên' },
                         { key: 'email', label: 'Email' },
-                        { key: 'username', label: 'username' },
-                        { key: 'role', label: 'Role', render: row => getRoleName(row.role) },
-                        { key: 'status', label: 'Status', render: row => getStatusLabel(row.status) },
+                        { key: 'username', label: 'Tên đăng nhập' },
+                        { key: 'role', label: 'Vai trò', render: row => getRoleName(row.role) },
+                        { key: 'status', label: 'Trạng thái', render: row => getStatusLabel(row.status) },
                         // { key: 'created_at', label: 'Created At' },
                     ]}
                     data={paginatedAccounts}
@@ -169,8 +178,8 @@ const UserManagement: React.FC = () => {
                     onToggleSelect={toggleSelectUser}
                     onToggleSelectAll={toggleSelectAll}
                     actions={[
-                        { label: 'Edit', icon: <Edit2 size={16} />, onClick: row => handleEdit(row) },
-                        { label: 'Delete', icon: <Trash2 size={16} />, onClick: row => handleDelete(row.id) },
+                        { label: 'Sửa', icon: <Edit2 size={16} />, onClick: row => handleEdit(row) },
+                        { label: 'Xóa', icon: <Trash2 size={16} />, onClick: row => handleDelete(row.id) },
                     ]}
                     searchTerm={searchTerm}
                     onSearch={setSearchTerm}
@@ -184,7 +193,7 @@ const UserManagement: React.FC = () => {
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleModalSubmit}
                 initialData={editingUser ?? undefined}
-                title={editingUser ? 'Edit Account' : 'Add New Account'}
+                title={editingUser ? 'Sửa tài khoản' : 'Thêm tài khoản mới'}
             />
         </div>
     );

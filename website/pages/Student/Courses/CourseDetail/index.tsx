@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Clock,
@@ -22,143 +22,54 @@ import { CourseCard } from './CourseCard';
 import { student_routes } from '../../../page_routes';
 import { useCourse, useCourseSections, useCourseReviews } from '../../../../hooks/useApi';
 import { ErrorState } from '../../../../components/DataStates';
+import { useCart } from '../../../../contexts/CartContext';
+import { useEffect } from 'react';
 
-// Mock data
-const MOCK_COURSE = {
-  id: 1,
-  title: 'Complete Web Development Bootcamp 2024',
-  short_description: 'Học lập trình web từ cơ bản đến nâng cao với HTML, CSS, JavaScript, React và Node.js',
-  description: `
-        <h3>Về khóa học này</h3>
-        <p>Khóa học Web Development toàn diện nhất dành cho người mới bắt đầu. Bạn sẽ học được:</p>
-        <ul>
-            <li>HTML5 và CSS3 từ cơ bản đến nâng cao</li>
-            <li>JavaScript ES6+ và lập trình hướng đối tượng</li>
-            <li>React.js - Thư viện phổ biến nhất hiện nay</li>
-            <li>Node.js và Express.js để xây dựng backend</li>
-            <li>MongoDB và cơ sở dữ liệu NoSQL</li>
-            <li>Deployment và DevOps cơ bản</li>
-        </ul>
-        <h3>Bạn sẽ học được gì?</h3>
-        <p>Sau khi hoàn thành khóa học, bạn sẽ có thể:</p>
-        <ul>
-            <li>Xây dựng website responsive từ đầu</li>
-            <li>Tạo ứng dụng web động với React</li>
-            <li>Phát triển RESTful API với Node.js</li>
-            <li>Làm việc với database và authentication</li>
-            <li>Deploy ứng dụng lên production</li>
-        </ul>
-    `,
-  thumbnail: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800',
-  price: 1990000,
-  discount_price: 990000,
-  level: 1,
-  language: 'vi',
-  rating: 4.8,
-  total_students: 12543,
-  total_lessons: 156,
-  total_duration: 3240,
-  last_updated: '2024-01-15',
-  instructor: {
-    id: 1,
-    full_name: 'Nguyễn Văn A',
-    avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=instructor1',
-    title: 'Senior Full-stack Developer',
-    bio: '10+ năm kinh nghiệm trong phát triển web. Đã làm việc tại Google, Meta và nhiều startup công nghệ.',
-    total_students: 45000,
-    total_courses: 12,
-    rating: 4.9
-  },
-  sections: [
-    {
-      id: 1,
-      title: 'Giới thiệu và Chuẩn bị',
-      lessons: [
-        { id: 1, title: 'Chào mừng đến với khóa học', duration: 5, is_preview: true, type: 'video' },
-        { id: 2, title: 'Cài đặt môi trường phát triển', duration: 15, is_preview: true, type: 'video' },
-        { id: 3, title: 'Tổng quan về Web Development', duration: 20, is_preview: false, type: 'video' }
-      ]
-    },
-    {
-      id: 2,
-      title: 'HTML & CSS Fundamentals',
-      lessons: [
-        { id: 4, title: 'HTML Basics - Tags và Elements', duration: 25, is_preview: false, type: 'video' },
-        { id: 5, title: 'CSS Styling và Selectors', duration: 30, is_preview: false, type: 'video' },
-        { id: 6, title: 'Flexbox và Grid Layout', duration: 35, is_preview: false, type: 'video' },
-        { id: 7, title: 'Responsive Design', duration: 40, is_preview: false, type: 'video' },
-        { id: 8, title: 'Bài tập thực hành', duration: 0, is_preview: false, type: 'assignment' }
-      ]
-    },
-    {
-      id: 3,
-      title: 'JavaScript Programming',
-      lessons: [
-        { id: 9, title: 'JavaScript Basics', duration: 30, is_preview: false, type: 'video' },
-        { id: 10, title: 'Functions và Scope', duration: 25, is_preview: false, type: 'video' },
-        { id: 11, title: 'Arrays và Objects', duration: 35, is_preview: false, type: 'video' },
-        { id: 12, title: 'DOM Manipulation', duration: 40, is_preview: false, type: 'video' },
-        { id: 13, title: 'ES6+ Features', duration: 30, is_preview: false, type: 'video' }
-      ]
-    }
-  ],
-  reviews: [
-    {
-      id: 1,
-      student: {
-        name: 'Trần Thị B',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user1'
-      },
-      rating: 5,
-      comment: 'Khóa học rất chi tiết và dễ hiểu. Thầy giảng rất tận tâm!',
-      created_at: '2024-01-10'
-    },
-    {
-      id: 2,
-      student: {
-        name: 'Lê Văn C',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user2'
-      },
-      rating: 5,
-      comment: 'Tốt nhất cho người mới bắt đầu. Nội dung cập nhật và thực tế.',
-      created_at: '2024-01-08'
-    },
-    {
-      id: 3,
-      student: {
-        name: 'Phạm Thị D',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user3'
-      },
-      rating: 4,
-      comment: 'Khóa học hay, nhưng có một số phần hơi nhanh. Nhìn chung rất tốt!',
-      created_at: '2024-01-05'
-    }
-  ],
-  what_you_will_learn: [
-    'Xây dựng website responsive hoàn chỉnh',
-    'Làm chủ HTML5, CSS3 và JavaScript',
-    'Phát triển ứng dụng với React.js',
-    'Tạo RESTful API với Node.js và Express',
-    'Làm việc với MongoDB database',
-    'Deploy ứng dụng lên production',
-    'Git và GitHub cho version control',
-    'Best practices và coding standards'
-  ],
-  requirements: [
-    'Máy tính có kết nối internet',
-    'Không cần kiến thức lập trình trước đó',
-    'Đam mê học hỏi và kiên trì'
-  ]
+// Default structure for course data (no fake data, only safe defaults)
+const DEFAULT_INSTRUCTOR = {
+  id: 0,
+  full_name: 'Chưa có thông tin',
+  avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=default',
+  title: '',
+  bio: '',
+  total_students: 0,
+  total_courses: 0,
+  rating: 0
 };
+
+// Interface for course type
+interface CourseData {
+  id: number;
+  title: string;
+  short_description: string;
+  description: string;
+  thumbnail: string;
+  price: number;
+  discount_price: number;
+  level: number;
+  language: string;
+  rating: number;
+  total_students: number;
+  total_lessons: number;
+  total_duration: number;
+  last_updated: string;
+  instructor: typeof DEFAULT_INSTRUCTOR;
+  sections: any[];
+  reviews: any[];
+  what_you_will_learn: string[];
+  requirements: string[];
+}
 
 // Enrollment Dialog Component
 const EnrollmentDialog: React.FC<{
-  course: typeof MOCK_COURSE;
+  course: CourseData;
   isOpen: boolean;
   onClose: () => void;
   onCheckout: () => void;
   onAddToCart: () => void;
-}> = ({ course, isOpen, onClose, onCheckout, onAddToCart }) => {
+  onFreeEnroll: () => Promise<void>;
+  isEnrolling?: boolean;
+}> = ({ course, isOpen, onClose, onCheckout, onAddToCart, onFreeEnroll, isEnrolling = false }) => {
   if (!isOpen) return null;
 
   const formatPrice = (price: number) => {
@@ -168,6 +79,11 @@ const EnrollmentDialog: React.FC<{
     }).format(price);
   };
 
+  // Check if course is free
+  const effectivePrice = course.discount_price ?? course.price ?? 0;
+  const isFree = effectivePrice === 0;
+  const hasDiscount = course.price > 0 && course.discount_price < course.price;
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -176,7 +92,8 @@ const EnrollmentDialog: React.FC<{
           <h2 className="text-2xl font-bold text-secondary">Xác nhận đăng ký khóa học</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            disabled={isEnrolling}
+            className="p-2 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
           >
             <X className="w-6 h-6" />
           </button>
@@ -190,14 +107,17 @@ const EnrollmentDialog: React.FC<{
               src={course.thumbnail}
               alt={course.title}
               className="w-32 h-32 object-cover rounded-lg"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://via.placeholder.com/128?text=No+Image';
+              }}
             />
             <div className="flex-1">
               <h3 className="text-xl font-bold text-secondary mb-2">{course.title}</h3>
-              <p className="text-slate-600 mb-3">{course.short_description}</p>
+              <p className="text-slate-600 mb-3 line-clamp-2">{course.short_description}</p>
               <div className="flex items-center gap-4 text-sm text-slate-600">
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                  <span>{course.rating ?? 0}</span>
+                  <span>{Number(course.rating ?? 0).toFixed(1)}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Users className="w-4 h-4" />
@@ -206,6 +126,10 @@ const EnrollmentDialog: React.FC<{
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
                   <span>{Math.floor((course.total_duration ?? 0) / 60)}h</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <BookOpen className="w-4 h-4" />
+                  <span>{course.total_lessons ?? 0} bài</span>
                 </div>
               </div>
             </div>
@@ -217,11 +141,15 @@ const EnrollmentDialog: React.FC<{
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div className="flex items-center gap-2">
                 <PlayCircle className="w-5 h-5 text-primary" />
-                <span>{course.total_lessons} bài học video</span>
+                <span>{course.total_lessons ?? 0} bài học</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-primary" />
+                <span>{course.sections?.length ?? 0} phần</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5 text-primary" />
-                <span>{Math.floor(course.total_duration / 60)}h nội dung</span>
+                <span>{Math.floor((course.total_duration ?? 0) / 60)}h nội dung</span>
               </div>
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-primary" />
@@ -231,49 +159,90 @@ const EnrollmentDialog: React.FC<{
                 <Award className="w-5 h-5 text-primary" />
                 <span>Chứng chỉ hoàn thành</span>
               </div>
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-primary" />
+                <span>Truy cập trọn đời</span>
+              </div>
             </div>
           </div>
 
           {/* Pricing */}
           <div className="border-t border-b border-slate-200 py-4 mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-slate-600">Giá gốc:</span>
-              <span className="text-slate-400 line-through">{formatPrice(course.price)}</span>
-            </div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-slate-600">Giảm giá:</span>
-              <span className="text-red-600 font-semibold">
-                -{Math.round((1 - course.discount_price / course.price) * 100)}%
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold text-secondary">Tổng thanh toán:</span>
-              <span className="text-2xl font-bold text-primary">
-                {formatPrice(course.discount_price)}
-              </span>
-            </div>
+            {isFree ? (
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-bold text-secondary">Tổng thanh toán:</span>
+                <span className="text-2xl font-bold text-green-600">Miễn phí</span>
+              </div>
+            ) : (
+              <>
+                {hasDiscount && (
+                  <>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-slate-600">Giá gốc:</span>
+                      <span className="text-slate-400 line-through">{formatPrice(course.price)}</span>
+                    </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-slate-600">Giảm giá:</span>
+                      <span className="text-red-600 font-semibold">
+                        -{Math.round((1 - course.discount_price / course.price) * 100)}%
+                      </span>
+                    </div>
+                  </>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-bold text-secondary">Tổng thanh toán:</span>
+                  <span className="text-2xl font-bold text-primary">
+                    {formatPrice(effectivePrice)}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-3">
+          {/* Actions - Different for free vs paid courses */}
+          {isFree ? (
             <button
-              onClick={onAddToCart}
-              className="flex-1 flex items-center justify-center gap-2 border-2 border-primary text-primary hover:bg-primary/5 font-bold py-3 rounded-xl transition-colors"
+              onClick={onFreeEnroll}
+              disabled={isEnrolling}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              <ShoppingCart className="w-5 h-5" />
-              Thêm vào giỏ hàng
+              {isEnrolling ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Đang đăng ký...
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-5 h-5" />
+                  Đăng ký miễn phí ngay
+                </>
+              )}
             </button>
-            <button
-              onClick={onCheckout}
-              className="flex-1 bg-primary hover:bg-primary-hover text-white font-bold py-3 rounded-xl transition-colors"
-            >
-              Thanh toán ngay
-            </button>
-          </div>
+          ) : (
+            <div className="flex gap-3">
+              <button
+                onClick={onAddToCart}
+                disabled={isEnrolling}
+                className="flex-1 flex items-center justify-center gap-2 border-2 border-primary text-primary hover:bg-primary/5 font-bold py-3 rounded-xl transition-colors disabled:opacity-50"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                Thêm vào giỏ hàng
+              </button>
+              <button
+                onClick={onCheckout}
+                disabled={isEnrolling}
+                className="flex-1 bg-primary hover:bg-primary-hover text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-50"
+              >
+                Thanh toán ngay
+              </button>
+            </div>
+          )}
 
-          <p className="text-center text-sm text-slate-500 mt-4">
-            💰 Đảm bảo hoàn tiền trong 30 ngày
-          </p>
+          {!isFree && (
+            <p className="text-center text-sm text-slate-500 mt-4">
+              💰 Đảm bảo hoàn tiền trong 30 ngày
+            </p>
+          )}
         </div>
       </div>
     </div>
@@ -285,45 +254,254 @@ const CourseDetail: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const [expandedSections, setExpandedSections] = useState<number[]>([1]);
-  const [isEnrolled] = useState(false);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [enrollmentStatus, setEnrollmentStatus] = useState<any>(null);
   const [showEnrollmentDialog, setShowEnrollmentDialog] = useState(false);
+  const [isEnrolling, setIsEnrolling] = useState(false);
+
+  // Certificate state
+  const [hasCertificate, setHasCertificate] = useState(false);
+  const [isClaimingCertificate, setIsClaimingCertificate] = useState(false);
+
+  // Review form state
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [userReview, setUserReview] = useState<any>(null);
+
+  // Get current user
+  const getCurrentUser = (): { id: number; role: string } | null => {
+    try {
+      const accountData = sessionStorage.getItem('Account');
+      if (accountData) {
+        return JSON.parse(accountData);
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  };
+
+  const currentUser = getCurrentUser();
+
+  // Cart
+  const { addItem, isInCart } = useCart();
 
   // Use API hooks
   const { data: courseData, loading: courseLoading, error: courseError, refetch: refetchCourse } = useCourse(parseInt(courseId || '0'));
   const { data: sectionsData, loading: sectionsLoading } = useCourseSections(parseInt(courseId || '0'));
   const { data: reviewsData, loading: reviewsLoading } = useCourseReviews(parseInt(courseId || '0'));
 
-  // Merge course data with defaults - ensure all numeric fields have fallback values
+  // Check enrollment and certificate status
+  useEffect(() => {
+    checkEnrollment();
+    checkCertificate();
+  }, [courseId]);
+
+  // Check user review when reviewsData is loaded
+  useEffect(() => {
+    if (reviewsData) {
+      checkUserReview();
+    }
+  }, [reviewsData, courseId]);
+
+  // Check if student already has certificate for this course
+  const checkCertificate = async () => {
+    const accountData = sessionStorage.getItem('Account');
+    if (!accountData || !courseId) return;
+
+    try {
+      const account = JSON.parse(accountData);
+      const API_BASE_URL = import.meta.env.VITE_BACK_END_API_PATH || 'http://localhost:4000';
+
+      const response = await fetch(`${API_BASE_URL}/certificates/student/${account.id}`);
+      if (response.ok) {
+        const certificates = await response.json();
+        // Check if there's a certificate for this course
+        const existingCert = certificates.find((c: any) => c.course_id === parseInt(courseId));
+        setHasCertificate(!!existingCert);
+      }
+    } catch (error) {
+      console.error('Failed to check certificate:', error);
+    }
+  };
+
+  const checkEnrollment = async () => {
+    const accountData = sessionStorage.getItem('Account');
+    if (!accountData || !courseId) return;
+
+    try {
+      const account = JSON.parse(accountData);
+      const API_BASE_URL = import.meta.env.VITE_BACK_END_API_PATH || 'http://localhost:4000';
+
+      // ✅ Fixed: Use correct endpoint with query params
+      const response = await fetch(
+        `${API_BASE_URL}/enrollments/check?course_id=${courseId}&user_id=${account.id}`,
+        {
+          headers: {
+            'x-user-id': account.id.toString()
+          }
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        // Backend returns { success: true, is_enrolled: true, ... }
+        setEnrollmentStatus(result);
+        setIsEnrolled(result.is_enrolled);
+      } else {
+        console.error('Failed to check enrollment:', response.status);
+        // Set default values if API fails
+        setEnrollmentStatus({
+          is_enrolled: false,
+          progress: 0,
+          completed_lessons: 0,
+          total_lessons: 0
+        });
+        setIsEnrolled(false);
+      }
+    } catch (error) {
+      console.error('Failed to check enrollment:', error);
+      // Set default values if API fails
+      setEnrollmentStatus({
+        is_enrolled: false,
+        progress: 0,
+        completed_lessons: 0,
+        total_lessons: 0
+      });
+      setIsEnrolled(false);
+    }
+  };
+
+  const checkUserReview = async () => {
+    const accountData = sessionStorage.getItem('Account');
+    if (!accountData || !courseId) return;
+
+    try {
+      const account = JSON.parse(accountData);
+      // Check if user already reviewed this course
+      const existingReview = reviewsData?.find((r: any) => r.student_id === account.id);
+      if (existingReview) {
+        setUserReview(existingReview);
+      }
+    } catch (error) {
+      console.error('Failed to check user review:', error);
+    }
+  };
+
+  const handleSubmitReview = async () => {
+    const accountData = sessionStorage.getItem('Account');
+    if (!accountData || !courseId) {
+      toast.error('Vui lòng đăng nhập để đánh giá!');
+      return;
+    }
+
+    if (!reviewComment.trim()) {
+      toast.error('Vui lòng nhập nội dung đánh giá!');
+      return;
+    }
+
+    try {
+      const account = JSON.parse(accountData);
+      const API_BASE_URL = import.meta.env.VITE_BACK_END_API_PATH || 'http://localhost:4000';
+
+      setIsSubmittingReview(true);
+
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          student_id: account.id,
+          rating: reviewRating,
+          comment: reviewComment.trim(),
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('Đã gửi đánh giá thành công! 🎉');
+        setShowReviewForm(false);
+        setReviewComment('');
+        setReviewRating(5);
+        // Refresh reviews
+        window.location.reload();
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || 'Không thể gửi đánh giá');
+      }
+    } catch (error) {
+      console.error('Submit review error:', error);
+      toast.error('Có lỗi xảy ra khi gửi đánh giá');
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
+
+  // Build course object from API data with safe defaults (no fake data)
   const courseAny = courseData as any;
-  const course = courseData ? {
-    ...MOCK_COURSE, // Default structure làm fallback cho các field thiếu
-    ...courseData,
-    // Ensure numeric fields have default values to prevent toLocaleString errors
+
+  // Calculate total lessons and duration from sections (more accurate than DB value)
+  const sectionsArray = Array.isArray(sectionsData) ? sectionsData : [];
+  const calculatedTotalLessons = sectionsArray.reduce((total, section) => {
+    const lessons = section.lessons || section.course_lessons || [];
+    return total + lessons.length;
+  }, 0);
+
+  const calculatedTotalDuration = sectionsArray.reduce((total, section) => {
+    const lessons = section.lessons || section.course_lessons || [];
+    return total + lessons.reduce((sum: number, lesson: any) => sum + (lesson.duration || 0), 0);
+  }, 0);
+
+  const course: CourseData | null = courseData ? {
+    // Core fields from API
+    id: courseAny.id ?? 0,
+    title: courseAny.title ?? 'Không có tiêu đề',
+    short_description: courseAny.short_description || (courseAny.description?.substring(0, 150) + '...') || '',
+    description: courseAny.description ?? '',
+    // Backend uses thumbnail_url, frontend uses thumbnail
+    thumbnail: courseAny.thumbnail || courseAny.thumbnail_url || 'https://via.placeholder.com/800x450?text=No+Image',
+    language: courseAny.language ?? 'vi',
+    last_updated: courseAny.last_updated ?? courseAny.updated_at ?? '',
+
+    // Numeric fields - use calculated values if available
     total_students: courseAny.total_students ?? 0,
-    total_lessons: courseAny.total_lessons ?? 0,
-    total_duration: courseAny.total_duration ?? 0,
-    rating: courseAny.rating ?? 0,
+    total_lessons: calculatedTotalLessons || courseAny.total_lessons || 0,
+    total_duration: calculatedTotalDuration || courseAny.total_duration || 0,
+    // Backend uses average_rating, frontend uses rating
+    rating: courseAny.rating ?? courseAny.average_rating ?? 0,
     price: courseAny.price ?? 0,
     discount_price: courseAny.discount_price ?? courseAny.price ?? 0,
     level: courseAny.level ?? 0,
-    short_description: courseAny.short_description || courseAny.description?.substring(0, 150) + '...' || '',
-    sections: Array.isArray(sectionsData) && sectionsData.length > 0 ? sectionsData : MOCK_COURSE.sections,
-    reviews: Array.isArray(reviewsData) && reviewsData.length > 0 ? reviewsData : MOCK_COURSE.reviews,
-    instructor: {
-      ...MOCK_COURSE.instructor,
-      ...(courseAny.instructor || {}),
-      // Ensure instructor numeric fields have defaults
-      total_students: courseAny.instructor?.total_students ?? 0,
-      total_courses: courseAny.instructor?.total_courses ?? 0,
-      rating: courseAny.instructor?.rating ?? 0,
-      full_name: courseAny.instructor?.full_name || 'Chưa có thông tin',
-      avatar_url: courseAny.instructor?.avatar_url || MOCK_COURSE.instructor.avatar_url,
-      title: courseAny.instructor?.title || '',
-      bio: courseAny.instructor?.bio || ''
-    },
-    what_you_will_learn: courseAny.what_you_will_learn || MOCK_COURSE.what_you_will_learn,
-    requirements: courseAny.requirements || MOCK_COURSE.requirements
+
+    sections: sectionsArray,
+    reviews: Array.isArray(reviewsData) ? reviewsData : [],
+
+    instructor: (() => {
+      const inst = courseAny.instructor || courseAny.accounts || {};
+      return {
+        ...DEFAULT_INSTRUCTOR,
+        ...inst,
+        id: inst.id ?? DEFAULT_INSTRUCTOR.id,
+        total_students: inst.total_students ?? 0,
+        total_courses: inst.total_courses ?? 0,
+        rating: inst.rating ?? 0,
+        full_name: inst.full_name || DEFAULT_INSTRUCTOR.full_name,
+        avatar_url: inst.avatar_url || DEFAULT_INSTRUCTOR.avatar_url,
+        title: inst.title || '',
+        bio: inst.bio || ''
+      };
+    })(),
+
+    // Arrays that could be empty
+    what_you_will_learn: Array.isArray(courseAny.what_you_will_learn) ? courseAny.what_you_will_learn : [],
+    requirements: Array.isArray(courseAny.requirements) ? courseAny.requirements : []
   } : null;
+
+  // Check if current user is the instructor
+  const instructorId = courseAny?.instructor_id || courseAny?.accounts?.id;
+  const isOwnCourse = currentUser && instructorId && currentUser.id === instructorId;
 
   const loading = courseLoading || sectionsLoading || reviewsLoading;
 
@@ -359,9 +537,51 @@ const CourseDetail: React.FC = () => {
 
   const handleContinueLearning = () => {
     if (!course) return;
-    // Navigate to first lesson of the course
-    const firstLessonId = course.sections?.[0]?.lessons?.[0]?.id || '1';
-    navigate('/' + student_routes.lesson(courseId!, firstLessonId));
+
+    // If instructor owns the course, allow viewing all lessons
+    if (isOwnCourse) {
+      // Find first lesson
+      for (const section of course.sections || []) {
+        const lessons = section.lessons || section.course_lessons || [];
+        if (lessons.length > 0) {
+          navigate('/' + student_routes.lesson(courseId!, String(lessons[0].id)));
+          return;
+        }
+      }
+      toast.error('Không tìm thấy bài học nào!');
+      return;
+    }
+
+    // Find first preview lesson or first lesson
+    let firstLessonId = null;
+    let firstSectionId = null;
+
+    for (const section of course.sections || []) {
+      const lessons = section.lessons || section.course_lessons || [];
+
+      // If enrolled, go to first lesson
+      if (isEnrolled && lessons.length > 0) {
+        firstLessonId = lessons[0].id;
+        firstSectionId = section.id;
+        break;
+      }
+
+      // If not enrolled, find first preview lesson
+      const previewLesson = lessons.find((l: any) => l.is_preview);
+      if (previewLesson) {
+        firstLessonId = previewLesson.id;
+        firstSectionId = section.id;
+        break;
+      }
+    }
+
+    if (!firstLessonId) {
+      toast.error('Không tìm thấy bài học để xem!');
+      return;
+    }
+
+    // Navigate to lesson
+    navigate('/' + student_routes.lesson(courseId!, String(firstLessonId)));
   };
 
   const handleCheckout = () => {
@@ -369,12 +589,137 @@ const CourseDetail: React.FC = () => {
     navigate('/checkout', { state: { courses: [course] } });
   };
 
-  const handleAddToCart = () => {
+  // Handle free course enrollment directly
+  const handleFreeEnroll = async () => {
+    if (!course) return;
+
+    const accountData = sessionStorage.getItem('Account');
+    if (!accountData) {
+      toast.error('Vui lòng đăng nhập để đăng ký khóa học!');
+      navigate('/login');
+      return;
+    }
+
+    const account = JSON.parse(accountData);
+    setIsEnrolling(true);
+
+    try {
+      const API_BASE_URL = import.meta.env.VITE_BACK_END_API_PATH || 'http://localhost:4000';
+      const response = await fetch(`${API_BASE_URL}/enrollments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': account.id.toString()
+        },
+        body: JSON.stringify({
+          course_id: course.id,
+          student_id: account.id
+        })
+      });
+
+      if (response.ok) {
+        toast.success('Đăng ký khóa học thành công! 🎉', {
+          duration: 4000
+        });
+        setShowEnrollmentDialog(false);
+        setIsEnrolled(true);
+        // Refresh enrollment status
+        checkEnrollment();
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || 'Không thể đăng ký khóa học');
+      }
+    } catch (error: any) {
+      console.error('Enrollment error:', error);
+      toast.error('Có lỗi xảy ra khi đăng ký khóa học');
+    } finally {
+      setIsEnrolling(false);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (!course) return;
+    console.log(course);
     setShowEnrollmentDialog(false);
-    toast.success('Đã thêm khóa học vào giỏ hàng!', {
-      icon: '🛒',
-      duration: 3000
-    });
+
+    // Check if already in cart
+    if (isInCart(course.id)) {
+      toast.error('Khóa học đã có trong giỏ hàng!', {
+        icon: '⚠️',
+        duration: 3000
+      });
+      return;
+    }
+
+    // Add to cart (only pass courseId - backend fetches course details)
+    const added = await addItem(course.id);
+
+    if (added) {
+      toast.success('Đã thêm khóa học vào giỏ hàng!', {
+        icon: '🛒',
+        duration: 3000
+      });
+    }
+  };
+
+  // Handle claim certificate when course is 100% complete
+  const handleClaimCertificate = async () => {
+    if (!course || hasCertificate) return;
+
+    const accountData = sessionStorage.getItem('Account');
+    if (!accountData) {
+      toast.error('Vui lòng đăng nhập!');
+      return;
+    }
+
+    const account = JSON.parse(accountData);
+    setIsClaimingCertificate(true);
+
+    try {
+      const API_BASE_URL = import.meta.env.VITE_BACK_END_API_PATH || 'http://localhost:4000';
+
+      // Generate certificate code
+      const timestamp = Date.now();
+      const certificateCode = `CERT-${course.id}-${account.id}-${timestamp.toString(36).toUpperCase()}`;
+
+      // Create certificate
+      const response = await fetch(`${API_BASE_URL}/certificates`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          student_id: account.id,
+          course_id: course.id,
+          certificate_code: certificateCode,
+          issued_at: new Date().toISOString(),
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('Chúc mừng! Bạn đã nhận được chứng chỉ! 🎉', {
+          duration: 5000
+        });
+        setHasCertificate(true);
+
+        // Redirect to certificates page or show certificate dialog
+        navigate(`/${student_routes.certificates}`);
+      } else {
+        const errorData = await response.json();
+        // Check if certificate already exists
+        if (errorData.message?.includes('already') || errorData.message?.includes('exist')) {
+          setHasCertificate(true);
+          toast.success('Bạn đã có chứng chỉ cho khóa học này!');
+        } else {
+          toast.error(errorData.message || 'Không thể tạo chứng chỉ');
+        }
+      }
+    } catch (error: any) {
+      console.error('Claim certificate error:', error);
+      toast.error('Có lỗi xảy ra khi nhận chứng chỉ');
+    } finally {
+      setIsClaimingCertificate(false);
+    }
   };
 
   // Loading state
@@ -469,10 +814,14 @@ const CourseDetail: React.FC = () => {
                 <CourseCard
                   course={course}
                   isEnrolled={isEnrolled}
+                  enrollmentStatus={enrollmentStatus}
                   isMobile={true}
+                  isOwnCourse={isOwnCourse}
+                  hasCertificate={hasCertificate}
                   onEnroll={handleEnroll}
                   onContinue={handleContinueLearning}
                   onAddToCart={handleAddToCart}
+                  onClaimCertificate={handleClaimCertificate}
                 />
               </div>
             </section>
@@ -517,35 +866,51 @@ const CourseDetail: React.FC = () => {
                           <span className="font-semibold text-secondary">{section.title}</span>
                         </div>
                         <span className="text-sm text-slate-600">
-                          {section.lessons.length} bài học
+                          {(section.lessons || section.course_lessons || []).length} bài học
                         </span>
                       </button>
 
                       {expandedSections.includes(section.id) && (
                         <div className="border-t border-slate-200 bg-slate-50">
-                          {section.lessons.map((lesson: any) => (
-                            <div
-                              key={lesson.id}
-                              className="flex items-center justify-between p-4 hover:bg-white transition-colors border-b border-slate-100 last:border-b-0"
-                            >
-                              <div className="flex items-center gap-3">
-                                {lesson.is_preview ? (
-                                  <PlayCircle className="w-5 h-5 text-primary" />
-                                ) : (
-                                  <Lock className="w-5 h-5 text-slate-400" />
-                                )}
-                                <span className="text-slate-700">{lesson.title}</span>
-                                {lesson.is_preview && (
-                                  <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
-                                    Xem trước
-                                  </span>
-                                )}
+                          {(section.lessons || section.course_lessons || []).map((lesson: any) => {
+                            // Instructor can view all lessons, others need enrollment or preview
+                            const canView = isOwnCourse || isEnrolled || lesson.is_preview;
+
+                            return (
+                              <div
+                                key={lesson.id}
+                                className={`flex items-center justify-between p-4 border-b border-slate-100 last:border-b-0 ${canView ? 'hover:bg-white transition-colors cursor-pointer' : ''
+                                  }`}
+                                onClick={() => {
+                                  if (canView) {
+                                    navigate('/' + student_routes.lesson(courseId!, String(lesson.id)));
+                                  }
+                                }}
+                              >
+                                <div className="flex items-center gap-3">
+                                  {canView ? (
+                                    <PlayCircle className="w-5 h-5 text-primary" />
+                                  ) : (
+                                    <Lock className="w-5 h-5 text-slate-400" />
+                                  )}
+                                  <span className="text-slate-700">{lesson.title}</span>
+                                  {lesson.is_preview && !isOwnCourse && (
+                                    <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                                      Xem trước
+                                    </span>
+                                  )}
+                                  {isOwnCourse && (
+                                    <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                                      Khóa học của bạn
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-sm text-slate-600">
+                                  {lesson.duration > 0 ? `${lesson.duration}:00` : 'Bài tập'}
+                                </span>
                               </div>
-                              <span className="text-sm text-slate-600">
-                                {lesson.duration > 0 ? `${lesson.duration}:00` : 'Bài tập'}
-                              </span>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -618,30 +983,149 @@ const CourseDetail: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="space-y-6">
-                  {course.reviews?.map((review: any) => (
-                    <div key={review.id} className="flex gap-4">
-                      <img
-                        src={review.student.avatar}
-                        alt={review.student.name}
-                        className="w-12 h-12 rounded-full"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="font-semibold text-secondary">{review.student.name}</span>
-                          <div className="flex items-center gap-1">
-                            {[...Array(review.rating)].map((_, i) => (
-                              <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                            ))}
-                          </div>
-                          <span className="text-sm text-slate-500">
-                            {new Date(review.created_at).toLocaleDateString('vi-VN')}
-                          </span>
+                {/* Review Form - Only show if enrolled and haven't reviewed yet */}
+                {isEnrolled && !isOwnCourse && !userReview && (
+                  <div className="mb-8 p-6 bg-slate-50 rounded-xl border border-slate-200">
+                    {!showReviewForm ? (
+                      <button
+                        onClick={() => setShowReviewForm(true)}
+                        className="w-full py-3 px-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Star className="w-5 h-5" />
+                        Viết đánh giá của bạn
+                      </button>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-semibold text-secondary">Đánh giá khóa học</h3>
+                          <button
+                            onClick={() => setShowReviewForm(false)}
+                            className="text-slate-400 hover:text-slate-600"
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
                         </div>
-                        <p className="text-slate-700">{review.comment}</p>
+
+                        {/* Rating Stars */}
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Đánh giá của bạn
+                          </label>
+                          <div className="flex items-center gap-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <button
+                                key={star}
+                                type="button"
+                                onClick={() => setReviewRating(star)}
+                                className="transition-transform hover:scale-110"
+                              >
+                                <Star
+                                  className={`w-8 h-8 ${star <= reviewRating
+                                    ? 'text-yellow-400 fill-yellow-400'
+                                    : 'text-slate-300'
+                                    }`}
+                                />
+                              </button>
+                            ))}
+                            <span className="ml-2 text-sm text-slate-600">
+                              ({reviewRating} sao)
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Comment Textarea */}
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Nhận xét của bạn
+                          </label>
+                          <textarea
+                            value={reviewComment}
+                            onChange={(e) => setReviewComment(e.target.value)}
+                            placeholder="Chia sẻ trải nghiệm của bạn về khóa học này..."
+                            rows={4}
+                            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary resize-none"
+                          />
+                        </div>
+
+                        {/* Submit Button */}
+                        <div className="flex gap-3">
+                          <button
+                            onClick={() => {
+                              setShowReviewForm(false);
+                              setReviewComment('');
+                              setReviewRating(5);
+                            }}
+                            className="flex-1 py-2.5 px-4 border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition-colors"
+                          >
+                            Hủy
+                          </button>
+                          <button
+                            onClick={handleSubmitReview}
+                            disabled={isSubmittingReview || !reviewComment.trim()}
+                            className="flex-1 py-2.5 px-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          >
+                            {isSubmittingReview ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Đang gửi...
+                              </>
+                            ) : (
+                              'Gửi đánh giá'
+                            )}
+                          </button>
+                        </div>
                       </div>
+                    )}
+                  </div>
+                )}
+
+                {/* User's existing review */}
+                {userReview && (
+                  <div className="mb-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <CheckCircle2 className="w-5 h-5 text-blue-600" />
+                      <span className="font-semibold text-blue-900">Đánh giá của bạn</span>
                     </div>
-                  ))}
+                    <div className="flex items-center gap-2 mb-2">
+                      {[...Array(userReview.rating || 0)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      ))}
+                    </div>
+                    <p className="text-slate-700">{userReview.comment}</p>
+                  </div>
+                )}
+
+                <div className="space-y-6">
+                  {course.reviews?.map((review: any) => {
+                    // Backend uses 'accounts' relation, frontend expects 'student'
+                    const reviewer = review.student || review.accounts || {};
+                    const reviewerName = reviewer.name || reviewer.full_name || 'Học viên ẩn danh';
+                    const reviewerAvatar = reviewer.avatar || reviewer.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default';
+
+                    return (
+                      <div key={review.id} className="flex gap-4">
+                        <img
+                          src={reviewerAvatar}
+                          alt={reviewerName}
+                          className="w-12 h-12 rounded-full"
+                        />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="font-semibold text-secondary">{reviewerName}</span>
+                            <div className="flex items-center gap-1">
+                              {[...Array(review.rating || 0)].map((_, i) => (
+                                <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                              ))}
+                            </div>
+                            <span className="text-sm text-slate-500">
+                              {review.created_at ? new Date(review.created_at).toLocaleDateString('vi-VN') : ''}
+                            </span>
+                          </div>
+                          <p className="text-slate-700">{review.comment}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -688,10 +1172,14 @@ const CourseDetail: React.FC = () => {
               <CourseCard
                 course={course}
                 isEnrolled={isEnrolled}
+                enrollmentStatus={enrollmentStatus}
                 isMobile={false}
+                isOwnCourse={isOwnCourse}
+                hasCertificate={hasCertificate}
                 onEnroll={handleEnroll}
                 onContinue={handleContinueLearning}
                 onAddToCart={handleAddToCart}
+                onClaimCertificate={handleClaimCertificate}
               />
             </div>
           </div>
@@ -705,6 +1193,8 @@ const CourseDetail: React.FC = () => {
         onClose={() => setShowEnrollmentDialog(false)}
         onCheckout={handleCheckout}
         onAddToCart={handleAddToCart}
+        onFreeEnroll={handleFreeEnroll}
+        isEnrolling={isEnrolling}
       />
     </div>
   );

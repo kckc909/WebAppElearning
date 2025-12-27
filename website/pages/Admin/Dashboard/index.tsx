@@ -1,23 +1,50 @@
-import StatCard from '../../../components/StatCard';
+﻿import StatCard from '../../../components/StatCard';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { Users, BookOpen, DollarSign } from "lucide-react";
-import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { useRecentAdminActivities } from '../../../hooks/useAdminActivities';
+
+// Static chart data (UI constants, not from DB)
+const revenueChartData = [
+    { name: 'Jan', revenue: 4000 },
+    { name: 'Feb', revenue: 3000 },
+    { name: 'Mar', revenue: 2000 },
+    { name: 'Apr', revenue: 2780 },
+    { name: 'May', revenue: 1890 },
+    { name: 'Jun', revenue: 2390 },
+    { name: 'Jul', revenue: 3490 },
+];
+
+// Helper to format time ago
+const getTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    if (diffHours < 48) return 'Yesterday';
+    return `${Math.floor(diffHours / 24)} days ago`;
+};
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
+    const { data: activities, loading, error } = useRecentAdminActivities(10);
 
-    const [notifications, setNotifications] = useState<any[]>([]);
-
-    useEffect(() => {
-        // fetch api
-        setNotifications(mockData);
-    }, [])
-
-    const getTitle = (type: any) => {
-        if (type === 0) return "New course submitted";
-        if (type === 1) return "Course updated";
-        return "Notification";
+    const getTitle = (type: string) => {
+        switch (type) {
+            case 'course_submitted':
+                return "New course submitted";
+            case 'course_updated':
+                return "Course updated";
+            case 'user_registered':
+                return "New instructor registered";
+            case 'payment_received':
+                return "Payment received";
+            default:
+                return "Notification";
+        }
     };
 
     const handleClick = () => {
@@ -44,7 +71,7 @@ export default function AdminDashboard() {
                         <h3 className="text-lg font-bold mb-4">Revenue Analytics</h3>
                         <div className="h-80">
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={data}>
+                                <BarChart data={revenueChartData}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="name" />
                                     <YAxis />
@@ -58,66 +85,36 @@ export default function AdminDashboard() {
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <h3 className="text-lg font-bold mb-4">Recent Activities</h3>
                         <div className="space-y-4">
-                            <div>
-                                {notifications.map((item) => (
-                                    <div
-                                        key={item.id}
-                                        onClick={handleClick}
-                                        className="flex items-start space-x-3 pb-4 border-b border-gray-100 last:border-0 last:pb-0 cursor-pointer hover:bg-gray-50 rounded-md p-2"
-                                    >
-                                        <div className="w-2 h-2 mt-2 rounded-full bg-blue-500" />
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900">
-                                                {getTitle(item.type)}
-                                            </p>
-                                            <p className="text-xs text-gray-500">
-                                                Instructor {item.instructor} {item.type === 0 ? "created" : "updated"} "{item.course}"
-                                            </p>
-                                            <p className="text-xs text-gray-400 mt-1">{item.time}</p>
+                            {loading ? (
+                                <div className="text-center text-gray-500">�ang t?i...</div>
+                            ) : error ? (
+                                <div className="text-center text-red-500">{error}</div>
+                            ) : (
+                                <div>
+                                    {activities.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            onClick={handleClick}
+                                            className="flex items-start space-x-3 pb-4 border-b border-gray-100 last:border-0 last:pb-0 cursor-pointer hover:bg-gray-50 rounded-md p-2"
+                                        >
+                                            <div className={`w-2 h-2 mt-2 rounded-full ${item.is_read ? 'bg-gray-300' : 'bg-blue-500'}`} />
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-900">
+                                                    {getTitle(item.type)}
+                                                </p>
+                                                <p className="text-xs text-gray-500">
+                                                    {item.instructor_name && `Instructor ${item.instructor_name}`} {item.description}
+                                                </p>
+                                                <p className="text-xs text-gray-400 mt-1">{getTimeAgo(item.timestamp)}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
-
         </>
     );
 }
-
-
-const data = [
-    { name: 'Jan', revenue: 4000 },
-    { name: 'Feb', revenue: 3000 },
-    { name: 'Mar', revenue: 2000 },
-    { name: 'Apr', revenue: 2780 },
-    { name: 'May', revenue: 1890 },
-    { name: 'Jun', revenue: 2390 },
-    { name: 'Jul', revenue: 3490 },
-];
-
-const mockData = [
-    {
-        id: 1,
-        type: 0, // 0 = create
-        instructor: "John Doe",
-        course: "React Mastery",
-        time: "2 hours ago"
-    },
-    {
-        id: 2,
-        type: 1, // 1 = update
-        instructor: "Anna Smith",
-        course: "NodeJS Zero to Hero",
-        time: "5 hours ago"
-    },
-    {
-        id: 3,
-        type: 0,
-        instructor: "Michael Lee",
-        course: "UI/UX Design 101",
-        time: "Yesterday"
-    }
-];

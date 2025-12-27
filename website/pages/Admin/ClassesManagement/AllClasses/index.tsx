@@ -1,30 +1,44 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Search, Users, Calendar, Eye, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useClasses } from '../../../../hooks/useClasses';
 
 const AdminAllClasses: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
-    const classes = [
-        {
-            id: 1,
-            name: 'Web Development - Lớp A1',
-            instructor: 'Nguyễn Văn A',
-            students: 25,
-            schedule: 'T2, T4, T6 - 19:00-21:00',
-            startDate: '2024-01-15',
-            status: 'active',
-        },
-        {
-            id: 2,
-            name: 'React Advanced - Lớp B2',
-            instructor: 'Trần Thị B',
-            students: 20,
-            schedule: 'T3, T5, T7 - 18:00-20:00',
-            startDate: '2024-02-01',
-            status: 'active',
-        },
-    ];
+    const { data: classes, loading, error, refetch } = useClasses();
+
+    useEffect(() => {
+        refetch();
+    }, []);
+
+    const classList = classes || [];
+
+    // Format schedule - handle both string and object {days, time}
+    const formatSchedule = (schedule: any): string => {
+        if (!schedule) return 'Chưa có lịch';
+        if (typeof schedule === 'string') return schedule;
+        if (typeof schedule === 'object') {
+            const days = schedule.days || '';
+            const time = schedule.time || '';
+            if (days && time) return `${days} - ${time}`;
+            return days || time || 'Chưa có lịch';
+        }
+        return 'Chưa có lịch';
+    };
+
+    const filteredClasses = classList.filter((cls: any) =>
+        (cls.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (cls.instructor_name || '').toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
 
     return (
         <div className="space-y-6">
@@ -34,24 +48,27 @@ const AdminAllClasses: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <p className="text-sm text-gray-600">Tổng lớp học</p>
-                    <p className="text-2xl font-bold text-blue-600 mt-1">{classes.length}</p>
+                    <p className="text-2xl font-bold text-blue-600 mt-1">{classList.length}</p>
                 </div>
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <p className="text-sm text-gray-600">Đang hoạt động</p>
                     <p className="text-2xl font-bold text-green-600 mt-1">
-                        {classes.filter(c => c.status === 'active').length}
+                        {classList.filter((c: any) => c.status === 'active').length}
                     </p>
                 </div>
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <p className="text-sm text-gray-600">Tổng học viên</p>
                     <p className="text-2xl font-bold text-purple-600 mt-1">
-                        {classes.reduce((sum, c) => sum + c.students, 0)}
+                        {classList.reduce((sum: number, c: any) => sum + (c.students_count || c.students || 0), 0)}
                     </p>
                 </div>
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <p className="text-sm text-gray-600">TB học viên/lớp</p>
                     <p className="text-2xl font-bold text-yellow-600 mt-1">
-                        {Math.round(classes.reduce((sum, c) => sum + c.students, 0) / classes.length)}
+                        {classList.length > 0
+                            ? Math.round(classList.reduce((sum: number, c: any) => sum + (c.students_count || c.students || 0), 0) / classList.length)
+                            : 0
+                        }
                     </p>
                 </div>
             </div>
@@ -72,18 +89,18 @@ const AdminAllClasses: React.FC = () => {
 
             {/* Classes Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {classes.map((cls) => (
+                {filteredClasses.map((cls: any) => (
                     <div key={cls.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                         <h3 className="font-bold text-gray-900 mb-2">{cls.name}</h3>
-                        <p className="text-sm text-gray-600 mb-4">Giảng viên: {cls.instructor}</p>
+                        <p className="text-sm text-gray-600 mb-4">Giảng viên: {cls.instructor_name || 'N/A'}</p>
                         <div className="space-y-2 text-sm text-gray-600 mb-4">
                             <div className="flex items-center gap-2">
                                 <Users className="w-4 h-4" />
-                                <span>{cls.students} học viên</span>
+                                <span>{cls.students_count || cls.students || 0} học viên</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Calendar className="w-4 h-4" />
-                                <span>{cls.schedule}</span>
+                                <span>{formatSchedule(cls.schedule)}</span>
                             </div>
                         </div>
                         <div className="flex gap-2">
@@ -101,6 +118,12 @@ const AdminAllClasses: React.FC = () => {
                     </div>
                 ))}
             </div>
+
+            {filteredClasses.length === 0 && (
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                    <p className="text-gray-500">Không tìm thấy lớp học nào</p>
+                </div>
+            )}
         </div>
     );
 };

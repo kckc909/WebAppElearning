@@ -1,14 +1,36 @@
-import React from 'react';
-import { Play, CheckCircle, Lock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+﻿import React from 'react';
+import { Play, CheckCircle, Lock, BookOpen } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import { useCourseLessons } from '../../../../hooks/useCourseLessons';
 
 const StudentCourseLessons: React.FC = () => {
-    const lessons = [
-        { id: 1, title: 'Introduction to React', duration: '5:30', completed: true, locked: false },
-        { id: 2, title: 'JSX Basics', duration: '8:45', completed: true, locked: false },
-        { id: 3, title: 'Components', duration: '12:20', completed: false, locked: false },
-        { id: 4, title: 'Props & State', duration: '15:30', completed: false, locked: true },
-    ];
+    // Get course ID from params
+    const { courseId } = useParams<{ courseId: string }>();
+    const numericCourseId = parseInt(courseId || '1');
+
+    // TODO: Get current user ID from auth context
+    const currentUserId = 7;
+
+    // Get lessons from API hook
+    const { data: lessonsData, isLoading, error } = useCourseLessons(numericCourseId, currentUserId);
+
+    const lessons = (lessonsData || []).map((lesson: any) => ({
+        id: lesson.id,
+        lesson_id: lesson.lesson_id || lesson.id,
+        title: lesson.title,
+        duration: lesson.duration || '10:00',
+        completed: lesson.completed || lesson.is_completed,
+        locked: lesson.locked || false,
+        progress_percent: lesson.progress_percent || lesson.progress || 0,
+    }));
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {(error as Error).message}</div>;
+    }
 
     return (
         <div className="max-w-7xl mx-auto space-y-6">
@@ -18,7 +40,7 @@ const StudentCourseLessons: React.FC = () => {
                 {lessons.map((lesson) => (
                     <Link
                         key={lesson.id}
-                        to={lesson.locked ? '#' : `/lesson/${lesson.id}`}
+                        to={lesson.locked ? '#' : `/lesson/${lesson.lesson_id}`}
                         className={`flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow ${lesson.locked ? 'opacity-50 cursor-not-allowed' : ''
                             }`}
                     >
@@ -41,9 +63,22 @@ const StudentCourseLessons: React.FC = () => {
                             <p className="font-medium text-slate-900">{lesson.title}</p>
                             <p className="text-sm text-slate-500">{lesson.duration}</p>
                         </div>
+                        {!lesson.locked && !lesson.completed && lesson.progress_percent > 0 && (
+                            <div className="text-xs text-blue-600 font-medium">
+                                {lesson.progress_percent}%
+                            </div>
+                        )}
                     </Link>
                 ))}
             </div>
+
+            {lessons.length === 0 && (
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+                    <BookOpen className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-slate-900 mb-2">Chưa có bài học</h3>
+                    <p className="text-slate-600">Bài học sẽ hiển thị ở đây khi có</p>
+                </div>
+            )}
         </div>
     );
 };

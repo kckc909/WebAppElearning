@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Award, Download, Share2, Search, Filter, ExternalLink, CheckCircle, Eye } from 'lucide-react';
 import CertificateDialog from '../../../components/CertificateDialog';
+import { useMyCertificates } from '../../../hooks/useApi';
 
-interface Certificate {
+// Certificate type
+type Certificate = {
     id: number;
+    courseId?: number;
     courseTitle: string;
-    courseThumbnail: string;
-    certificateCode: string;
-    issuedDate: string;
     instructor: string;
+    instructorName?: string;
     category: string;
+    completedAt?: string;
+    issuedDate?: string;
+    certificateCode: string;
     certificateUrl: string;
     verificationUrl: string;
-}
+    user_id: number;
+    studentName?: string;
+    studentId?: number;
+};
 
 const StudentCertificates: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -21,52 +28,42 @@ const StudentCertificates: React.FC = () => {
     const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
     const [showPreview, setShowPreview] = useState(false);
 
-    const certificates: Certificate[] = [
-        {
-            id: 1,
-            courseTitle: 'Complete Web Development Bootcamp 2024',
-            courseThumbnail: 'https://picsum.photos/seed/cert1/400/250',
-            certificateCode: 'CERT-WD-2024-001',
-            issuedDate: '2024-12-01',
-            instructor: 'Dr. Angela Yu',
-            category: 'Web Development',
-            certificateUrl: '#',
-            verificationUrl: '#',
-        },
-        {
-            id: 2,
-            courseTitle: 'React - The Complete Guide',
-            courseThumbnail: 'https://picsum.photos/seed/cert2/400/250',
-            certificateCode: 'CERT-REACT-2024-042',
-            issuedDate: '2024-11-15',
-            instructor: 'Maximilian Schwarzmüller',
-            category: 'Frontend Development',
-            certificateUrl: '#',
-            verificationUrl: '#',
-        },
-        {
-            id: 3,
-            courseTitle: 'Python for Data Science',
-            courseThumbnail: 'https://picsum.photos/seed/cert3/400/250',
-            certificateCode: 'CERT-PY-2024-128',
-            issuedDate: '2024-10-20',
-            instructor: 'Jose Portilla',
-            category: 'Data Science',
-            certificateUrl: '#',
-            verificationUrl: '#',
-        },
-        {
-            id: 4,
-            courseTitle: 'UI/UX Design Masterclass',
-            courseThumbnail: 'https://picsum.photos/seed/cert4/400/250',
-            certificateCode: 'CERT-UX-2024-089',
-            issuedDate: '2024-09-10',
-            instructor: 'Daniel Schifano',
-            category: 'Design',
-            certificateUrl: '#',
-            verificationUrl: '#',
-        },
-    ];
+    // Get current user ID from localStorage
+    const getCurrentUserId = (): number => {
+        const accountData = sessionStorage.getItem('Account');
+        if (accountData) {
+            try {
+                const account = JSON.parse(accountData);
+                return account.id || 0;
+            } catch {
+                return 0;
+            }
+        }
+        return 0;
+    };
+
+    const currentUserId = getCurrentUserId();
+
+    // Get certificates from API hook
+    const { data: certificatesData, loading, error, refetch } = useMyCertificates(currentUserId);
+
+    useEffect(() => {
+        if (currentUserId) {
+            refetch();
+        }
+    }, [currentUserId]);
+
+    const certificates = certificatesData || [];
+
+    // Debug log
+    console.log('Certificates Page - Data:', {
+        currentUserId,
+        certificatesData,
+        certificates,
+        loading,
+        error
+    });
+
 
     const categories = ['all', ...Array.from(new Set(certificates.map((c) => c.category)))];
 
@@ -76,7 +73,8 @@ const StudentCertificates: React.FC = () => {
         return matchesSearch && matchesCategory;
     });
 
-    const formatDate = (dateString: string) => {
+    const formatDate = (dateString?: string) => {
+        if (!dateString) return 'N/A';
         return new Date(dateString).toLocaleDateString('vi-VN', {
             year: 'numeric',
             month: 'long',
@@ -226,6 +224,36 @@ const StudentCertificates: React.FC = () => {
         </div>
     );
 
+    // Loading state
+    if (loading) {
+        return (
+            <div className="max-w-7xl mx-auto py-20">
+                <div className="flex flex-col items-center justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+                    <p className="text-slate-600">Đang tải chứng chỉ...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="max-w-7xl mx-auto py-20">
+                <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+                    <p className="text-red-600 font-semibold mb-2">Lỗi khi tải chứng chỉ</p>
+                    <p className="text-red-500 text-sm mb-4">{error}</p>
+                    <button
+                        onClick={() => refetch()}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                        Thử lại
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-7xl mx-auto space-y-6">
             {/* Header */}
@@ -369,10 +397,10 @@ const StudentCertificates: React.FC = () => {
                 }}
                 certificate={selectedCertificate ? {
                     id: selectedCertificate.id,
-                    course_id: selectedCertificate.id,
+                    course_id: selectedCertificate.courseId || selectedCertificate.id,
                     course_title: selectedCertificate.courseTitle,
-                    student_name: 'Học viên',
-                    instructor_name: selectedCertificate.instructor,
+                    student_name: selectedCertificate.studentName || 'Học viên',
+                    instructor_name: selectedCertificate.instructorName || selectedCertificate.instructor,
                     certificate_url: selectedCertificate.certificateUrl,
                     issued_at: selectedCertificate.issuedDate,
                     certificate_code: selectedCertificate.certificateCode

@@ -156,5 +156,119 @@ export class CourseEnrollments_Service {
 
         return deleted;
     }
-}
 
+    async getEnrollmentWithProgress(courseId: number, studentId: number): Promise<any> {
+        const enrollment = await this.prisma.course_enrollments.findFirst({
+            where: {
+                course_id: courseId,
+                student_id: studentId
+            },
+            include: {
+                courses: {
+                    include: {
+                        course_sections: {
+                            include: {
+                                course_lessons: {
+                                    select: {
+                                        id: true,
+                                        title: true,
+                                        duration: true,
+                                        order_index: true,
+                                    }
+                                }
+                            },
+                            orderBy: { order_index: 'asc' }
+                        },
+                        accounts: {
+                            select: {
+                                id: true,
+                                full_name: true,
+                                avatar_url: true,
+                            }
+                        }
+                    }
+                },
+                lesson_progress: {
+                    include: {
+                        course_lessons: {
+                            select: {
+                                id: true,
+                                title: true,
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        return enrollment;
+    }
+
+    async markLessonComplete(lessonId: number, userId: number, courseId: number): Promise<any> {
+        // 1. Find enrollment
+        const enrollment = await this.prisma.course_enrollments.findFirst({
+            where: {
+                student_id: userId,
+                course_id: courseId
+            }
+        });
+
+        if (!enrollment) {
+            throw new Error('Enrollment not found');
+        }
+
+        // 2. Upsert lesson progress
+        const lessonProgress = await this.prisma.lesson_progress.upsert({
+            where: {
+                enrollment_id_lesson_id: {
+                    enrollment_id: enrollment.id,
+                    lesson_id: lessonId
+                }
+            },
+            update: {
+                is_completed: true,
+                progress: 100,
+                completed_at: new Date(),
+                last_accessed_at: new Date()
+            },
+            create: {
+                enrollment_id: enrollment.id,
+                lesson_id: lessonId,
+                is_completed: true,
+                progress: 100,
+                completed_at: new Date(),
+                last_accessed_at: new Date()
+            }
+        });
+
+        // 3. Update enrollment progress
+        const totalLessons = await this.prisma.course_lessons.count({
+            where: { course_id: courseId }
+        });
+
+        const completedLessons = await this.prisma.lesson_progress.count({
+            where: {
+                enrollment_id: enrollment.id,
+                is_completed: true
+            }
+        });
+
+        const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+        await this.prisma.course_enrollments.update({
+            where: { id: enrollment.id },
+            data: {
+                progress,
+                last_accessed_at: new Date(),
+                ...(progress === 100 ? { completed_at: new Date() } : {})
+            }
+        });
+
+        return {
+            lesson_progress: lessonProgress,
+            progress,
+            completed_lessons: completedLessons,
+            total_lessons: totalLessons
+        };
+    }
+}

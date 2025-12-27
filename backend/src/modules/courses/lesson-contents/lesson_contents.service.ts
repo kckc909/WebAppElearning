@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../../prisma.service.js";
 import type { LessonContentsCreateForm, LessonContentsUpdateForm } from "./lesson_contents.dto.js";
 
@@ -79,8 +79,19 @@ export class LessonContents_Service {
     async delete(deletedId: number)
         : Promise<any> {
 
-        const deleted = await this.prisma.lesson_blocks.delete({ where: { id: deletedId } })
+        // Check if block exists first
+        const block = await this.prisma.lesson_blocks.findUnique({ 
+            where: { id: deletedId } 
+        });
 
-        return deleted
+        if (!block) {
+            throw new NotFoundException(`Lesson block with id ${deletedId} not found`);
+        }
+
+        const deleted = await this.prisma.lesson_blocks.delete({ 
+            where: { id: deletedId } 
+        });
+
+        return deleted;
     }
 }

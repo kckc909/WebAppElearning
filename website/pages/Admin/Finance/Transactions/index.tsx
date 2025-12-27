@@ -1,67 +1,21 @@
-import React, { useState } from 'react';
-import { Search, Filter, Download, CheckCircle, XCircle, Clock, Eye } from 'lucide-react';
+﻿import React, { useState, useEffect } from 'react';
+import { Search, Download, CheckCircle, XCircle, Clock, Eye } from 'lucide-react';
+import { useTransactions } from '../../../../hooks/useTransactions';
 
 const AdminTransactions: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
 
-    const transactions = [
-        {
-            id: 'TXN001234',
-            date: '2024-12-14 10:30',
-            user: 'Nguyễn Văn A',
-            type: 'course',
-            item: 'Complete Web Development Bootcamp',
-            amount: 299000,
-            method: 'MoMo',
-            status: 'completed',
-        },
-        {
-            id: 'TXN001235',
-            date: '2024-12-14 09:15',
-            user: 'Trần Thị B',
-            type: 'class',
-            item: 'React Advanced - Lớp A1',
-            amount: 499000,
-            method: 'Bank Transfer',
-            status: 'pending',
-        },
-        {
-            id: 'TXN001236',
-            date: '2024-12-13 16:45',
-            user: 'Lê Văn C',
-            type: 'course',
-            item: 'Python for Data Science',
-            amount: 399000,
-            method: 'ZaloPay',
-            status: 'completed',
-        },
-        {
-            id: 'TXN001237',
-            date: '2024-12-13 14:20',
-            user: 'Phạm Thị D',
-            type: 'course',
-            item: 'UI/UX Design Masterclass',
-            amount: 349000,
-            method: 'Card',
-            status: 'failed',
-        },
-        {
-            id: 'TXN001238',
-            date: '2024-12-13 11:00',
-            user: 'Hoàng Văn E',
-            type: 'class',
-            item: 'JavaScript Fundamentals - Lớp B2',
-            amount: 599000,
-            method: 'MoMo',
-            status: 'completed',
-        },
-    ];
+    const { data: transactions, loading, error, refetch } = useTransactions();
 
-    const filteredTransactions = transactions.filter((txn) => {
-        const matchesSearch = txn.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            txn.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            txn.item.toLowerCase().includes(searchTerm.toLowerCase());
+    useEffect(() => {
+        refetch();
+    }, []);
+
+    const filteredTransactions = transactions.filter((txn: any) => {
+        const matchesSearch = (txn.id?.toString() || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (txn.user_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (txn.course_name || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = statusFilter === 'all' || txn.status === statusFilter;
         return matchesSearch && matchesStatus;
     });
@@ -98,9 +52,17 @@ const AdminTransactions: React.FC = () => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
     };
 
-    const totalAmount = filteredTransactions.reduce((sum, txn) => sum + txn.amount, 0);
-    const completedCount = filteredTransactions.filter(txn => txn.status === 'completed').length;
-    const pendingCount = filteredTransactions.filter(txn => txn.status === 'pending').length;
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
+
+    const totalAmount = filteredTransactions.reduce((sum: number, txn: any) => sum + (txn.amount || 0), 0);
+    const completedCount = filteredTransactions.filter((txn: any) => txn.status === 'completed').length;
+    const pendingCount = filteredTransactions.filter((txn: any) => txn.status === 'pending').length;
 
     return (
         <div className="space-y-6">
@@ -169,25 +131,24 @@ const AdminTransactions: React.FC = () => {
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Người dùng</th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Sản phẩm</th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Số tiền</th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Phương thức</th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Trạng thái</th>
                                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Hành động</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {filteredTransactions.map((txn) => (
+                            {filteredTransactions.map((txn: any) => (
                                 <tr key={txn.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 font-mono text-sm text-gray-900">{txn.id}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-600">{txn.date}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-900">{txn.user}</td>
+                                    <td className="px-6 py-4 font-mono text-sm text-gray-900">TXN{String(txn.id).padStart(6, '0')}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-600">
+                                        {txn.created_at ? new Date(txn.created_at).toLocaleString('vi-VN') : '-'}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-gray-900">{txn.user_name || 'N/A'}</td>
                                     <td className="px-6 py-4 text-sm text-gray-900">
                                         <div>
-                                            <p className="font-medium">{txn.item}</p>
-                                            <p className="text-xs text-gray-500">{txn.type === 'course' ? 'Khóa học' : 'Lớp học'}</p>
+                                            <p className="font-medium">{txn.course_name || 'N/A'}</p>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-sm font-semibold text-gray-900">{formatCurrency(txn.amount)}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-600">{txn.method}</td>
+                                    <td className="px-6 py-4 text-sm font-semibold text-gray-900">{formatCurrency(txn.amount || 0)}</td>
                                     <td className="px-6 py-4">{getStatusBadge(txn.status)}</td>
                                     <td className="px-6 py-4">
                                         <button className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors">
@@ -205,18 +166,6 @@ const AdminTransactions: React.FC = () => {
                         <p className="text-gray-500">Không tìm thấy giao dịch nào</p>
                     </div>
                 )}
-            </div>
-
-            {/* Pagination */}
-            <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-600">Hiển thị 1-{filteredTransactions.length} của {transactions.length} giao dịch</p>
-                <div className="flex gap-2">
-                    <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 transition-colors">Trước</button>
-                    <button className="px-3 py-1 bg-blue-600 text-white rounded">1</button>
-                    <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 transition-colors">2</button>
-                    <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 transition-colors">3</button>
-                    <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 transition-colors">Sau</button>
-                </div>
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Users, Calendar, BookOpen } from 'lucide-react';
 
 const InstructorClassDetail: React.FC = () => {

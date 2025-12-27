@@ -1,6 +1,13 @@
-import React from 'react';
-import { TEAM_MEMBERS } from '../../mockData';
+﻿import React from 'react';
 import { IoHomeOutline } from 'react-icons/io5';
+
+// Static team data - not user-scoped
+const TEAM_MEMBERS = [
+    { name: 'Chu Đức Minh', title: 'Back-end Developer', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Minh' },
+    { name: 'Trần Quang Minh Đức', title: 'Front-end Developer', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Duc' },
+    { name: 'Nguyễn Thị Duyên', title: 'UI/UX Designer', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Duyen' },
+    { name: 'Phạm Hoàng Nam', title: 'Product Manager', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nam' },
+];
 
 const ValueCard: React.FC<{ icon: string; title: string; description: string }> = ({ icon, title, description }) => (
     <div className="bg-white p-6 rounded-lg shadow-lg text-center h-full border-t-4 border-primary">

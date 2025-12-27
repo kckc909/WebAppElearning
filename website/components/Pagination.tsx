@@ -14,7 +14,7 @@ const Pagination: React.FC<PaginationProps> = ({
     totalItems,
     pageSize,
     onPageChange,
-    itemName = 'results'
+    itemName = 'kết quả'
 }) => {
     const totalPages = Math.ceil(totalItems / pageSize);
     const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
@@ -27,7 +27,7 @@ const Pagination: React.FC<PaginationProps> = ({
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                 <div>
                     <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">{startItem}</span> to <span className="font-medium">{endItem}</span> of <span className="font-medium">{totalItems}</span> {itemName}
+                        Hiển thị <span className="font-medium">{startItem}</span> đến <span className="font-medium">{endItem}</span> của <span className="font-medium">{totalItems}</span> {itemName}
                     </p>
                 </div>
                 <div>
@@ -37,7 +37,7 @@ const Pagination: React.FC<PaginationProps> = ({
                             disabled={currentPage === 1}
                             className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <span className="sr-only">Previous</span>
+                            <span className="sr-only">Trước</span>
                             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
                         </button>
 
@@ -55,8 +55,8 @@ const Pagination: React.FC<PaginationProps> = ({
                                     key={page}
                                     onClick={() => onPageChange(page)}
                                     className={`relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${page === currentPage
-                                            ? 'bg-brand-600 text-white focus-visible:outline-brand-600'
-                                            : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
+                                        ? 'bg-brand-600 text-white focus-visible:outline-brand-600'
+                                        : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
                                         }`}
                                 >
                                     {page}
@@ -69,7 +69,7 @@ const Pagination: React.FC<PaginationProps> = ({
                             disabled={currentPage === totalPages}
                             className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <span className="sr-only">Next</span>
+                            <span className="sr-only">Sau</span>
                             <ChevronRight className="h-5 w-5" aria-hidden="true" />
                         </button>
                     </nav>
@@ -83,17 +83,17 @@ const Pagination: React.FC<PaginationProps> = ({
                     disabled={currentPage === 1}
                     className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
                 >
-                    Previous
+                    Trước
                 </button>
                 <span className="text-sm text-gray-700">
-                    Page {currentPage} of {totalPages}
+                    Trang {currentPage} / {totalPages}
                 </span>
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
                 >
-                    Next
+                    Sau
                 </button>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { FileText, Image, Plus, Edit, Trash2, Eye, Save } from 'lucide-react';
 
 interface Page {

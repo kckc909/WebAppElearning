@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Users, BookOpen, Calendar, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 

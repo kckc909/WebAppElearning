@@ -36,7 +36,7 @@ export interface TableProps<T> {
     };
 }
 
-function DataTable<T extends { id: any }>({
+function DataTable<T extends { id?: any }>({
     columns,
     data,
     rowKey,
@@ -62,14 +62,14 @@ function DataTable<T extends { id: any }>({
                             value={searchTerm}
                             onChange={(e) => onSearch(e.target.value)}
                             className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
-                            placeholder="Filter..."
+                            placeholder="Lọc..."
                         />
                     </div>
                 )}
 
                 {selectedItems.size > 0 && (
                     <div className="flex items-center gap-2 bg-brand-50 px-3 py-1.5 rounded-md border border-brand-100">
-                        <span className="text-sm text-brand-700 font-medium">{selectedItems.size} selected</span>
+                        <span className="text-sm text-brand-700 font-medium">Đã chọn {selectedItems.size}</span>
                         <div className="h-4 w-px bg-brand-200 mx-1"></div>
                         {actions
                             .filter(a => a.label.toLowerCase().includes('delete')) // ví dụ lọc action delete
@@ -111,7 +111,7 @@ function DataTable<T extends { id: any }>({
                                     {col.label}
                                 </th>
                             ))}
-                            {actions.length > 0 && <th className="relative py-3.5 pl-3 pr-4 sm:pr-6"><span className="sr-only">Actions</span></th>}
+                            {actions.length > 0 && <th className="relative py-3.5 pl-3 pr-4 sm:pr-6"><span className="sr-only">Thao tác</span></th>}
                         </tr>
                     </thead>
 
@@ -119,7 +119,7 @@ function DataTable<T extends { id: any }>({
                         {data.length === 0 ? (
                             <tr>
                                 <td colSpan={columns.length + (actions.length > 0 ? 2 : 0)} className="py-8 text-center text-gray-500">
-                                    No data available.
+                                    Không có dữ liệu.
                                 </td>
                             </tr>
                         ) : (
@@ -176,7 +176,7 @@ function DataTable<T extends { id: any }>({
                     totalItems={pagination.totalItems}
                     pageSize={pagination.pageSize}
                     onPageChange={pagination.onPageChange}
-                    itemName="items"
+                    itemName="mục"
                 />
             )}
         </div>

@@ -1,92 +1,29 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Upload, File, Folder, Search, Grid, List, Download, Trash2, Share2, MoreVertical, FolderPlus, Settings } from 'lucide-react';
-
-interface FileItem {
-    id: number;
-    name: string;
-    type: 'file' | 'folder';
-    size?: string;
-    uploadDate: string;
-    fileType?: string;
-    url?: string;
-    category?: string;
-}
+import { useDocumentLibrary } from '../../../hooks/useDocumentLibrary';
 
 const AdminDocumentLibrary: React.FC = () => {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-    const [files] = useState<FileItem[]>([
-        {
-            id: 1,
-            name: 'Platform Terms of Service.pdf',
-            type: 'file',
-            size: '3.2 MB',
-            uploadDate: '2024-12-10',
-            fileType: 'pdf',
-            category: 'legal',
-            url: '#',
-        },
-        {
-            id: 2,
-            name: 'Course Templates',
-            type: 'folder',
-            uploadDate: '2024-12-08',
-            category: 'templates',
-        },
-        {
-            id: 3,
-            name: 'Branding Guidelines.pdf',
-            type: 'file',
-            size: '5.4 MB',
-            uploadDate: '2024-12-05',
-            fileType: 'pdf',
-            category: 'branding',
-            url: '#',
-        },
-        {
-            id: 4,
-            name: 'Certificate Templates.zip',
-            type: 'file',
-            size: '12.3 MB',
-            uploadDate: '2024-11-28',
-            fileType: 'zip',
-            category: 'templates',
-            url: '#',
-        },
-        {
-            id: 5,
-            name: 'System Resources',
-            type: 'folder',
-            uploadDate: '2024-11-20',
-            category: 'system',
-        },
-        {
-            id: 6,
-            name: 'Privacy Policy.pdf',
-            type: 'file',
-            size: '2.1 MB',
-            uploadDate: '2024-11-15',
-            fileType: 'pdf',
-            category: 'legal',
-            url: '#',
-        },
-    ]);
+    const { data: files, loading, error, refetch } = useDocumentLibrary({
+        category: selectedCategory === 'all' ? undefined : selectedCategory,
+        search: searchTerm || undefined
+    });
+
+    useEffect(() => {
+        refetch();
+    }, [selectedCategory, searchTerm]);
+
+    const fileList = files || [];
 
     const categories = [
-        { id: 'all', name: 'Tất cả', count: files.length },
-        { id: 'templates', name: 'Templates', count: files.filter(f => f.category === 'templates').length },
-        { id: 'legal', name: 'Legal Documents', count: files.filter(f => f.category === 'legal').length },
-        { id: 'branding', name: 'Branding', count: files.filter(f => f.category === 'branding').length },
-        { id: 'system', name: 'System Resources', count: files.filter(f => f.category === 'system').length },
+        { id: 'all', name: 'Tất cả', count: fileList.length },
+        { id: 'template', name: 'Templates', count: fileList.filter((f: any) => f.type === 'template').length },
+        { id: 'pdf', name: 'PDF', count: fileList.filter((f: any) => f.type === 'pdf').length },
+        { id: 'document', name: 'Documents', count: fileList.filter((f: any) => f.type === 'document').length },
     ];
-
-    const filteredFiles = files.filter((file) => {
-        const matchesSearch = file.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'all' || file.category === selectedCategory;
-        return matchesSearch && matchesCategory;
-    });
 
     const getFileIcon = (fileType?: string) => {
         const iconClass = 'w-8 h-8';
@@ -94,6 +31,7 @@ const AdminDocumentLibrary: React.FC = () => {
             case 'pdf':
                 return <File className={`${iconClass} text-red-500`} />;
             case 'docx':
+            case 'document':
                 return <File className={`${iconClass} text-blue-500`} />;
             case 'zip':
                 return <File className={`${iconClass} text-purple-500`} />;
@@ -101,6 +39,14 @@ const AdminDocumentLibrary: React.FC = () => {
                 return <File className={`${iconClass} text-gray-500`} />;
         }
     };
+
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
 
     return (
         <div className="flex-1 overflow-y-auto bg-gray-50 p-6">
@@ -129,9 +75,7 @@ const AdminDocumentLibrary: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-gray-600">Tổng file</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-1">
-                                    {files.filter((f) => f.type === 'file').length}
-                                </p>
+                                <p className="text-2xl font-bold text-gray-900 mt-1">{fileList.length}</p>
                             </div>
                             <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
                                 <File className="w-6 h-6 text-blue-600" />
@@ -143,9 +87,7 @@ const AdminDocumentLibrary: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-gray-600">Thư mục</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-1">
-                                    {files.filter((f) => f.type === 'folder').length}
-                                </p>
+                                <p className="text-2xl font-bold text-gray-900 mt-1">0</p>
                             </div>
                             <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
                                 <Folder className="w-6 h-6 text-green-600" />
@@ -157,7 +99,7 @@ const AdminDocumentLibrary: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-gray-600">Dung lượng</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-1">23 MB</p>
+                                <p className="text-2xl font-bold text-gray-900 mt-1">-</p>
                             </div>
                             <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
                                 <Upload className="w-6 h-6 text-purple-600" />
@@ -170,7 +112,7 @@ const AdminDocumentLibrary: React.FC = () => {
                             <div>
                                 <p className="text-sm text-gray-600">Templates</p>
                                 <p className="text-2xl font-bold text-gray-900 mt-1">
-                                    {files.filter(f => f.category === 'templates').length}
+                                    {fileList.filter((f: any) => f.type === 'template').length}
                                 </p>
                             </div>
                             <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
@@ -187,8 +129,8 @@ const AdminDocumentLibrary: React.FC = () => {
                             key={category.id}
                             onClick={() => setSelectedCategory(category.id)}
                             className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${selectedCategory === category.id
-                                    ? 'bg-green-600 text-white'
-                                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                                ? 'bg-green-600 text-white'
+                                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                                 }`}
                         >
                             {category.name} ({category.count})
@@ -215,15 +157,13 @@ const AdminDocumentLibrary: React.FC = () => {
                         <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
                             <button
                                 onClick={() => setViewMode('grid')}
-                                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600'
-                                    }`}
+                                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600'}`}
                             >
                                 <Grid className="w-5 h-5" />
                             </button>
                             <button
                                 onClick={() => setViewMode('list')}
-                                className={`p-2 rounded ${viewMode === 'list' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600'
-                                    }`}
+                                className={`p-2 rounded ${viewMode === 'list' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600'}`}
                             >
                                 <List className="w-5 h-5" />
                             </button>
@@ -234,18 +174,14 @@ const AdminDocumentLibrary: React.FC = () => {
                 {/* Files Display */}
                 {viewMode === 'grid' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {filteredFiles.map((file) => (
+                        {fileList.map((file: any) => (
                             <div
                                 key={file.id}
                                 className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow group"
                             >
                                 <div className="flex items-start justify-between mb-3">
                                     <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                                        {file.type === 'folder' ? (
-                                            <Folder className="w-8 h-8 text-amber-500" />
-                                        ) : (
-                                            getFileIcon(file.fileType)
-                                        )}
+                                        {getFileIcon(file.type)}
                                     </div>
                                     <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded">
                                         <MoreVertical className="w-5 h-5 text-gray-600" />
@@ -256,21 +192,21 @@ const AdminDocumentLibrary: React.FC = () => {
                                     {file.name}
                                 </h3>
                                 <p className="text-sm text-gray-600 mb-3">
-                                    {file.type === 'folder' ? 'Thư mục' : file.size}
+                                    {file.size || '-'}
                                 </p>
-                                <p className="text-xs text-gray-500">{new Date(file.uploadDate).toLocaleDateString('vi-VN')}</p>
+                                <p className="text-xs text-gray-500">
+                                    {file.created_at ? new Date(file.created_at).toLocaleDateString('vi-VN') : '-'}
+                                </p>
 
-                                {file.type === 'file' && (
-                                    <div className="mt-3 pt-3 border-t border-gray-100 flex gap-2">
-                                        <button className="flex-1 px-3 py-1.5 text-sm font-medium text-green-600 border border-green-600 rounded hover:bg-green-50 transition-colors flex items-center justify-center gap-1">
-                                            <Download className="w-4 h-4" />
-                                            Tải
-                                        </button>
-                                        <button className="px-3 py-1.5 text-sm font-medium text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors">
-                                            <Share2 className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                )}
+                                <div className="mt-3 pt-3 border-t border-gray-100 flex gap-2">
+                                    <button className="flex-1 px-3 py-1.5 text-sm font-medium text-green-600 border border-green-600 rounded hover:bg-green-50 transition-colors flex items-center justify-center gap-1">
+                                        <Download className="w-4 h-4" />
+                                        Tải
+                                    </button>
+                                    <button className="px-3 py-1.5 text-sm font-medium text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors">
+                                        <Share2 className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -281,49 +217,33 @@ const AdminDocumentLibrary: React.FC = () => {
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Tên</th>
                                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Loại</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Danh mục</th>
                                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Kích thước</th>
                                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Ngày tải</th>
                                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
-                                {filteredFiles.map((file) => (
+                                {fileList.map((file: any) => (
                                     <tr key={file.id} className="hover:bg-gray-50 transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                {file.type === 'folder' ? (
-                                                    <Folder className="w-6 h-6 text-amber-500" />
-                                                ) : (
-                                                    getFileIcon(file.fileType)
-                                                )}
+                                                {getFileIcon(file.type)}
                                                 <span className="font-medium text-gray-900">{file.name}</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-gray-600">
-                                            {file.type === 'folder' ? 'Thư mục' : file.fileType?.toUpperCase()}
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-gray-600">
-                                            <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
-                                                {file.category}
-                                            </span>
-                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-600">{file.type?.toUpperCase() || '-'}</td>
                                         <td className="px-6 py-4 text-sm text-gray-600">{file.size || '-'}</td>
                                         <td className="px-6 py-4 text-sm text-gray-600">
-                                            {new Date(file.uploadDate).toLocaleDateString('vi-VN')}
+                                            {file.created_at ? new Date(file.created_at).toLocaleDateString('vi-VN') : '-'}
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex gap-2">
-                                                {file.type === 'file' && (
-                                                    <>
-                                                        <button className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors">
-                                                            <Download className="w-4 h-4" />
-                                                        </button>
-                                                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors">
-                                                            <Share2 className="w-4 h-4" />
-                                                        </button>
-                                                    </>
-                                                )}
+                                                <button className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors">
+                                                    <Download className="w-4 h-4" />
+                                                </button>
+                                                <button className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors">
+                                                    <Share2 className="w-4 h-4" />
+                                                </button>
                                                 <button className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
@@ -336,7 +256,7 @@ const AdminDocumentLibrary: React.FC = () => {
                     </div>
                 )}
 
-                {filteredFiles.length === 0 && (
+                {fileList.length === 0 && (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
                         <div className="flex flex-col items-center text-center">
                             <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">

@@ -21,6 +21,12 @@ export const createThumbnail = async (imagePath, fileName) => {
         const thumbnailDir = path.join(config.uploadDir, 'images', 'thumbnails');
         const thumbnailPath = path.join(thumbnailDir, fileName);
         
+        // Check if input and output are the same
+        if (path.resolve(imagePath) === path.resolve(thumbnailPath)) {
+            console.warn('Thumbnail creation skipped: input and output paths are the same');
+            return null;
+        }
+        
         await sharp(imagePath)
             .resize(300, 300, { 
                 fit: 'inside', 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { IoChevronForward, IoChevronBack } from "react-icons/io5";
 import { Outlet } from "react-router-dom";
 import SidebarButton from '../../components/SidebarLink'
@@ -71,7 +71,7 @@ const Student_LogedInLayout = () => {
                 <SidebarButton to={student_routes.certificates} icon="Award" label="Chứng chỉ" isCollapsed={isCollapsed} />
                 <SidebarButton to={student_routes.stats} icon="BarChart" label="Thống kê học tập" isCollapsed={isCollapsed} />
                 <div className="my-3 border-t border-slate-200"></div>
-                <SidebarButton to={student_routes.checkout} icon="ShoppingCart" label="Giỏ hàng" isCollapsed={isCollapsed} />
+                <SidebarButton to="cart" icon="ShoppingCart" label="Giỏ hàng" isCollapsed={isCollapsed} />
                 <SidebarButton to={student_routes.payment_history} icon="CreditCard" label="Lịch sử thanh toán" isCollapsed={isCollapsed} />
                 <SidebarButton to={student_routes.profile} icon="User" label="Hồ sơ cá nhân" isCollapsed={isCollapsed} />
                 <SidebarButton to={student_routes.settings} icon="Settings" label="Cài đặt" isCollapsed={isCollapsed} />

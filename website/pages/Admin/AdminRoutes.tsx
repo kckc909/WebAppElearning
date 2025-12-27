@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+﻿import { Route, Routes } from "react-router-dom";
 import AdminLayout from "./AdminLayout";
 import AdminDashboard from './Dashboard/index'
 import { Toaster } from 'react-hot-toast';
@@ -16,6 +16,7 @@ import Admin_Approval from "./CoursesManagement/Approval";
 import Admin_Certificates from "./CoursesManagement/Certificates";
 import Admin_CoursesOverview from "./CoursesManagement/CoursesOverview";
 import Admin_CourseGrades from "./CoursesManagement/Grades";
+import Admin_LessonPreview from "./CoursesManagement/LessonPreview";
 import Admin_DocumentLibrary from "./DocumentLibrary";
 
 import Admin_StudentManagement from "./StudentManagement"
@@ -37,9 +38,51 @@ export default function AdminRoutes() {
             <Toaster
                 position="top-right"
                 reverseOrder={false}
+                gutter={12}
+                containerStyle={{
+                    top: 20,
+                    right: 20,
+                }}
                 toastOptions={{
                     duration: 3000,
-                    style: { fontSize: '14px' }
+                    style: {
+                        padding: '14px 20px',
+                        borderRadius: '12px',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+                        maxWidth: '400px',
+                    },
+                    success: {
+                        style: {
+                            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                            color: '#fff',
+                        },
+                        iconTheme: {
+                            primary: '#fff',
+                            secondary: '#10B981',
+                        },
+                    },
+                    error: {
+                        style: {
+                            background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+                            color: '#fff',
+                        },
+                        iconTheme: {
+                            primary: '#fff',
+                            secondary: '#EF4444',
+                        },
+                    },
+                    loading: {
+                        style: {
+                            background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                            color: '#fff',
+                        },
+                        iconTheme: {
+                            primary: '#fff',
+                            secondary: '#3B82F6',
+                        },
+                    },
                 }}
             />
             <Routes>
@@ -59,6 +102,7 @@ export default function AdminRoutes() {
                     {/*  COURSES MANAGEMENT  */}
                     <Route path={admin_routes.all_courses} element={<Admin_AllCourses />} />
                     <Route path={admin_routes.course_detail(':id')} element={<Admin_CourseDetail />} />
+                    <Route path={admin_routes.lesson_preview(':courseId', ':lessonId')} element={<Admin_LessonPreview />} />
                     <Route path={admin_routes.approval} element={<Admin_Approval />} />
                     <Route path={admin_routes.certificates} element={<Admin_Certificates />} />
                     <Route path={admin_routes.courses_overview} element={<Admin_CoursesOverview />} />

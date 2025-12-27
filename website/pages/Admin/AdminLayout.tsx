@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import AdminPageHeader from "./AdminPageHeader"
 import AdminPageSidebar from './AdminPageSidebar'
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function AdminLayout() {
+    const navigate = useNavigate();
+    const { logout } = useAuth();
     // Protect Route - 0 
     // Kiểm tra đăng nhập - quyền truy cập
     const [user, setUser] = useState<any>();
@@ -23,8 +26,8 @@ export default function AdminLayout() {
     }, [user])
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
-        setUser(null)
+        logout();
+        navigate('/');
     };
 
     // if (!user && redirect) {

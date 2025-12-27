@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Users, Calendar, Clock, BookOpen } from 'lucide-react';
 

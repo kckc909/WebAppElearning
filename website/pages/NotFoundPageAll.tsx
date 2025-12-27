@@ -1,4 +1,4 @@
-
+﻿
 import { LostIcon } from '../components/icons/icons';
 
 export default function NotFoundPageAll() {

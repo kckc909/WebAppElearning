@@ -1,8 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { Search, Bell, Menu, LogOut, User, Home, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { MOCK_USER } from '../../mockData';
+
+// Default avatar fallback
+const DEFAULT_AVATAR = 'https://api.dicebear.com/7.x/avataaars/svg?seed=SuperAdmin';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -29,7 +31,7 @@ const SuperAdminHeader: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     const handleLogout = () => {
         logout();
         setIsDropdownOpen(false);
-        navigate('/superadmin/login')
+        navigate('/')
     }
 
     return (
@@ -72,7 +74,7 @@ const SuperAdminHeader: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
                     >
                         <img
                             className="h-8 w-8 rounded-full object-cover border border-gray-200"
-                            src={user?.avatar_url || MOCK_USER.avatar}
+                            src={user?.avatar_url || DEFAULT_AVATAR}
                             alt="User Avatar"
                         />
                         <span className="hidden md:block text-sm font-medium text-gray-700">{user?.full_name || 'Super Admin'}</span>

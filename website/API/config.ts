@@ -3,11 +3,11 @@
  * Toggle giữa Mock Data và Real Database API
  */
 
-// Đọc từ localStorage, mặc định là true (Mock API)
+// Đọc từ localStorage, mặc định là false (Real API - Database)
 const getApiMode = (): boolean => {
-    if (typeof window === 'undefined') return true;
+    if (typeof window === 'undefined') return false;
     const stored = localStorage.getItem('USE_MOCK_API');
-    return stored === null ? true : stored === 'true';
+    return stored === null ? false : stored === 'true';
 };
 
 // Toggle này quyết định dùng Mock hay Real API

@@ -4,12 +4,8 @@
  * Seedable directly to database
  */
 
-// Enum (must match Prisma)
-export enum ClassCalendarType {
-    CLASS = 'CLASS',
-    EXAM = 'EXAM',
-    ASSIGNMENT = 'ASSIGNMENT'
-}
+// Import enum from central enums file
+import { ClassCalendarType } from './enums.mock';
 
 export interface ClassCalendar {
     id: number;

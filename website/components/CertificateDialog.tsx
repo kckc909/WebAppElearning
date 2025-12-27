@@ -3,8 +3,9 @@
  * Hiển thị chứng chỉ dạng dialog với preview và tải xuống
  */
 
-import React from 'react';
-import { X, Download, Share2, Award, ExternalLink, Printer } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Download, Share2, Award, Printer, RefreshCw } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface CertificateDialogProps {
     isOpen: boolean;
@@ -19,9 +20,12 @@ interface CertificateDialogProps {
         issued_at?: string;
         certificate_code?: string;
     } | null;
+    onRegenerate?: () => void; // Callback sau khi regenerate thành công
 }
 
-const CertificateDialog: React.FC<CertificateDialogProps> = ({ isOpen, onClose, certificate }) => {
+const CertificateDialog: React.FC<CertificateDialogProps> = ({ isOpen, onClose, certificate, onRegenerate }) => {
+    const [isRegenerating, setIsRegenerating] = useState(false);
+
     if (!isOpen || !certificate) return null;
 
     const formatDate = (dateStr: string | undefined) => {
@@ -37,8 +41,7 @@ const CertificateDialog: React.FC<CertificateDialogProps> = ({ isOpen, onClose, 
         if (certificate.certificate_url) {
             window.open(certificate.certificate_url, '_blank');
         } else {
-            // Create downloadable certificate
-            alert('Chức năng tải xuống chứng chỉ đang được phát triển');
+            toast.error('Chứng chỉ chưa có ảnh. Vui lòng tạo lại ảnh chứng chỉ.');
         }
     };
 
@@ -61,7 +64,52 @@ const CertificateDialog: React.FC<CertificateDialogProps> = ({ isOpen, onClose, 
             }
         } else {
             navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
-            alert('Đã sao chép link chia sẻ!');
+            toast.success('Đã sao chép link chia sẻ!');
+        }
+    };
+
+    const handleRegenerate = async () => {
+        if (!certificate.id) return;
+
+        // Confirm dialog
+        if (!window.confirm('Bạn có chắc muốn tạo lại ảnh chứng chỉ? Ảnh cũ sẽ bị thay thế.')) {
+            return;
+        }
+
+        setIsRegenerating(true);
+
+        try {
+            const API_BASE_URL = (import.meta as any).env.VITE_BACK_END_API_PATH || 'http://localhost:4000';
+            const response = await fetch(`${API_BASE_URL}/certificates/${certificate.id}/regenerate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to regenerate certificate');
+            }
+
+            const result = await response.json();
+            
+            toast.success('Đã tạo lại ảnh chứng chỉ thành công! 🎉');
+            
+            // Callback để refresh data
+            if (onRegenerate) {
+                onRegenerate();
+            }
+
+            // Reload page sau 1s để lấy URL mới
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+
+        } catch (error) {
+            console.error('Error regenerating certificate:', error);
+            toast.error('Có lỗi xảy ra khi tạo lại ảnh chứng chỉ');
+        } finally {
+            setIsRegenerating(false);
         }
     };
 
@@ -145,9 +193,13 @@ const CertificateDialog: React.FC<CertificateDialogProps> = ({ isOpen, onClose, 
                                 </div>
                             </div>
 
+
                             {/* Signature area */}
                             <div className="flex justify-between items-end px-12 mt-8">
                                 <div className="text-center">
+                                    <p className="text-base font-semibold text-slate-800 mb-2" style={{ fontFamily: 'cursive' }}>
+                                        {certificate.instructor_name || 'Giảng viên'}
+                                    </p>
                                     <div className="w-32 h-px bg-slate-300 mb-2"></div>
                                     <p className="text-sm text-slate-500">Giảng viên</p>
                                 </div>
@@ -156,6 +208,9 @@ const CertificateDialog: React.FC<CertificateDialogProps> = ({ isOpen, onClose, 
                                     <p className="text-xs text-slate-400">MiLearn Certified</p>
                                 </div>
                                 <div className="text-center">
+                                    <p className="text-base font-semibold text-slate-800 mb-2" style={{ fontFamily: 'cursive' }}>
+                                        MiLearn
+                                    </p>
                                     <div className="w-32 h-px bg-slate-300 mb-2"></div>
                                     <p className="text-sm text-slate-500">Ban giám đốc</p>
                                 </div>
@@ -170,6 +225,15 @@ const CertificateDialog: React.FC<CertificateDialogProps> = ({ isOpen, onClose, 
                         Cấp ngày: {formatDate(certificate.issued_at)}
                     </div>
                     <div className="flex gap-3">
+                        <button
+                            onClick={handleRegenerate}
+                            disabled={isRegenerating}
+                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Tạo lại ảnh chứng chỉ với template mới"
+                        >
+                            <RefreshCw className={`w-4 h-4 ${isRegenerating ? 'animate-spin' : ''}`} />
+                            {isRegenerating ? 'Đang tạo...' : 'Tạo lại ảnh'}
+                        </button>
                         <button
                             onClick={handleShare}
                             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"

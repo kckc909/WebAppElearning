@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import { X, Edit2, Plus, EyeOff, Eye } from 'lucide-react';
-import { Account } from '../../../types/types';
+import { Account } from '../../../API/interfaces/IAccountsApi';
 
 export interface AccountModalProps {
     isOpen: boolean;
@@ -16,7 +16,7 @@ const defaultFormData: Account = {
     email: '',
     username: '',
     password_hash: '',
-    role: 2,
+    role: 'STUDENT',
     status: 0,
 };
 
@@ -37,13 +37,13 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'role' || name === 'status' ? Number(value) : value
+            [name]: name === 'status' ? Number(value) : value
         }));
         setIsDirty(true);
     };
 
     const handleSafeClose = useCallback(() => {
-        if (isDirty && !window.confirm('You have unsaved changes. Are you sure you want to close?')) return;
+        if (isDirty && !window.confirm('Bạn có thay đổi chưa lưu. Bạn có chắc muốn đóng?')) return;
         onClose();
     }, [isDirty, onClose]);
 
@@ -85,7 +85,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
                         <h3 className="text-base font-semibold leading-6 text-gray-900">{title}</h3>
                         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
                             <div>
-                                <label htmlFor="full_name" className="block text-sm font-medium text-gray-900">Full Name</label>
+                                <label htmlFor="full_name" className="block text-sm font-medium text-gray-900">Họ tên</label>
                                 <input
                                     type="text"
                                     id="full_name"
@@ -98,7 +98,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
                             </div>
 
                             <div>
-                                <label htmlFor="username" className="block text-sm font-medium text-gray-900">Username</label>
+                                <label htmlFor="username" className="block text-sm font-medium text-gray-900">Tên đăng nhập</label>
                                 <input
                                     type="text"
                                     id="username"
@@ -124,7 +124,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
                             </div>
 
                             <div>
-                                <label htmlFor="password_hash" className="block text-sm font-medium text-gray-900">Password</label>
+                                <label htmlFor="password_hash" className="block text-sm font-medium text-gray-900">Mật khẩu</label>
                                 <div className="relative mt-1">
                                     <input
                                         type={showPassword ? 'text' : 'password'}
@@ -133,7 +133,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
                                         value={formData.password_hash}
                                         onChange={handleChange}
                                         className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
-                                        placeholder={initialData ? 'Leave blank to keep current password' : ''}
+                                        placeholder={initialData ? 'Để trống nếu giữ mật khẩu hiện tại' : ''}
                                     />
                                     <button
                                         type="button"
@@ -147,23 +147,23 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label htmlFor="role" className="block text-sm font-medium text-gray-900">Role</label>
+                                    <label htmlFor="role" className="block text-sm font-medium text-gray-900">Vai trò</label>
                                     <select
                                         id="role"
                                         name="role"
-                                        value={formData.role as number}
+                                        value={formData.role ?? 'STUDENT'}
                                         onChange={handleChange}
                                         className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
                                     >
-                                        <option value={-1}>Super Admin</option>
-                                        <option value={0}>Admin</option>
-                                        <option value={1}>Instructor</option>
-                                        <option value={2}>Student</option>
+                                        <option value="SUPER_ADMIN">Quản trị viên cao cấp</option>
+                                        <option value="ADMIN">Quản trị viên</option>
+                                        <option value="INSTRUCTOR">Giảng viên</option>
+                                        <option value="STUDENT">Học viên</option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label htmlFor="status" className="block text-sm font-medium text-gray-900">Status</label>
+                                    <label htmlFor="status" className="block text-sm font-medium text-gray-900">Trạng thái</label>
                                     <select
                                         id="status"
                                         name="status"
@@ -171,9 +171,9 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
                                         onChange={handleChange}
                                         className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-brand-600 sm:text-sm"
                                     >
-                                        <option value={0}>Active</option>
-                                        <option value={1}>Inactive</option>
-                                        <option value={2}>Pending</option>
+                                        <option value={0}>Hoạt động</option>
+                                        <option value={1}>Không hoạt động</option>
+                                        <option value={2}>Đang chờ</option>
                                     </select>
                                 </div>
                             </div>
@@ -183,14 +183,14 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSubmit, 
                                     type="submit"
                                     className="inline-flex w-full justify-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 sm:col-start-2"
                                 >
-                                    {initialData ? 'Save Changes' : 'Create User'}
+                                    {initialData ? 'Lưu thay đổi' : 'Tạo người dùng'}
                                 </button>
                                 <button
                                     type="button"
                                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
                                     onClick={handleSafeClose}
                                 >
-                                    Cancel
+                                    Hủy
                                 </button>
                             </div>
                         </form>

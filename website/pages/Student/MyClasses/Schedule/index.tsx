@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, MapPin, Video, Users, Plus, Filter, ExternalLink } from 'lucide-react';
 import { classesApi } from '../../../../API';
+import { useAuth } from '../../../../contexts/AuthContext';
 import { student_routes } from '../../../page_routes';
 
 interface CalendarEvent {
@@ -20,21 +21,21 @@ interface CalendarEvent {
 
 const StudentSchedule: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const userId = user?.id || 7;
+
     const [currentDate, setCurrentDate] = useState(new Date());
     const [events, setEvents] = useState<CalendarEvent[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedFilter, setSelectedFilter] = useState<'all' | 'class' | 'assignment' | 'exam'>('all');
     const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
 
-    // Mock user ID
-    const CURRENT_USER_ID = 7;
-
     // Fetch events from API
     useEffect(() => {
         const fetchEvents = async () => {
             setLoading(true);
             try {
-                const response = await classesApi.getCalendar(CURRENT_USER_ID);
+                const response = await classesApi.getCalendar(userId);
                 if (response.success) {
                     // Transform API data to CalendarEvent format
                     const transformedEvents = response.data.map((event: any) => ({

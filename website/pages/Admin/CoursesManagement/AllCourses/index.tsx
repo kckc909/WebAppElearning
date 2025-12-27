@@ -1,86 +1,48 @@
-import React, { useState } from 'react';
-import { Search, Filter, Eye, Edit, Trash2, Plus, BookOpen, Users, Star } from 'lucide-react';
+﻿import React, { useState, useEffect } from 'react';
+import { Search, Eye, BookOpen, Users, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAdminCourses } from '../../../../hooks/useApi';
+import { CourseStatusBadge } from '../../../../components/CourseStatusBadge';
 
 const AdminAllCourses: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
 
-    const courses = [
-        {
-            id: 1,
-            title: 'Complete Web Development Bootcamp 2024',
-            instructor: 'Dr. Angela Yu',
-            category: 'Web Development',
-            students: 1250,
-            rating: 4.8,
-            reviews: 450,
-            price: 299000,
-            status: 'published',
-            thumbnail: 'https://picsum.photos/seed/course1/400/225',
-        },
-        {
-            id: 2,
-            title: 'React - The Complete Guide',
-            instructor: 'Maximilian Schwarzmüller',
-            category: 'Web Development',
-            students: 980,
-            rating: 4.9,
-            reviews: 380,
-            price: 349000,
-            status: 'published',
-            thumbnail: 'https://picsum.photos/seed/course2/400/225',
-        },
-        {
-            id: 3,
-            title: 'Python for Data Science',
-            instructor: 'Jose Portilla',
-            category: 'Data Science',
-            students: 850,
-            rating: 4.7,
-            reviews: 320,
-            price: 399000,
-            status: 'published',
-            thumbnail: 'https://picsum.photos/seed/course3/400/225',
-        },
-        {
-            id: 4,
-            title: 'UI/UX Design Masterclass',
-            instructor: 'Daniel Schifano',
-            category: 'Design',
-            students: 720,
-            rating: 4.6,
-            reviews: 280,
-            price: 349000,
-            status: 'draft',
-            thumbnail: 'https://picsum.photos/seed/course4/400/225',
-        },
-    ];
+    // Use useAdminCourses to get courses (excludes DRAFT - admin shouldn't see instructor's drafts)
+    const { data: courses, loading, error, refetch } = useAdminCourses();
 
-    const filteredCourses = courses.filter((course) => {
-        const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.instructor.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = categoryFilter === 'all' || course.category === categoryFilter;
+    useEffect(() => {
+        refetch();
+    }, []);
+
+    const courseList = courses || [];
+
+    const filteredCourses = courseList.filter((course: any) => {
+        const matchesSearch = (course.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (course.accounts?.full_name || course.instructor_name || course.instructor || '').toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = categoryFilter === 'all' || course.course_categories?.name === categoryFilter;
         const matchesStatus = statusFilter === 'all' || course.status === statusFilter;
         return matchesSearch && matchesCategory && matchesStatus;
     });
 
     const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
     };
+
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800">Tất cả khóa học</h1>
-                <Link
-                    to="/admin/courses/create"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-                >
-                    <Plus className="w-4 h-4" />
-                    Thêm khóa học
-                </Link>
+                <p className="text-gray-500">Tổng cộng: {courseList.length} khóa học</p>
             </div>
 
             {/* Stats */}
@@ -89,7 +51,7 @@ const AdminAllCourses: React.FC = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm text-gray-600">Tổng khóa học</p>
-                            <p className="text-2xl font-bold text-gray-900 mt-1">{courses.length}</p>
+                            <p className="text-2xl font-bold text-gray-900 mt-1">{courseList.length}</p>
                         </div>
                         <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
                             <BookOpen className="w-6 h-6 text-blue-600" />
@@ -102,7 +64,7 @@ const AdminAllCourses: React.FC = () => {
                         <div>
                             <p className="text-sm text-gray-600">Đã xuất bản</p>
                             <p className="text-2xl font-bold text-green-600 mt-1">
-                                {courses.filter(c => c.status === 'published').length}
+                                {courseList.filter((c: any) => c.status === 'PUBLISHED').length}
                             </p>
                         </div>
                         <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
@@ -116,7 +78,7 @@ const AdminAllCourses: React.FC = () => {
                         <div>
                             <p className="text-sm text-gray-600">Tổng học viên</p>
                             <p className="text-2xl font-bold text-purple-600 mt-1">
-                                {courses.reduce((sum, c) => sum + c.students, 0).toLocaleString()}
+                                {courseList.reduce((sum: number, c: any) => sum + (c.students_count || c.students || 0), 0).toLocaleString()}
                             </p>
                         </div>
                         <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
@@ -130,7 +92,10 @@ const AdminAllCourses: React.FC = () => {
                         <div>
                             <p className="text-sm text-gray-600">Đánh giá TB</p>
                             <p className="text-2xl font-bold text-yellow-600 mt-1">
-                                {(courses.reduce((sum, c) => sum + c.rating, 0) / courses.length).toFixed(1)}
+                                {courseList.length > 0
+                                    ? (courseList.reduce((sum: number, c: any) => sum + (c.rating || 0), 0) / courseList.length).toFixed(1)
+                                    : '-'
+                                }
                             </p>
                         </div>
                         <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
@@ -169,64 +134,53 @@ const AdminAllCourses: React.FC = () => {
                         className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                         <option value="all">Tất cả trạng thái</option>
-                        <option value="published">Đã xuất bản</option>
-                        <option value="draft">Bản nháp</option>
+                        <option value="PUBLISHED">Đã xuất bản</option>
+                        <option value="PENDING">Chờ duyệt</option>
+                        <option value="REJECTED">Từ chối</option>
                     </select>
                 </div>
             </div>
 
             {/* Courses Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredCourses.map((course) => (
+                {filteredCourses.map((course: any) => (
                     <div key={course.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                        <img src={course.thumbnail} alt={course.title} className="w-full h-40 object-cover" />
+                        <img
+                            src={course.thumbnail_url || course.thumbnail || `https://picsum.photos/seed/course${course.id}/400/225`}
+                            alt={course.title}
+                            className="w-full h-40 object-cover"
+                        />
                         <div className="p-4">
                             <div className="flex items-start justify-between mb-2">
                                 <h3 className="font-semibold text-gray-900 line-clamp-2 flex-1">{course.title}</h3>
-                                <span className={`px-2 py-1 rounded text-xs font-medium ml-2 ${course.status === 'published'
-                                        ? 'bg-green-100 text-green-700'
-                                        : 'bg-yellow-100 text-yellow-700'
-                                    }`}>
-                                    {course.status === 'published' ? 'Xuất bản' : 'Nháp'}
-                                </span>
+                                <div className="ml-2">
+                                    <CourseStatusBadge status={course.status} />
+                                </div>
                             </div>
-                            <p className="text-sm text-gray-600 mb-3">{course.instructor}</p>
+                            <p className="text-sm text-gray-600 mb-3">{course.accounts?.full_name || course.instructor_name || course.instructor}</p>
 
                             <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
                                 <div className="flex items-center gap-1">
                                     <Users className="w-4 h-4" />
-                                    <span>{course.students.toLocaleString()}</span>
+                                    <span>{(course.students_count || course.students || 0).toLocaleString()}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                                    <span>{course.rating}</span>
-                                    <span className="text-gray-400">({course.reviews})</span>
+                                    <span>{course.rating || '-'}</span>
+                                    <span className="text-gray-400">({course.reviews_count || course.reviews || 0})</span>
                                 </div>
                             </div>
 
                             <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                                 <span className="text-lg font-bold text-blue-600">{formatCurrency(course.price)}</span>
-                                <div className="flex gap-2">
-                                    <Link
-                                        to={`/admin/courses/${course.id}`}
-                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                                        title="Xem chi tiết"
-                                    >
-                                        <Eye className="w-4 h-4" />
-                                    </Link>
-                                    <button
-                                        className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors"
-                                        title="Chỉnh sửa"
-                                    >
-                                        <Edit className="w-4 h-4" />
-                                    </button>
-                                    <button
-                                        className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                                        title="Xóa"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
-                                </div>
+                                <Link
+                                    to={`/admin/courses/${course.id}`}
+                                    className="px-3 py-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors flex items-center gap-1 text-sm font-medium"
+                                    title="Xem chi tiết"
+                                >
+                                    <Eye className="w-4 h-4" />
+                                    Xem
+                                </Link>
                             </div>
                         </div>
                     </div>

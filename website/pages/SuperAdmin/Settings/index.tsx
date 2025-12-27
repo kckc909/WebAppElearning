@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Save, Lock, Bell, Globe, Mail } from 'lucide-react';
 
 const Settings: React.FC = () => {

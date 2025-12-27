@@ -108,3 +108,22 @@ export class CheckExistsForm {
     @IsNotEmpty()
     username!: string;
 }
+
+export class RegisterForm {
+    @IsString()
+    @IsNotEmpty()
+    full_name!: string;
+
+    @IsEmail()
+    email!: string;
+
+    @IsNotEmpty()
+    username!: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MinLength(6, {
+        message: 'Mật khẩu phải có tối thiểu $constraint1 ký tự',
+    })
+    password_hash!: string;
+}

@@ -1,30 +1,31 @@
-import React, { useState } from 'react';
-import { DollarSign, TrendingUp, TrendingDown, Calendar, Download } from 'lucide-react';
+﻿import React, { useState } from 'react';
+import { DollarSign, TrendingUp, Calendar, Download } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useRevenue, useCategoryRevenue } from '../../../../hooks/useRevenue';
 
 const AdminRevenue: React.FC = () => {
-    const [timeRange, setTimeRange] = useState('month');
+    const [timeRange, setTimeRange] = useState<'day' | 'week' | 'month' | 'year'>('month');
 
-    const revenueData = [
-        { month: 'T1', revenue: 45000000, courses: 120, classes: 45 },
-        { month: 'T2', revenue: 52000000, courses: 145, classes: 52 },
-        { month: 'T3', revenue: 48000000, courses: 130, classes: 48 },
-        { month: 'T4', revenue: 61000000, courses: 165, classes: 58 },
-        { month: 'T5', revenue: 55000000, courses: 150, classes: 55 },
-        { month: 'T6', revenue: 67000000, courses: 180, classes: 62 },
-    ];
-
-    const categoryRevenue = [
-        { category: 'Web Development', revenue: 45000000, percentage: 35 },
-        { category: 'Data Science', revenue: 32000000, percentage: 25 },
-        { category: 'Design', revenue: 25600000, percentage: 20 },
-        { category: 'Business', revenue: 19200000, percentage: 15 },
-        { category: 'Other', revenue: 6400000, percentage: 5 },
-    ];
+    const { data: revenueData, loading: loadingRevenue, error: revenueError } = useRevenue(timeRange);
+    const { data: categoryRevenue, loading: loadingCategory, error: categoryError } = useCategoryRevenue(timeRange === 'year' ? 'year' : 'month');
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
     };
+
+    const loading = loadingRevenue || loadingCategory;
+    const error = revenueError || categoryError;
+
+    if (loading) {
+        return <div className="flex items-center justify-center h-64">�ang t?i...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">L?i: {error}</div>;
+    }
+
+    // Calculate totals from data
+    const totalRevenue = revenueData.reduce((sum, d) => sum + (d.revenue || 0), 0);
 
     return (
         <div className="space-y-6">
@@ -33,12 +34,12 @@ const AdminRevenue: React.FC = () => {
                 <div className="flex gap-2">
                     <select
                         value={timeRange}
-                        onChange={(e) => setTimeRange(e.target.value)}
+                        onChange={(e) => setTimeRange(e.target.value as 'day' | 'week' | 'month' | 'year')}
                         className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                         <option value="week">7 ngày qua</option>
                         <option value="month">30 ngày qua</option>
-                        <option value="quarter">90 ngày qua</option>
+                        <option value="day">1 ngày qua</option>
                         <option value="year">1 năm qua</option>
                     </select>
                     <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
@@ -116,7 +117,7 @@ const AdminRevenue: React.FC = () => {
                     {categoryRevenue.map((cat, index) => (
                         <div key={index}>
                             <div className="flex items-center justify-between mb-2">
-                                <span className="font-medium text-gray-900">{cat.category}</span>
+                                <span className="font-medium text-gray-900">{cat.category_name}</span>
                                 <span className="text-sm text-gray-600">{formatCurrency(cat.revenue)}</span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-2.5">

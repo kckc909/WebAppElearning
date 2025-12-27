@@ -4,20 +4,7 @@
  * Seedable directly to database
  */
 
-// Enums (must match Prisma)
-export enum CourseStatus {
-    DRAFT = 'DRAFT',           // 0 in old system
-    PENDING = 'PENDING',       // 1
-    PUBLISHED = 'PUBLISHED',   // 2
-    ARCHIVED = 'ARCHIVED'      // 3
-}
-
-export enum CourseLevel {
-    ALL_LEVELS = 'ALL_LEVELS',       // 0 in old system
-    BEGINNER = 'BEGINNER',           // 1
-    INTERMEDIATE = 'INTERMEDIATE',   // 2
-    ADVANCED = 'ADVANCED'            // 3
-}
+import { CourseStatus, CourseLevel } from './enums.mock';
 
 export interface Course {
     id: number;
@@ -285,6 +272,24 @@ export const COURSES: Course[] = [
         status: CourseStatus.PUBLISHED,
         created_at: '2024-04-20T00:00:00.000Z',
         updated_at: '2024-10-05T00:00:00.000Z'
+    },
+
+    // === TEST COURSE - All Layout Types & Block Types ===
+    {
+        id: 16,
+        instructor_id: 3,
+        category_id: 1,
+        title: 'Complete Lesson Builder Demo - All Features',
+        short_description: 'Demo course showcasing all layout types and block types in the lesson builder.',
+        description: '<h3>About this course</h3><p>This is a comprehensive demo course designed to test all features of the lesson builder system. Each lesson uses a different layout type and contains various block types.</p>',
+        thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600',
+        price: 0,
+        discount_price: 0,
+        level: CourseLevel.ALL_LEVELS,
+        language: 'en',
+        status: CourseStatus.PUBLISHED,
+        created_at: '2024-12-18T00:00:00.000Z',
+        updated_at: '2024-12-18T00:00:00.000Z'
     }
 ];
 

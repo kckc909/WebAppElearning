@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+﻿import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { student_routes } from '../page_routes';
 
@@ -10,10 +10,12 @@ import LessonPage from './Courses/Lesson/index'
 import StudentDashboard from './Dashboard/index'
 import BecomeInstructorPage from './BecomeInstructorPage'
 import AuthPage from './AuthPage'
+import ForgotPasswordPage from './ForgotPasswordPage'
 import AboutPage from './AboutPage'
 import NotFoundPageAll from '../NotFoundPageAll';
 
 import Student_Checkout from "./CheckOut"
+import Student_Cart from "./Cart"
 import Student_Profile from "./Profile"
 import Schedule from "./MyClasses/Schedule"
 import StudentStats from "./Stats"
@@ -32,20 +34,49 @@ export default function StudentRoutes() {
         <>
             <Toaster
                 position="top-right"
+                gutter={12}
+                containerStyle={{
+                    top: 20,
+                    right: 20,
+                }}
                 toastOptions={{
                     duration: 3000,
                     style: {
-                        background: '#333',
-                        color: '#fff',
+                        padding: '14px 20px',
+                        borderRadius: '12px',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+                        maxWidth: '400px',
                     },
                     success: {
                         style: {
-                            background: '#10b981',
+                            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                            color: '#fff',
+                        },
+                        iconTheme: {
+                            primary: '#fff',
+                            secondary: '#10B981',
                         },
                     },
                     error: {
                         style: {
-                            background: '#ef4444',
+                            background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+                            color: '#fff',
+                        },
+                        iconTheme: {
+                            primary: '#fff',
+                            secondary: '#EF4444',
+                        },
+                    },
+                    loading: {
+                        style: {
+                            background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                            color: '#fff',
+                        },
+                        iconTheme: {
+                            primary: '#fff',
+                            secondary: '#3B82F6',
                         },
                     },
                 }}
@@ -58,6 +89,7 @@ export default function StudentRoutes() {
                     <Route path={student_routes.course_detail(':courseId')} element={<CourseDetailPage />} />
                     <Route path={student_routes.lesson(':courseId', ':lessonId')} element={<LessonPage />} />
                     <Route path={student_routes.auth} element={<AuthPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                     <Route path={student_routes.about} element={<AboutPage />} />
                     <Route path={student_routes.become_instructor} element={<BecomeInstructorPage />} />
 
@@ -67,6 +99,7 @@ export default function StudentRoutes() {
                         <Route path={student_routes.schedule} element={<Schedule />} />
                         <Route path={student_routes.class_detail(':classId')} element={<ClassDetail />} />
                         <Route path={student_routes.my_courses} element={<MyCourses />} />
+                        <Route path="cart" element={<Student_Cart />} />
                         <Route path={student_routes.checkout} element={<Student_Checkout />} />
                         <Route path={student_routes.payment_history} element={<Student_PaymentHistory />} />
                         <Route path={student_routes.certificates} element={<Student_Certificates />} />

@@ -1,31 +1,65 @@
-import React, { useState } from 'react';
-import { Camera, Mail, Phone, MapPin, Calendar, Briefcase, Globe, Github, Linkedin, Twitter, Facebook, Award, BookOpen, Clock } from 'lucide-react';
+﻿import React, { useState, useEffect } from 'react';
+import { Camera, Mail, Phone, MapPin, Calendar, Briefcase, Globe, Github, Linkedin, Twitter, Facebook, Award, BookOpen, Clock, Loader2, AlertCircle } from 'lucide-react';
+import { useMyProfile, ProfileUpdateData } from '../../../hooks/student/useMyProfile';
+import { useMyStats } from '../../../hooks/student/useMyStats';
+import toast from 'react-hot-toast';
 
 const StudentProfile: React.FC = () => {
+    // Get current user from sessionStorage
+    const getCurrentUser = () => {
+        const accountData = sessionStorage.getItem('Account');
+        if (accountData) {
+            try {
+                return JSON.parse(accountData);
+            } catch {
+                return null;
+            }
+        }
+        return null;
+    };
+
+    const currentUser = getCurrentUser();
+    const userId = currentUser?.id || 0;
+
+    // Fetch profile and stats using hooks
+    const { profile, isLoading: profileLoading, error: profileError, updateProfile, isUpdating } = useMyProfile(userId);
+    const { data: stats, isLoading: statsLoading } = useMyStats(userId);
+
     const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({
-        fullName: 'Nguyễn Văn A',
-        email: 'nguyenvana@example.com',
-        phone: '+84 123 456 789',
-        dateOfBirth: '1998-05-15',
-        gender: 'male',
-        country: 'Vietnam',
-        city: 'Ho Chi Minh City',
-        bio: 'Passionate learner focused on web development and data science. Always eager to learn new technologies and improve my skills.',
-        jobTitle: 'Full Stack Developer',
-        linkedin: 'https://linkedin.com/in/nguyenvana',
-        github: 'https://github.com/nguyenvana',
-        twitter: 'https://twitter.com/nguyenvana',
-        facebook: 'https://facebook.com/nguyenvana',
+    const [formData, setFormData] = useState<ProfileUpdateData>({
+        fullName: '',
+        phone: '',
+        dateOfBirth: '',
+        gender: 'other',
+        country: '',
+        city: '',
+        bio: '',
+        jobTitle: '',
+        linkedin: '',
+        github: '',
+        twitter: '',
+        facebook: '',
     });
 
-    const stats = {
-        coursesEnrolled: 12,
-        coursesCompleted: 8,
-        hoursLearned: 156,
-        certificatesEarned: 5,
-        memberSince: 'January 2024',
-    };
+    // Update form when profile loads
+    useEffect(() => {
+        if (profile) {
+            setFormData({
+                fullName: profile.fullName,
+                phone: profile.phone,
+                dateOfBirth: profile.dateOfBirth,
+                gender: profile.gender,
+                country: profile.country,
+                city: profile.city,
+                bio: profile.bio,
+                jobTitle: profile.jobTitle,
+                linkedin: profile.linkedin,
+                github: profile.github,
+                twitter: profile.twitter,
+                facebook: profile.facebook,
+            });
+        }
+    }, [profile]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormData({
@@ -34,16 +68,66 @@ const StudentProfile: React.FC = () => {
         });
     };
 
-    const handleSave = () => {
-        // TODO: Call API to save profile
-        setIsEditing(false);
-        console.log('Saving profile:', formData);
+    const handleSave = async () => {
+        try {
+            await updateProfile(formData);
+            toast.success('Cập nhật hồ sơ thành công!');
+            setIsEditing(false);
+        } catch (error: any) {
+            toast.error('Có lỗi xảy ra khi cập nhật hồ sơ!');
+            console.error('Update profile error:', error);
+        }
     };
 
     const handleCancel = () => {
+        // Reset form to original profile data
+        if (profile) {
+            setFormData({
+                fullName: profile.fullName,
+                phone: profile.phone,
+                dateOfBirth: profile.dateOfBirth,
+                gender: profile.gender,
+                country: profile.country,
+                city: profile.city,
+                bio: profile.bio,
+                jobTitle: profile.jobTitle,
+                linkedin: profile.linkedin,
+                github: profile.github,
+                twitter: profile.twitter,
+                facebook: profile.facebook,
+            });
+        }
         setIsEditing(false);
-        // TODO: Reset form data to original values
     };
+
+    // Loading state
+    if (profileLoading || statsLoading) {
+        return (
+            <div className="max-w-6xl mx-auto py-20">
+                <div className="flex flex-col items-center justify-center">
+                    <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
+                    <p className="text-slate-600">Đang tải hồ sơ...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (profileError) {
+        return (
+            <div className="max-w-6xl mx-auto py-20">
+                <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+                    <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                    <p className="text-red-600 font-semibold mb-2">Không thể tải hồ sơ</p>
+                    <p className="text-red-500 text-sm">Vui lòng thử lại sau</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!profile) {
+        return null;
+    }
 
     return (
         <div className="max-w-6xl mx-auto space-y-6">
@@ -86,7 +170,7 @@ const StudentProfile: React.FC = () => {
                         <div className="flex flex-col items-center">
                             <div className="relative group">
                                 <img
-                                    src="https://ui-avatars.com/api/?name=Nguyen+Van+A&size=128&background=2563eb&color=fff"
+                                    src={profile.avatarUrl}
                                     alt="Profile"
                                     className="w-32 h-32 rounded-full border-4 border-slate-100"
                                 />
@@ -96,11 +180,11 @@ const StudentProfile: React.FC = () => {
                                     </button>
                                 )}
                             </div>
-                            <h2 className="mt-4 text-xl font-bold text-secondary">{formData.fullName}</h2>
-                            <p className="text-slate-600">{formData.jobTitle}</p>
+                            <h2 className="mt-4 text-xl font-bold text-secondary">{profile.fullName}</h2>
+                            <p className="text-slate-600">{profile.jobTitle || 'Chưa cập nhật'}</p>
                             <div className="mt-2 flex items-center text-sm text-slate-500">
                                 <Calendar className="w-4 h-4 mr-1" />
-                                Thành viên từ {stats.memberSince}
+                                Thành viên từ {stats?.memberSince || 'N/A'}
                             </div>
                         </div>
                     </div>
@@ -116,7 +200,7 @@ const StudentProfile: React.FC = () => {
                                     </div>
                                     <div>
                                         <p className="text-sm text-slate-600">Khóa học</p>
-                                        <p className="text-lg font-bold text-secondary">{stats.coursesEnrolled}</p>
+                                        <p className="text-lg font-bold text-secondary">{stats?.coursesEnrolled || 0}</p>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +211,7 @@ const StudentProfile: React.FC = () => {
                                     </div>
                                     <div>
                                         <p className="text-sm text-slate-600">Hoàn thành</p>
-                                        <p className="text-lg font-bold text-secondary">{stats.coursesCompleted}</p>
+                                        <p className="text-lg font-bold text-secondary">{stats?.coursesCompleted || 0}</p>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +222,7 @@ const StudentProfile: React.FC = () => {
                                     </div>
                                     <div>
                                         <p className="text-sm text-slate-600">Giờ học</p>
-                                        <p className="text-lg font-bold text-secondary">{stats.hoursLearned}h</p>
+                                        <p className="text-lg font-bold text-secondary">{stats?.hoursLearned || 0}h</p>
                                     </div>
                                 </div>
                             </div>
@@ -149,7 +233,7 @@ const StudentProfile: React.FC = () => {
                                     </div>
                                     <div>
                                         <p className="text-sm text-slate-600">Chứng chỉ</p>
-                                        <p className="text-lg font-bold text-secondary">{stats.certificatesEarned}</p>
+                                        <p className="text-lg font-bold text-secondary">{stats?.certificatesEarned || 0}</p>
                                     </div>
                                 </div>
                             </div>
@@ -186,17 +270,7 @@ const StudentProfile: React.FC = () => {
                                 </label>
                                 <div className="flex items-center">
                                     <Mail className="w-5 h-5 text-slate-400 mr-2" />
-                                    {isEditing ? (
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
-                                            className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                                        />
-                                    ) : (
-                                        <p className="text-slate-900">{formData.email}</p>
-                                    )}
+                                    <p className="text-slate-900">{profile.email}</p>
                                 </div>
                             </div>
 
@@ -233,7 +307,7 @@ const StudentProfile: React.FC = () => {
                                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                                     />
                                 ) : (
-                                    <p className="text-slate-900">{new Date(formData.dateOfBirth).toLocaleDateString('vi-VN')}</p>
+                                    <p className="text-slate-900">{formData.dateOfBirth ? new Date(formData.dateOfBirth).toLocaleDateString('vi-VN') : 'Chưa cập nhật'}</p>
                                 )}
                             </div>
 
@@ -312,7 +386,7 @@ const StudentProfile: React.FC = () => {
                                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                                     />
                                 ) : (
-                                    <p className="text-slate-900">{formData.city}</p>
+                                    <p className="text-slate-900">{formData.city || 'Chưa cập nhật'}</p>
                                 )}
                             </div>
                         </div>
